@@ -1,0 +1,77 @@
+# Handcrafted YAML representation of http://services.odata.org/V4/TripPinServiceRW/$metadata
+
+serviceRoot:
+  - name: photos
+    type: photo[]
+    searchable: true
+    insertable: true
+
+  - name: people
+    type: person[]
+    searchable: true
+    insertable: true
+    disallowNavigation: [friends]
+
+enums:
+  - name: personGender
+    members: [male, female, unknown]
+
+types:
+  - name: city
+    requiredProperties: [countryRegion, name, region]
+  - name: location
+    dynamic: true
+    requiredProperties: [address, {name: city, type: city}]
+  - name: eventLocation
+    baseType: location
+    optionalProperties: [buildingInfo]
+  - name: airportLocation
+    baseType: location
+    requiredProperties:
+      - name: loc
+        type: edm.geographyPoint
+  - name: photo
+    key: [{name: id, type: edm.int64}]
+    hasStream: true
+    optionalProperties: [name]
+  - name: person
+    key: [{name: userName, type: edm.string}]
+    requiredProperties: [firstName, lastName]
+    optionalProperties:
+      - name: emails
+        type: string[]
+      - name: addressInfo
+        type: location[]
+      - name: gender
+        type: gender
+      - name: concurrency
+        type: edm.int64
+        computed: true
+      - name: friends
+        type: person[]
+      - name: trips
+        type: trip[]
+      - name: photo
+        type: photo
+  - name: airline
+    key: {name: airlineCode, type: edm.string}
+    requiredProperties: name
+  - name: airport
+    key: {name: icaoCode, type: edm.string}
+    requiredProperties:
+      - name
+      - name: iataCode
+        immutable: true
+      - name: location
+        type: airportLocation
+  - name: planItem
+    key: planItemId
+    optionalProperties:
+      - confirmationCode
+      - name: startsAt
+        type: edm.dateTimeOffset
+      - name: endsAt
+        type: edm.dateTimeOffset
+      - name: duration
+        type: edm.duration
+# Left off at PublicTransportation EntityType

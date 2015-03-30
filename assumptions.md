@@ -5,6 +5,8 @@
 * A member of the service root is an entity set if the type is an array.
 * A member of the service root is a singleton if the type is not an array.
 * A member of the service root is a function/action import if the type is not specified.
+* Navigation property bindings default to the entity set containing the type of the navigation property.
+* Resource path annotation defaults to the name of the resource.
 
 ## Types assumptions
 
