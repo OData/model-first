@@ -52,7 +52,7 @@ types:
       - name: tasks
         type: tasks[]
   - name: task
-    key: [id]
+    key: id
     requiredProperties:
       - name: id
         type: int64
@@ -70,7 +70,7 @@ types:
       - name: project
         type: project
   - name: project
-    requiredProperties: [name]
+    requiredProperties: name
     optionalProperties: [description, {name: dueDate, type: date}]
 ```
 
@@ -79,7 +79,10 @@ types:
 Operations are declared in the `functions` and `actions` sections of the YAML document. Both functions and actions are required to have a `name` and may specify `parameters`. Functions are required to specify `returns`; actions may do so as well.
 
 ```yaml
-todo
+operations:
+  - name: getFriendsTasks
+    params: userName
+    returns: task[]
 ```
 
 #### Service root
