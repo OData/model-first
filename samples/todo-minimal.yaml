@@ -4,4 +4,4 @@ serviceRoot:
 types:
   - name: todo
     key: id
-    requiredProperties: [name]
+    requiredProperties: name
