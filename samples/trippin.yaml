@@ -1,41 +1,70 @@
 # Handcrafted YAML representation of http://services.odata.org/V4/TripPinServiceRW/$metadata
+service:
+  - name: "TripPin OData Reference Service"
+    description: "TripPin is a fictional reference service demonstrating the capabilities of OData v4."
+    auth: none
+    conformance: minimal
+    supportsFilterFunctions: [contains, endswith, startswith, length, indexof, substring, tolower, toupper, trim, concat, year, month, day, hour, minute, second, round, floor, ceiling, cast, isof]
 
 serviceRoot:
   - name: photos
     type: photo[]
     searchable: true
     insertable: true
-
   - name: people
     type: person[]
     searchable: true
     insertable: true
-    disallowNavigation: [friends]
+    concurrencyProperties: concurrency
+    disallowNavigation: friends
+    disallowInsert: [trips, friends]
+  - name: airlines
+    type: airline[]
+    searchable: true
+    insertable: true
+  - name: airports
+    type: airport[]
+    searchable: true
+    insertable: false
+    deletable: false
+  - name: me
+    type: person
+  - getNearestAirport
+  - resetDataSource
 
 enums:
   - name: personGender
-    members: [male, female, unknown]
+    members: [unknown, female, male]
 
 types:
   - name: city
     requiredProperties: [countryRegion, name, region]
   - name: location
     dynamic: true
-    requiredProperties: [address, {name: city, type: city}]
+    requiredProperties:
+      - address
+      - name: city
+        type: city
   - name: eventLocation
     baseType: location
-    optionalProperties: [buildingInfo]
+    optionalProperties: buildingInfo
   - name: airportLocation
     baseType: location
     requiredProperties:
       - name: loc
         type: edm.geographyPoint
   - name: photo
-    key: [{name: id, type: edm.int64}]
+    # Missing acceptable media types annotation - consider hasStream: image/jpeg instead
+    key:
+      - name: id
+        type: int64
     hasStream: true
-    optionalProperties: [name]
+    optionalProperties: name
   - name: person
-    key: [{name: userName, type: edm.string}]
+    key:
+      - name: userName
+        type: string
+    dynamic: true
     requiredProperties: [firstName, lastName]
     optionalProperties:
       - name: emails
@@ -45,7 +74,7 @@ types:
       - name: gender
         type: gender
       - name: concurrency
-        type: edm.int64
+        type: int64
         computed: true
       - name: friends
         type: person[]
@@ -53,11 +82,26 @@ types:
         type: trip[]
       - name: photo
         type: photo
+    operations:
+      - name: getFavoriteAirline
+        returns: airline
+      - name: getFriendsTrips
+        params: userName
+        returns: trip[]
+      - name: shareTrip
+        params:
+          - userName
+          - name: tripId
+            type: int32
   - name: airline
-    key: {name: airlineCode, type: edm.string}
+    key:
+      - name: airlineCode
+        type: string
     requiredProperties: name
   - name: airport
-    key: {name: icaoCode, type: edm.string}
+    key:
+      - name: icaoCode
+        type: string
     requiredProperties:
       - name
       - name: iataCode
@@ -69,9 +113,59 @@ types:
     optionalProperties:
       - confirmationCode
       - name: startsAt
-        type: edm.dateTimeOffset
+        type: dateTimeOffset
       - name: endsAt
-        type: edm.dateTimeOffset
+        type: dateTimeOffset
       - name: duration
-        type: edm.duration
-# Left off at PublicTransportation EntityType
+        type: duration
+  - name: publicTransportation
+    baseType: planItem
+    optionalProperties: seatNumber
+  - name: flight
+    baseType: publicTransportation
+    requiredProperties: flightNumber
+    optionalProperties:
+      - name: from
+        type: airport
+      - name: to
+        type: airport
+      - name: airline
+        type: airline
+  - name: event
+    baseType: planItem
+    dynamic: true
+    optionalProperties:
+      - description
+      - name: occursAt
+        type: eventLocation
+  - name: trip
+    key: tripId
+    requiredProperties:
+      - name
+      - name: budget
+        type: single
+        isoCurrency: USD
+      - name: startsAt
+        type: dateTimeOffset
+      - name: endsAt
+        type: dateTimeOffset
+      - name: tags
+        type: string[]
+      - name: photos
+        type: photo[]
+      - name: planItems
+        type: planItem[]
+        contained: true
+    operations:
+      - name: getInvolvedPeople
+        returns: person[]
+
+operations:
+  - name: getNearestAirport
+    params:
+      - name: lat
+        type: double
+      - name: lon
+        type: double
+    returns: airport
+  - name: resetDataSource
