@@ -29,8 +29,14 @@ serviceRoot:
     deletable: false
   - name: me
     type: person
-  - getNearestAirport
-  - resetDataSource
+  - name: getNearestAirport
+    params:
+      - name: lat
+        type: double
+      - name: lon
+        type: double
+    returns: airport
+  - name: resetDataSource
 
 enums:
   - name: personGender
@@ -159,13 +165,3 @@ types:
     operations:
       - name: getInvolvedPeople
         returns: person[]
-
-operations:
-  - name: getNearestAirport
-    params:
-      - name: lat
-        type: double
-      - name: lon
-        type: double
-    returns: airport
-  - name: resetDataSource
