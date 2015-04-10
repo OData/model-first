@@ -1,6 +1,9 @@
 {
   "node": true,
   "quotmark": "single",
-  "jasmine": true
+  "jasmine": true,
+  "globals": {
+    "Morpho": false
+  }
 }
 
