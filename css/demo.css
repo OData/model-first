@@ -1,0 +1,29 @@
+#container { 
+  margin-right:3%;
+  margin-left:3%;
+  margin-top:100px;
+}
+
+.textareamessage {
+  width: 50%;
+  float: left;
+}
+
+#inputarea {
+  border: 1px solid #888888;
+  border-radius: 3px;
+  width:49%;
+  height: 500px;
+  overflow: auto;
+  resize: none;
+}
+
+#outputarea {
+  border: 1px solid #888888;
+  border-radius: 3px;
+  width:49%;
+  height: 500px;
+  overflow: auto;
+  resize: none;
+  background-color: #fffeee;
+}
