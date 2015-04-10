@@ -1,5 +1,6 @@
 {
   "node": true,
-  "quotmark": "single"
+  "quotmark": "single",
+  "jasmine": true
 }
 
