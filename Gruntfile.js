@@ -11,9 +11,22 @@ module.exports = function(grunt) {
         'lib/**/*.js',
         'test/**/*.js'
       ]
+    },
+
+    karma: {
+      dev:{
+        configFile: 'karma.conf.js'
+      },
+      build: {
+        configFile: 'karma.conf.js',
+        singleRun: true
+      }
     }
   });
 
   grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.registerTask('default', ['jshint']);
+  grunt.loadNpmTasks('grunt-karma');
+
+  grunt.registerTask('default', ['karma:build', 'jshint']);
+  grunt.registerTask('tdd', ['karma:dev']);
 };
