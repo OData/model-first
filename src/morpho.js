@@ -1,21 +1,21 @@
-function MorphoModel(name, type)
+function MorphoModel(name, types)
 {
-  this.name = name;
-  this.type = type;
+  this.name     = name;
+  this.types    = types;
+  this.errors   = [];
 }
 
-MorphoModel.prototype.toCsdl = function()
-{
-  var str='';
-  for(var i = 0, l = this.type.length; i < l; i++){
-    str+=this.type[i];
-  }
-
-  return '<ComplexType Name="'+str+'" />';
-};
-
 this.Morpho = {
-  loadFromYaml : function(str){
-    return new MorphoModel('name', [str]);
+  register: function(name, fromFunc, toFunc){
+    if(fromFunc){
+      this['loadFrom' + name] = function(){
+        var model = new MorphoModel();
+        fromFunc.apply(model, arguments);
+        return model;
+      };
+    }
+    
+    if(toFunc)
+      MorphoModel.prototype['to' + name] = toFunc;
   }
 };

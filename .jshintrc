@@ -2,6 +2,7 @@
   "node": true,
   "quotmark": "single",
   "jasmine": true,
+  "multistr": true,
   "globals": {
     "Morpho": false
   }

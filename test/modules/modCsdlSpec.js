@@ -1,6 +1,6 @@
 'use strict';
 
-describe('To CSDL tests', function() {
+describe('To CSDL test', function() {
   var a = Morpho.loadFromYaml('x');
 
   it('Output is a complex type.', function() {
