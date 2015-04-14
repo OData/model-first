@@ -1,7 +1,7 @@
-function MorphoModel(name, types)
+function MorphoModel()
 {
-  this.name     = name;
-  this.types    = types;
+  this.service  = {};
+  this.types    = {};
   this.errors   = [];
 }
 

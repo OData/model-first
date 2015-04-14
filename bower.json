@@ -1,0 +1,7 @@
+{
+  "name": "morpho",
+  "version": "0.0.1",
+  "dependencies": {
+    "yaml-js": "~0.1.1"
+  }
+}

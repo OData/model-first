@@ -9,6 +9,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+      'bower_components/yaml-js/yaml.min.js',
       'src/*.js',
       'src/modules/*.js',
       'test/**/*.js',
