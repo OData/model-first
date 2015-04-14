@@ -4,10 +4,10 @@
   "jasmine": true,
   "multistr": true,
   "globals": {
-    "Morpho": false,
-	"window" : false,
-	"document" : false,
-	"CodeMirror" : false
+  "Morpho": false,
+  "window" : false,
+  "document" : false,
+  "CodeMirror" : false
   }
 }
 
