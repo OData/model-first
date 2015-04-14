@@ -62,7 +62,10 @@ window.runEdit = function runEdit() {
 service:\n\
   name: Service\n\
 types:\n\
-  - name: Book\n';
+  - name: Book\n\
+  - name: Blog\n\
+    key: ID\n\
+    requiredProperties: Title\n';
   source.setValue(defaultInput);
   convert();
 };

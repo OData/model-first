@@ -13,10 +13,10 @@ types:\n\
   it('Service name should match', function() {
     expect(model.service.name).toEqual('Service0');
   });
-  xit('Type count should match', function() {
-    expect(model.toJson()).toEqual('{"name":"name","type":["x"],"err":[]}');
+  it('Type count should match', function() {
+    expect(model.types.length).toEqual(1);
   });
-  xit('Debug string should match', function() {
-    expect(model.toJson()).toEqual('{"name":"name","type":["x"],"err":[]}');
+  it('Debug string should match', function() {
+    expect(model.toJson()).toEqual('{"service":{"name":"Service0"},"types":[{"properties":["id","name"],"name":"type1"}],"errors":[]}');
   });
 });

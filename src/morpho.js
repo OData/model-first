@@ -19,3 +19,82 @@ this.Morpho = {
       MorphoModel.prototype['to' + name] = toFunc;
   }
 };
+
+this.Logger = {
+  getLogger: function(level){
+    var nop = function(){};
+  
+    var debugLogger = {
+      debug   : console.log,
+      info    : console.info
+    };
+    
+    var infoLogger = {
+      debug   : nop,
+      info    : console.info
+    };
+    
+    if(level == 'debug')
+      return debugLogger;
+    else
+      return infoLogger;
+  }
+};
+
+this.logger = this.Logger.getLogger('debugA');
+
+function Visitor()
+{
+  this._level   = 0;
+  this._prefix  = '';
+}
+
+Visitor.prototype.log=function()
+{
+  var args = Array.prototype.slice.call(arguments); 
+  args.unshift(this._prefix);
+  logger.debug.apply(null, args);
+};
+
+Visitor.prototype.increaseLevel=function(){
+  ++this._level;
+  this._prefix+='|';
+};
+
+Visitor.prototype.decreaseLevel=function(){
+  --this._level;
+  this._prefix=this._prefix.substring(1);
+};
+
+Visitor.prototype.visitWrap=function(func)
+{
+  this.increaseLevel();
+  this.log('-- Visiting Begin');
+  func.call(this);
+  this.log('-- Visiting End');
+  this.decreaseLevel();
+};
+
+Visitor.prototype.visitObj=function(obj, map)
+{
+  this.log(JSON.stringify(obj));
+  this.visitWrap(function(){
+    for(var i in obj) {
+      if (obj.hasOwnProperty(i)) {
+        this.log('Node:', i);
+        if(map[i]){
+          map[i].call(this, obj[i]);
+        }
+      }
+    }
+  });
+};
+
+Visitor.prototype.visitArr=function(arr, func)
+{
+  this.visitWrap(function(){
+    for(var i in arr) {
+      func.call(this, arr[i]);
+    }
+  });
+};

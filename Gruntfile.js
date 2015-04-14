@@ -16,10 +16,10 @@ module.exports = function(grunt) {
     karma: {
       dev:{
         configFile: 'karma.conf.js',
-        singleRun: false
       },
       build: {
-        configFile: 'karma.conf.js'
+        configFile: 'karma.conf.js',
+        singleRun: true
       }
     }
   });
