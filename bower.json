@@ -2,6 +2,8 @@
   "name": "morpho",
   "version": "0.0.1",
   "dependencies": {
-    "yaml-js": "~0.1.1"
+    "yaml-js": "~0.1.1",
+    "jquery": "2.1.3",
+	"codemirror": "5.1.0"
   }
 }

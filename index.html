@@ -4,28 +4,30 @@
 	<title>Simple demo for model first</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="css/demo.css">
-	<script src="lib/core.js"></script>
+    <link rel="stylesheet" href="bower_components/codemirror/lib/codemirror.css">
+	<script src="src/edit.js"></script>
+	<script src="src/morpho.js"></script>
+	<script src="src/modules/modYaml.js"></script>
+	<script src="src/modules/modCsdl.js"></script>
+    <script src="bower_components/codemirror/lib/codemirror.js"></script>
+    <script src="bower_components/codemirror/mode/yaml/yaml.js"></script>
+    <script src="bower_components/codemirror/mode/xml/xml.js"></script>
+    <script src="bower_components/yaml-js/yaml.js"></script>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
   </head>
   <body>
-    <div id="container">
+    <div id="src">
 	    <div class="textareamessage">Edit model here:</div>
-		<div class="textareamessage">Result</div>
 		<textarea id="inputarea"></textarea>
-		<textarea id="outputarea" readonly></textarea>
-		<button onclick="convert()">Convert</button>
 	</div>
-	<script>
-	function convert() {
-		var input = document.getElementById("inputarea").value;
-		var result = Core.read(input);
-		if (result.valid){
-			document.getElementById("outputarea").value = result.value;
-		}
-		else {
-			document.getElementById("outputarea").value = '';
-			alert(result.value);
-		}
-	}
-	</script>
+    <div id="res">
+		<div class="textareamessage">Result</div>
+		<textarea id="outputarea"></textarea>
+	</div>
   </body>
+  <script>
+    $(document).ready(function() {
+		runEdit();
+    });
+  </script>
 </html>
