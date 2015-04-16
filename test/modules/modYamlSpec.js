@@ -30,13 +30,13 @@ types:\n\
       - p3\n',
       [{'properties':[{'name':'p1'},{'name':'p3'}],'name':'type1'}]));
 
-  xit('Multiple property should work,using [].', // not supported by parser
+  it('Multiple property should work,using [].',
     fromYamlTypeTest(
 '\
 types:\n\
   - name: type1\n\
-    requiredProperties: [p1 p3]\n',
-      [{'properties':['name','id'],'name':'type1'}]));     
+    requiredProperties: [p1, p3]\n',
+      [{'properties':[{'name':'p1'},{'name':'p3'}],'name':'type1'}]));     
 
   it('Property with facets should work.',
     fromYamlTypeTest(
