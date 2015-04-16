@@ -1,0 +1,67 @@
+service:
+  name: Swagger Petstore
+  version: 1.0.0
+  description: |
+    This is a sample server Petstore server.
+
+    [Learn about Swagger](http://swagger.wordnik.com) or join the IRC channel `#swagger` on irc.freenode.net.
+
+    For this sample, you can use the api key `special-key` to test the authorization filters
+
+serviceRoot:
+  - name: pets
+    type: pet[]
+    allows: [create, update, readSingle, delete]
+    operations:
+      - name: findByStatus
+        params: string[]
+        returns: pet[]
+      - name: findByTags
+        params: string[]
+        returns: pet[]
+  - name: orders
+    type: order[]
+    allows: [create, delete, readSingle]
+  - name: users
+    type: user[]
+    allows: [create, readSingle, update, delete]
+    operations:
+      - name: createWithArray
+        params: user[]
+      - name: createWithList
+        params: user[]
+
+types:
+  - name: category
+    key: {name: id, type: int64}
+    optionalProperties: name
+  - name: order
+    key: {name: id, type: int64}
+    optionalProperties:
+      - name: petId
+        type: int64
+      - name: quantity
+        type: int32
+      - name: shipDate
+        type: dateTimeOffset
+      - name: status
+      - name: complete
+        type: boolean
+  - name: pet
+    key: {name: id, type: int64}
+    requiredProperties:
+      - name: name
+      - name: photoUrls
+        type: string[]
+    optionalProperties:
+      - name: category
+        type: category
+      - name: tags
+        type: tag[]
+      - name: status
+  - name: tag
+    key: {name: id, type: int64}
+    optionalProperties: name
+  - name: user
+    key: {name: id, type: int64}
+    optionalProperties: [username, firstName, lastName, email, password, phone, {name: userStatus, type: int32}]
