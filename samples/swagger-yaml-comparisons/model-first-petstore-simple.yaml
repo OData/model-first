@@ -1,10 +1,10 @@
 # Handcrafted YAML representation of http://services.odata.org/V4/TripPinServiceRW/$metadata
 service:
-  - name: Swagger Petstore (Simple)
-    description: A sample API that uses a petstore as an example to demonstrate features in the swagger-2.0 specification
-    auth: none
-    conformance: minimal
-    supportsFilterFunctions: [contains, endswith, startswith, length, indexof, substring, tolower, toupper, trim, concat, year, month, day, hour, minute, second, round, floor, ceiling, cast, isof]
+  name: Swagger Petstore (Simple)
+  description: A sample API that uses a petstore as an example to demonstrate features in the swagger-2.0 specification
+  auth: none
+  conformance: minimal
+  supportsFilterFunctions: [contains, endswith, startswith, length, indexof, substring, tolower, toupper, trim, concat, year, month, day, hour, minute, second, round, floor, ceiling, cast, isof]
 
 serviceRoot:
   - name: pets
