@@ -45,8 +45,8 @@ types:\n\
   - name: type1\n\
     requiredProperties:\n\
       - name: p1\n\
-        type: int32\n',
-      [{'properties':[{'name':'p1','type':'int32'}],'name':'type1'}]));
+        type: int\n',
+      [{'properties':[{'name':'p1','type':'Int32'}],'name':'type1'}]));
 
   it('Combined Property case should work.',
     fromYamlTypeTest(
@@ -55,9 +55,9 @@ types:\n\
   - name: type1\n\
     requiredProperties:\n\
       - name: p1\n\
-        type: int32\n\
+        type: long\n\
       - p2',
-      [{'properties':[{'name':'p1','type':'int32'},{'name':'p2'}],'name':'type1'}]));      
+      [{'properties':[{'name':'p1','type':'Int64'},{'name':'p2'}],'name':'type1'}]));      
 });
 
 function fromYamlTypeTest(input, types)

@@ -69,7 +69,7 @@ types:\n\
   - name: Blog\n\
     key:\n\
       - name: ID\n\
-        type: string\n\
+        type: long\n\
     requiredProperties: Title\n';
   source.setValue(defaultInput);
   convert();
