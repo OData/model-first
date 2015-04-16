@@ -1,0 +1,78 @@
+# This YAML file lays out the full definition of what a model-first YAML file can contain.
+
+# The api section defines metadata about the service - name, contact info, etc.
+api: # Optional
+  name: REST API Name # Optional
+  version: # Optional
+    current: 1.0.0
+    supported: [0.5.0, 0.6.0, 0.7.0, 0.9.0] # Optional
+    deprecated: # Optional
+      - version: 0.8.0
+        endOfLife: 2015-09-01
+      - version: 0.4.0
+        endOfLife: 2015-10-01
+  description: This REST API does something amazing! # Optional
+  termsOfService: http://example.org/tos # Optional
+  support: # Optional
+    url: http://example.org/support # Optional
+    email: restapihelp@example.org # Optional
+    description: We will get back to you within two business days. # Optional
+  baseUrl: https://example.org/api # Optional
+  authentication: # Optional
+    type: [OAuth2, Basic] # Optional
+    documentation: http://example.org/auth # Optional
+  supportsFilterFunctions: [contains, endswith, startswith, length, indexof, substring, tolower, toupper, trim, concat, year, month, day, hour, minute, second, round, floor, ceiling, cast, isof] # Optional
+
+root:
+  # Collection
+  - name: things
+    url: things # Optional
+    type: thing[]
+    allows: [read, create, update, delete, query, order, page] # Optional
+  # Singleton
+  - name: me
+    type: user
+  # Operation
+  - name: getFavoriteThings
+    params: # Optional
+      - name: userId
+        type: integer # Optional
+    returns: thing[] # Optional
+
+types:
+  # Structural type
+  - name: thing
+    key: id # Optional
+    baseType: object # Optional
+    dynamic: true # Optional
+    hasStream: false # Optional
+    allowsQuery: [name] # Optional
+    allowsUpdate: [price] # Optional
+    # How to do concurrency?
+    requiredProperties: # Optional
+      - name: name
+        type: string # Optional
+        computed: false # Optional
+    optionalProperties: # Optional
+      - name: owner
+        type: user # Optional
+        contained: true # Optional
+      - name: price
+        type: decimal # Optional
+        isoCurrency: USD # Optional
+    operations: # Optional
+      - name: rename
+        params: # Optional
+          - name: newName
+            type: string # Optional
+        returns: thing # Optional
+  # Enumeration type
+  - name: permissions
+    flagged: true # Optional
+    members:
+      - name: none
+        value: 0 # Optional
+      - name: read
+        value: 1 # Optional
+      - name: write
+        value: 2 # Optional
