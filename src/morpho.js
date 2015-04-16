@@ -92,9 +92,11 @@ Visitor.prototype.visitObj=function(obj, map)
 
 Visitor.prototype.visitArr=function(arr, func)
 {
+  var na = [].concat(arr);
   this.visitWrap(function(){
-    for(var i in arr) {
-      func.call(this, arr[i]);
+    for(var i in na) {
+      this.log('Arr',i,na[i]);
+      func.call(this, na[i]);
     }
   });
 };

@@ -63,8 +63,13 @@ service:\n\
   name: Service\n\
 types:\n\
   - name: Book\n\
+    requiredProperties:\n\
+      - Title\n\
+      - Author\n\
   - name: Blog\n\
-    key: ID\n\
+    key:\n\
+      - name: ID\n\
+        type: string\n\
     requiredProperties: Title\n';
   source.setValue(defaultInput);
   convert();

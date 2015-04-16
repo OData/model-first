@@ -10,7 +10,7 @@ function toCsdl()
       if(type.properties.length>0){
         typeStr+='">\n';
         for(var j = 0, pl = type.properties.length; j < pl; j++){
-          typeStr+='  <Property Name="'+ type.properties[j] +'" Type="Edm.String"/>\n';
+          typeStr+='  <Property Name="'+ type.properties[j].name +'" Type="Edm.String"/>\n';
         }
         typeStr+='</ComplexType>\n';
       }else{
