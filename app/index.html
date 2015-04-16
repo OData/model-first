@@ -1,33 +1,41 @@
 <!DOCTYPE html>
 <html>
   <head>
-	<title>Simple demo for model first</title>
+    <title>Simple demo for model first</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="css/demo.css">
+    <!-- build:css css/codemirror.css -->
     <link rel="stylesheet" href="bower_components/codemirror/lib/codemirror.css">
-	<script src="src/edit.js"></script>
-	<script src="src/morpho.js"></script>
-	<script src="src/modules/modYaml.js"></script>
-	<script src="src/modules/modCsdl.js"></script>
+    <!-- endbuild -->
+
+    <!-- build:js scripts/app.js -->
+    <script src="edit.js"></script>
+    <script src="../src/morpho.js"></script>
+    <script src="../src/modules/modYaml.js"></script>
+    <script src="../src/modules/modCsdl.js"></script>
+    <!-- endbuild -->
+    
+    <!-- build:js scripts/lib.js -->
     <script src="bower_components/codemirror/lib/codemirror.js"></script>
     <script src="bower_components/codemirror/mode/yaml/yaml.js"></script>
     <script src="bower_components/codemirror/mode/xml/xml.js"></script>
     <script src="bower_components/yaml-js/yaml.js"></script>
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <!-- endbuild -->
   </head>
   <body>
     <div id="src">
-	    <div class="textareamessage">Edit model here:</div>
-		<textarea id="inputarea"></textarea>
-	</div>
+      <div class="textareamessage">Edit model here:</div>
+      <textarea id="inputarea"></textarea>
+    </div>
     <div id="res">
-		<div class="textareamessage">Result</div>
-		<textarea id="outputarea"></textarea>
-	</div>
+      <div class="textareamessage">Result</div>
+      <textarea id="outputarea"></textarea>
+    </div>
   </body>
   <script>
     $(document).ready(function() {
-		runEdit();
+      runEdit();
     });
   </script>
 </html>

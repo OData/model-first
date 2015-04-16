@@ -9,11 +9,11 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'bower_components/yaml-js/yaml.min.js',
-	  'bower_components/codemirror/lib/codemirror.js',
-	  'bower_components/codemirror/mode/xml/xml.js',
-	  'bower_components/codemirror/mode/yaml/yaml.js',
-	  'bower_components/jquery/dist/jquery.min.js',
+      'app/bower_components/yaml-js/yaml.min.js',
+	  'app/bower_components/codemirror/lib/codemirror.js',
+	  'app/bower_components/codemirror/mode/xml/xml.js',
+	  'app/bower_components/codemirror/mode/yaml/yaml.js',
+	  'app/bower_components/jquery/dist/jquery.min.js',
       'src/*.js',
       'src/modules/*.js',
       'test/**/*.js',
