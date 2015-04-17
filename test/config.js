@@ -1,0 +1,3 @@
+this.config= {
+  trace: true
+};

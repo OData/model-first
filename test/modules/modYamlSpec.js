@@ -5,8 +5,8 @@ describe('[YAML] Service section test', function() {
 service:\n\
   name: Service0\n';
 
-  var model = Morpho.loadFromYaml(input);
   it('Service name should match', function() {
+    var model = Morpho.loadFromYaml(input);
     expect(model.service.name).toEqual('Service0');
   });
 });

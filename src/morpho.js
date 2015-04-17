@@ -20,28 +20,13 @@ this.Morpho = {
   }
 };
 
-this.Logger = {
-  getLogger: function(level){
-    var nop = function(){};
-  
-    var debugLogger = {
-      debug   : console.log,
-      info    : console.info
-    };
-    
-    var infoLogger = {
-      debug   : nop,
-      info    : console.info
-    };
-    
-    if(level == 'debug')
-      return debugLogger;
-    else
-      return infoLogger;
-  }
-};
+this.config = this.config || {};
 
-this.logger = this.Logger.getLogger('debugA');
+this.log = (function(enableLog){
+  function nop(){}
+  return enableLog ? console.log : nop;
+})(this.config.trace);
+
 
 function Visitor()
 {
@@ -52,8 +37,9 @@ function Visitor()
 Visitor.prototype.log=function()
 {
   var args = Array.prototype.slice.call(arguments); 
-  args.unshift(this._prefix);
-  logger.debug.apply(null, args);
+  // args.unshift(this._prefix);
+  args[0] = this._prefix + args[0];
+  log.apply(null, args);
 };
 
 Visitor.prototype.increaseLevel=function(){
@@ -69,9 +55,9 @@ Visitor.prototype.decreaseLevel=function(){
 Visitor.prototype.visitWrap=function(func)
 {
   this.increaseLevel();
-  this.log('-- Visiting Begin');
+  this.log('--<');
   func.call(this);
-  this.log('-- Visiting End');
+  this.log('--<');
   this.decreaseLevel();
 };
 
@@ -95,7 +81,7 @@ Visitor.prototype.visitArr=function(arr, func)
   var na = [].concat(arr);
   this.visitWrap(function(){
     for(var i in na) {
-      this.log('Arr',i,na[i]);
+      this.log('Arr['+i+']:'+na[i]);
       func.call(this, na[i]);
     }
   });

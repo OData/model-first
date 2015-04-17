@@ -3,7 +3,7 @@
 A tool for RESTful API design.
 
 ### Documentation
-Please checkout documentation and samples under doc.
+Please check out documentations and samples under doc.
 
 ### How to build
 ```
