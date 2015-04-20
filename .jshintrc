@@ -3,11 +3,11 @@
   "quotmark": "single",
   "jasmine": true,
   "multistr": true,
+  "jquery": true,
+  "browser": true,
   "globals": {
-  "Morpho": false,
-  "window" : false,
-  "document" : false,
-  "CodeMirror" : false
+    "Morpho": false,
+    "CodeMirror" : false    
   }
 }
 

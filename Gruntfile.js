@@ -28,8 +28,19 @@ module.exports = function(grunt) {
       dist: {
         files: [
           {expand: true, cwd:'app', src: ['index.html','css/*'], dest: 'dist/'},
+          {expand: true, cwd:'doc/samples', src: ['*.yaml'], dest: 'dist/samples/'},
         ],
       },
+      config: {
+        src: ['app/scripts/config.js'],
+        dest: 'dist/scripts/config.js',
+        options: {
+          process : function (content, srcpath) {
+            var distCopy = require('./distCopy');
+            return distCopy.updateSamples(content);
+          }
+        }
+      }
     },
 
     clean: {
@@ -70,6 +81,7 @@ module.exports = function(grunt) {
   grunt.registerTask('build', [
     'clean:dist',
     'copy:dist',
+    'copy:config',
     'useminPrepare',
     'concat:generated',
     //'cssmin:generated',
