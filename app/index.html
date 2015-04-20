@@ -8,13 +8,6 @@
     <link rel="stylesheet" href="bower_components/codemirror/lib/codemirror.css">
     <!-- endbuild -->
 
-    <!-- build:js scripts/app.js -->
-    <script src="edit.js"></script>
-    <script src="../src/morpho.js"></script>
-    <script src="../src/modules/modYaml.js"></script>
-    <script src="../src/modules/modCsdl.js"></script>
-    <!-- endbuild -->
-    
     <!-- build:js scripts/lib.js -->
     <script src="bower_components/codemirror/lib/codemirror.js"></script>
     <script src="bower_components/codemirror/mode/yaml/yaml.js"></script>
@@ -22,8 +15,20 @@
     <script src="bower_components/yaml-js/yaml.js"></script>
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <!-- endbuild -->
+
+    <!-- build:js scripts/app.js -->
+    <script src="editor.js"></script>
+    <script src="loadSample.js"></script>
+    
+    <script src="../src/morpho.js"></script>
+    <script src="../src/modules/modYaml.js"></script>
+    <script src="../src/modules/modCsdl.js"></script>
+    <!-- endbuild -->
   </head>
   <body>
+    <div>
+       <select id="sampleList"></select>
+    </div>
     <div id="src">
       <div class="textareamessage">Edit model here:</div>
       <textarea id="inputarea"></textarea>
@@ -33,9 +38,4 @@
       <textarea id="outputarea"></textarea>
     </div>
   </body>
-  <script>
-    $(document).ready(function() {
-      runEdit();
-    });
-  </script>
 </html>

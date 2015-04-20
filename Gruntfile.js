@@ -9,7 +9,9 @@ module.exports = function(grunt) {
       all: [
         'Gruntfile.js',
         'src/**/*.js',
-        'test/**/*.js'
+        'test/**/*.js',
+        'app/**/*.js',
+        '!app/bower_components/**'
       ]
     },
 
