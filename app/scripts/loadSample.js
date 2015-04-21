@@ -2,7 +2,8 @@
 
 $(function (){
   var samplesPrefix   = 'samples/',
-      $sampleList     = $('#sampleList');
+      $sampleList     = $('#sampleList'),
+      $sampleLoad     = $('#sampleLoad');
   
   function loadSample(){
     $.get(samplesPrefix + $sampleList.find(':selected').text(), function(data){
@@ -15,5 +16,5 @@ $(function (){
   });
   
   loadSample();
-  $sampleList.change(loadSample);
+  $sampleLoad.click(loadSample);
 });
