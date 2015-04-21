@@ -32,7 +32,7 @@ module.exports = function(grunt) {
         ],
       },
       config: {
-        src: ['app/scripts/config.js'],
+        src:  'app/scripts/config.js',
         dest: 'dist/scripts/config.js',
         options: {
           process : function (content, srcpath) {
@@ -66,7 +66,18 @@ module.exports = function(grunt) {
 
     usemin: {
       html: 'dist/index.html'
+    },
+
+    connect: {
+      server: {
+        options: {
+          port: 9001,
+          base: 'dist',
+          keepalive: true
+        }
+      }
     }
+
   });
 
   grunt.loadNpmTasks('grunt-contrib-concat');
@@ -75,6 +86,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-usemin');
+  grunt.loadNpmTasks('grunt-contrib-connect');
 
   grunt.registerTask('default', ['karma:build', 'jshint']);
   grunt.registerTask('tdd', ['karma:dev']);
@@ -88,5 +100,9 @@ module.exports = function(grunt) {
     //'uglify:generated',
     //'filerev',
     'usemin'
+  ]);
+  grunt.registerTask('server', [
+    'build',
+    'connect',
   ]);
 };
