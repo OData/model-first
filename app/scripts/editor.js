@@ -5,23 +5,12 @@ $(function (){
     
   function convert(){
     var input = source.getValue();
-    var model = Morpho.loadFromYaml(input);
+    var out = new Morpho().convert(input, 'yaml', 'csdl');
 
-    if (valid(model)) {
-      var res = model.toCsdl();
-      if (valid(model)) {
-        target.setValue(res);
-      }
-    }
-  }
-
-  function valid(model) {
-    if (model.errors.length !== 0) {
-      target.setValue(model.errors[0].toString());
-      return false;
-    }
-    else {
-      return true;
+    if(out.errors.length > 0){
+      target.setValue(out.errors[0].toString());
+    }else{
+      target.setValue(out.result);
     }
   }
 

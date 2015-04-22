@@ -1,10 +1,11 @@
-function fromYaml(str){
+function fromYaml(str, errors){
   var obj;
   try {
     obj       = yaml.load(str);
   }
   catch(err) {
-    this.errors.push('Service is not declared.');
+    errors.push('Service is not declared.');
+    return null;
   }
 
   var typeMap =

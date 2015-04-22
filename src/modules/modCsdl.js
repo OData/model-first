@@ -26,31 +26,31 @@ function getEdmType(str)
   return typeMap[str] || 'Edm.String';
 }
 
-function toCsdl(model)
+function toCsdl(model, errors)
 {
-//  try {
-    var str='';
-    for(var i = 0, l = model.types.length; i < l; i++){
-      var type = model.types[i];
-      var typeStr='<ComplexType Name="'+type.name;
-      if(type.properties.length>0){
-        typeStr+='">\n';
-        for(var j = 0, pl = type.properties.length; j < pl; j++){
-          var property = type.properties[j];
-          typeStr+='  <Property Name="'+ property.name +'" Type="'+getEdmType(property.type)+'"/>\n';
-        }
-        typeStr+='</ComplexType>\n';
-      }else{
-        typeStr+='" />\n';
+  try {
+  var str='';
+  for(var i = 0, l = model.types.length; i < l; i++){
+    var type = model.types[i];
+    var typeStr='<ComplexType Name="'+type.name;
+    if(type.properties.length>0){
+      typeStr+='">\n';
+      for(var j = 0, pl = type.properties.length; j < pl; j++){
+        var property = type.properties[j];
+        typeStr+='  <Property Name="'+ property.name +'" Type="'+getEdmType(property.type)+'"/>\n';
       }
-      str+=typeStr;
+      typeStr+='</ComplexType>\n';
+    }else{
+      typeStr+='" />\n';
     }
+    str+=typeStr;
+  }
 
-    return str;
-//  }
-//  catch(err) {
-//    this.errors.push('Types is not declared.');
-//  }
+  return str;
+  }
+  catch(err) {
+    errors.push('Types is not declared.');
+  }
 }
 
 Morpho.registerTo('csdl', toCsdl);
