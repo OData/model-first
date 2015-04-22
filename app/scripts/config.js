@@ -1,6 +1,6 @@
 window.morphoEditorConfig = {
   sourceFormat  : 'yaml',
-  targetFormat  : 'xml',
+  targetFormat  : 'csdl',
   
   samples       : 
   // sample

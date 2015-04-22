@@ -1,11 +1,13 @@
 'use strict';
 
 $(function (){
+  var config = window.morphoEditorConfig;
+
   var source, target;
     
   function convert(){
     var input = source.getValue();
-    var out = new Morpho().convert(input, 'yaml', 'csdl');
+    var out = new Morpho().convert(input, config.sourceFormat, config.targetFormat);
 
     if(out.errors.length > 0){
       target.setValue(out.errors[0].toString());
@@ -49,6 +51,16 @@ $(function (){
     }
   });
 
+  function getcmStr(format){
+    switch(format){
+      case 'csdl' :
+        return 'xml';
+      case 'json' :
+        return 'javascript';//{name: 'javascript', json: true};
+    }
+  }
+
+
   window.MorphoEditor = {
     loadSource : function(data){
       source.setValue(data);
@@ -58,7 +70,11 @@ $(function (){
       return window.morphoEditorConfig.samples;
     },
     setTargetFormat : function(format){
-      target.setOption('mode', 'javascript');
+      // console.log(getcmStr(format));
+      target.setOption('mode', getcmStr(format));
+      config.targetFormat = format;
+      convert();
+      console.log(target.getOption('mode'));
     }
   };
 });

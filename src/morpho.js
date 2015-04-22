@@ -29,6 +29,10 @@ Morpho.prototype.convert= function(source, sourceFormat, targetFormat){
     throw 'Source format ' + sourceFormat + ' not supported.';
   }
 
+  if(!Morpho.convertTo[targetFormat]){
+    throw 'Target format ' + targetFormat + ' not supported.';
+  }
+
   var errors = [];
   var model = Morpho.convertFrom[sourceFormat].call(this, source, errors);
   var result;
