@@ -19,7 +19,7 @@ types:\n\
   - name: type1\n\
     requiredProperties: p1\n',
       [{'properties':[{'name':'p1'}],'name':'type1'}]));
-      
+
   it('Multiple property should work,using -.',
     fromYamlTypeTest(
 '\
@@ -62,7 +62,7 @@ types:\n\
 
 function fromYamlTypeTest(input, types)
 {
-  return fromYamlTest(input, {'types':types,'errors':[]});
+  return fromYamlTest(input, {'types':types});
 }
 
 function fromYamlTest(input, json){
