@@ -4,34 +4,37 @@ function MorphoModel()
   this.types    = {};
 }
 
-function MorphoNG()
+function Morpho(config)
 {
+  this.config = config || {};
 
+  this.log = (function(enableLog){
+    function nop(){}
+    return enableLog ? console.log : nop;
+  })(this.config.trace);
 }
 
-this.MorphoNG.prototype.convert = function(sourceData, sourceFormat, targetFormat){
 
+Morpho.convertFrom  = {};
+Morpho.convertTo    = {};
+Morpho.registerFrom = function(name, fromFunc){
+  this.convertFrom[name] = fromFunc;
 };
 
-this.Morpho = {
-  register: function(name, fromFunc, toFunc){
-    if(fromFunc){
-      this['loadFrom' + name] = function(){
-        var model = new MorphoModel();
-        fromFunc.apply(model, arguments);
-        return model;
-      };
-    }
+Morpho.registerTo    = function(name, toFunc) {
+  this.convertTo[name] = toFunc;
+};
 
-    if(toFunc)
-      MorphoModel.prototype['to' + name] = toFunc;
+Morpho.prototype.convert= function(source, sourceFormat, targetFormat){
+  if(!Morpho.convertFrom[sourceFormat]){
+    throw 'Source format ' + sourceFormat + ' not supported.';
   }
+
+  var x = Morpho.convertFrom[sourceFormat].call(this, source);
+  return Morpho.convertTo[targetFormat].call(this, x);
 };
 
-this.config = this.config || {};
 
-this.log = (function(enableLog){
-  function nop(){}
-  return enableLog ? console.log : nop;
-})(this.config.trace);
+
+
 

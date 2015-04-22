@@ -1,3 +1,3 @@
-this.config= {
+window.morphoTestConfig= {
   trace: true
 };

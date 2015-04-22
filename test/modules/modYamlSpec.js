@@ -6,7 +6,7 @@ service:\n\
   name: Service0\n';
 
   it('Service name should match', function() {
-    var model = Morpho.loadFromYaml(input);
+    var model = Morpho.convertFrom.yaml.call(new Morpho(), input);
     expect(model.service.name).toEqual('Service0');
   });
 });
@@ -65,9 +65,10 @@ function fromYamlTypeTest(input, types)
   return fromYamlTest(input, {'types':types});
 }
 
+var morpho = new Morpho(window.morphoTestConfig);
 function fromYamlTest(input, json){
   return function(){
-    var model = Morpho.loadFromYaml(input);
-    expect(model.toJson()).toEqual(JSON.stringify(json));
+    var actual = morpho.convert(input, 'yaml', 'json');
+    expect(actual).toEqual(JSON.stringify(json));
   };
 }

@@ -5,14 +5,14 @@
     function fromJson(jsonStr)
     {
       var obj       = JSON.parse(jsonStr);
-      this.types    = obj.types;
-      this.errors   = obj.errors;
+      return obj;
     }
 
-    function toJson()
+    function toJson(model)
     {
-      return JSON.stringify(this);
+      return JSON.stringify(model);
     }
 
-    this.Morpho.register('Json', fromJson, toJson);
+    Morpho.registerFrom('json', fromJson);
+    Morpho.registerTo('json', toJson);
 })();

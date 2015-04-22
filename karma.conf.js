@@ -9,7 +9,7 @@ module.exports = function(config) {
       'src/morpho.js',
       'src/visitor.js',
       'src/modules/*.js',
-      'test/**/*.js',
+      'test/modules/*.js',
     ],
 
     exclude: [],

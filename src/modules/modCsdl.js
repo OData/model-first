@@ -26,12 +26,12 @@ function getEdmType(str)
   return typeMap[str] || 'Edm.String';
 }
 
-function toCsdl()
+function toCsdl(model)
 {
-  try {
+//  try {
     var str='';
-    for(var i = 0, l = this.types.length; i < l; i++){
-      var type = this.types[i];
+    for(var i = 0, l = model.types.length; i < l; i++){
+      var type = model.types[i];
       var typeStr='<ComplexType Name="'+type.name;
       if(type.properties.length>0){
         typeStr+='">\n';
@@ -45,12 +45,12 @@ function toCsdl()
       }
       str+=typeStr;
     }
-    
+
     return str;
-  }
-  catch(err) {
-    this.errors.push('Types is not declared.');
-  }
+//  }
+//  catch(err) {
+//    this.errors.push('Types is not declared.');
+//  }
 }
 
-this.Morpho.register('Csdl', null, toCsdl);
+Morpho.registerTo('csdl', toCsdl);

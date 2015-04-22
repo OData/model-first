@@ -6,8 +6,8 @@ function fromYaml(str){
   catch(err) {
     this.errors.push('Service is not declared.');
   }
-  
-  var typeMap = 
+
+  var typeMap =
   {
     'binary': 'Binary',
     'bool': 'Boolean',
@@ -33,7 +33,7 @@ function fromYaml(str){
     return typeMap[str] || 'string';
   }
 
-  var visitor   = new Visitor();
+  var visitor   = this.getVisitor();
   var state     = {};
   visitor.visitObj(obj, {
       'service' : function(obj){ state.service  = obj; },
@@ -52,11 +52,10 @@ function fromYaml(str){
                 property.type=getType(property.type);
               }
             }
-            
+
             return property;
           }
-        
-        
+
           var type={properties:[]};
           this.visitObj(item, {
             'name'  : function(obj){ type.name = obj; },
@@ -78,10 +77,8 @@ function fromYaml(str){
         });
       }
   });
-  
-  this.service  = state.service;
-  this.types    = state.types;
 
+  return state;
 }
 
-this.Morpho.register('Yaml', fromYaml, null);
+Morpho.registerFrom('yaml', fromYaml);
