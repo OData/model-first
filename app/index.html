@@ -20,6 +20,7 @@
     <!-- build:js scripts/app.js -->
     <script src="scripts/editor.js"></script>
     <script src="scripts/loadSample.js"></script>
+    <script src="scripts/formatChooser.js"></script>
     <script src="../src/morpho.js"></script>
     <script src="../src/modules/modYaml.js"></script>
     <script src="../src/modules/modCsdl.js"></script>
@@ -36,6 +37,12 @@
     </div>
     <div id="res">
       <div class="textareamessage">Result</div>
+      <div>
+        <form>
+          <input type="radio" name="targetFormat" value="csdl" checked>CSDL</input>
+          <input type="radio" name="targetFormat" value="json">JSON</input>
+        </form>
+      </div>
       <textarea id="outputarea"></textarea>
     </div>
   </body>

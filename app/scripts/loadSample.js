@@ -7,11 +7,11 @@ $(function (){
   
   function loadSample(){
     $.get(samplesPrefix + $sampleList.find(':selected').text(), function(data){
-      window.morphoEditor.loadSource(data);
+      window.MorphoEditor.loadSource(data);
     });
   }
 
-  $.each(window.morphoEditor.getConfig('samples'), function(key, value) {   
+  $.each(window.MorphoEditor.getSamples(), function(key, value) {   
        $sampleList.append($('<option></option>').text(value)); 
   });
   
