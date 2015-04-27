@@ -1,10 +1,6 @@
 'use strict';
 
 $(function (){
-  var config = window.morphoEditorConfig;
-
-  var source, target;
-    
   function convert(){
     var input = source.getValue();
     var out = new Morpho().convert(input, config.sourceFormat, config.targetFormat, {format: true});
@@ -18,16 +14,23 @@ $(function (){
     }
   }
 
-  source = CodeMirror.fromTextArea(document.getElementById('inputarea'), {
-    mode: getcmStr(config.sourceFormat),
-    lineNumbers: true
-  });
-  target = CodeMirror.fromTextArea(document.getElementById('outputarea'), {
-    mode: getcmStr(config.targetFormat),
-    readOnly: true,
-    lineNumbers: true
-  });
-  
+  var config  = window.morphoEditorConfig;
+  var formats = config.formats;
+  config.sourceFormat = config.soruceFormat || config.soruceFormats[0];
+  config.targetFormat = config.targetFormat || config.targetFormats[0];
+
+  var source = CodeMirror.fromTextArea(document.getElementById('inputarea'), {
+        mode: formats[config.sourceFormat].cmMode,
+        lineNumbers: true
+      }),
+      target = CodeMirror.fromTextArea(document.getElementById('outputarea'), {
+        mode: formats[config.targetFormat].cmMode,
+        readOnly: true,
+        lineNumbers: true
+      });
+
+  var timer = null;
+
   source.on('keyup', function(instance, evt) {
     switch (evt.keyCode) {
       //ignore up down left right 
@@ -38,29 +41,9 @@ $(function (){
         return;
     }
 
-    var timer, flag = null;
-  
     window.clearTimeout(timer);
-    timer = setTimeout(convert, 500);
-    if (flag === null) {
-      flag = true;
-    }
-    else {
-      if (flag === true) {
-        window.clearTimeout(timer);
-        timer = window.setTimeout(convert, 500);
-      }
-    }
+    timer = window.setTimeout(convert, 500);
   });
-
-  function getcmStr(format){
-    switch(format){
-      case 'csdl' :
-        return 'xml';
-      case 'json' :
-        return {name: 'javascript', json: true};
-    }
-  }
 
   window.MorphoEditor = {
     loadSource : function(data){
@@ -71,10 +54,9 @@ $(function (){
       return window.morphoEditorConfig.samples;
     },
     setTargetFormat : function(format){
-      target.setOption('mode', getcmStr(format));
+      target.setOption('mode', formats[format].cmMode);
       config.targetFormat = format;
       convert();
-      console.log(target.getOption('mode'));
     }
   };
 });
