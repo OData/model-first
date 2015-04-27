@@ -1,10 +1,13 @@
 function fromYaml(str, errors){
   var obj;
   try {
-    obj       = yaml.load(str);
+    obj       = jsyaml.load(str);
   }
   catch(err) {
-    errors.push('Service is not declared.');
+    errors.push({
+      line: err.mark.line,
+      message: err.reason
+    });
     return null;
   }
 

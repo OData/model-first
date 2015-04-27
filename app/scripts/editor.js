@@ -10,9 +10,11 @@ $(function (){
     var out = new Morpho().convert(input, config.sourceFormat, config.targetFormat);
 
     if(out.errors.length > 0){
-      target.setValue(out.errors[0].toString());
+      target.setValue('');
+      $('#errors').val(JSON.stringify(out.errors[0]));
     }else{
       target.setValue(out.result);
+      $('#errors').val('');
     }
   }
 

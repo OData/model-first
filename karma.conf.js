@@ -5,7 +5,7 @@ module.exports = function(config) {
     frameworks:  ['jasmine'],
 
     files: [
-      'app/bower_components/yaml-js/yaml.min.js',
+      'app/bower_components/js-yaml/dist/js-yaml.min.js',
       'src/morpho.js',
       'src/visitor.js',
       'src/modules/*.js',

@@ -49,7 +49,9 @@ function toCsdl(model, errors)
   return str;
   }
   catch(err) {
-    errors.push('Types is not declared.');
+    errors.push({
+      message: 'Types is not declared.'
+    });
   }
 }
 
