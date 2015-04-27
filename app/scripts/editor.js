@@ -7,23 +7,23 @@ $(function (){
     
   function convert(){
     var input = source.getValue();
-    var out = new Morpho().convert(input, config.sourceFormat, config.targetFormat);
+    var out = new Morpho().convert(input, config.sourceFormat, config.targetFormat, {format: true});
 
     if(out.errors.length > 0){
       target.setValue('');
       $('#errors').val(JSON.stringify(out.errors[0]));
     }else{
-      target.setValue(out.result);
+      target.setValue(out.model);
       $('#errors').val('');
     }
   }
 
   source = CodeMirror.fromTextArea(document.getElementById('inputarea'), {
-    mode: 'yaml',
+    mode: getcmStr(config.sourceFormat),
     lineNumbers: true
   });
   target = CodeMirror.fromTextArea(document.getElementById('outputarea'), {
-    mode: 'xml',
+    mode: getcmStr(config.targetFormat),
     readOnly: true,
     lineNumbers: true
   });
@@ -58,10 +58,9 @@ $(function (){
       case 'csdl' :
         return 'xml';
       case 'json' :
-        return 'javascript';//{name: 'javascript', json: true};
+        return {name: 'javascript', json: true};
     }
   }
-
 
   window.MorphoEditor = {
     loadSource : function(data){
@@ -72,7 +71,6 @@ $(function (){
       return window.morphoEditorConfig.samples;
     },
     setTargetFormat : function(format){
-      // console.log(getcmStr(format));
       target.setOption('mode', getcmStr(format));
       config.targetFormat = format;
       convert();

@@ -8,8 +8,12 @@
       return obj;
     }
 
-    function toJson(model)
+    function toJson(model, errors, option)
     {
+      if(option && option.format){
+        return JSON.stringify(model, null, 2);
+      }
+
       return JSON.stringify(model);
     }
 

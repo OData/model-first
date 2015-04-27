@@ -86,6 +86,6 @@ var morpho = new Morpho(window.morphoTestConfig);
 function fromYamlTest(input, json){
   return function(){
     var actual = morpho.convert(input, 'yaml', 'json');
-    expect(actual.result).toEqual(JSON.stringify(json));
+    expect(actual.model).toEqual(JSON.stringify(json));
   };
 }

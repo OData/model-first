@@ -24,7 +24,7 @@ Morpho.registerTo    = function(name, toFunc) {
   this.convertTo[name] = toFunc;
 };
 
-Morpho.prototype.convert= function(source, sourceFormat, targetFormat){
+Morpho.prototype.convert= function(source, sourceFormat, targetFormat, option){
   if(!Morpho.convertFrom[sourceFormat]){
     throw 'Source format ' + sourceFormat + ' not supported.';
   }
@@ -34,14 +34,14 @@ Morpho.prototype.convert= function(source, sourceFormat, targetFormat){
   }
 
   var errors = [];
-  var model = Morpho.convertFrom[sourceFormat].call(this, source, errors);
+  var model = Morpho.convertFrom[sourceFormat].call(this, source, errors, option);
   var result;
   if(model){
-    result = Morpho.convertTo[targetFormat].call(this, model, errors);
+    result = Morpho.convertTo[targetFormat].call(this, model, errors, option);
   }
   
   return {
-    result    : result,
+    model     : result,
     errors    : errors
   };
 };

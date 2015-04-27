@@ -16,5 +16,5 @@ describe('To CSDL test', function() {
 
 var morpho = new Morpho(window.morphoTestConfig);
 function json2Csdl(input){
-  return morpho.convert(input, 'json', 'csdl').result;
+  return morpho.convert(input, 'json', 'csdl').model;
 }
