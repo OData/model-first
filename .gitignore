@@ -231,5 +231,6 @@ $RECYCLE.BIN/
 *.lnk
 
 *.swp
+bower_components/*
 app/bower_components/*
 dist/*

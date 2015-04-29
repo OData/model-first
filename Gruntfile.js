@@ -11,6 +11,7 @@ module.exports = function(grunt) {
         'src/**/*.js',
         'test/**/*.js',
         'app/**/*.js',
+        '!bower_components/**',
         '!app/bower_components/**'
       ]
     },

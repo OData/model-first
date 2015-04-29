@@ -1,9 +1,15 @@
 {
   "name": "morpho",
-  "version": "0.0.1",
+  "version": "0.0.1-alpha",
+  "ignore": [
+    "**/.*",
+    "app",
+    "bower_components",
+    "doc",
+    "node_modules",
+    "test"
+  ],
   "dependencies": {
-    "jquery": "2.1.3",
-    "codemirror": "5.1.0",
     "js-yaml": "~3.3.0"
   }
 }
