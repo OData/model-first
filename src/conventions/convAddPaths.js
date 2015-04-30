@@ -15,17 +15,38 @@ function addPaths(model)
     'entitysets'  : function(arr){
       visitor.visitArr(arr, function(item){
         var responseType = {};
-
+        var schema = getSchema(item.type, true);
         var path = {};
         var getRoute = {
           'responses':{
             '200' : {
-              'schema' : getSchema(item.type, true)
+              'description' : 'Get the ' + item.name,
+              'schema' : schema
             }
           }
         };
 
         path.get = getRoute;
+        var singleSchema = getSchema(item.type, false);
+        var postRoute= {
+          "description": "Post a new entity to EntitySet" + item.name,
+          "parameters": [
+            {
+              "name": item.type,
+              "in": "body",
+              "description": "The entity to post",
+              "schema": singleSchema
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "EntitySet " + item.name,
+              "schema": singleSchema
+            },
+          }
+        };
+        path.post = postRoute;
+
         paths['/' + item.name] = path;
       });
     },
@@ -36,6 +57,7 @@ function addPaths(model)
         var getRoute = {
           'responses':{
             '200' : {
+              'description' : 'Get the ' + item.name,
               'schema' : getSchema(item.type, false)
             }
           }
