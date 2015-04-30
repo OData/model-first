@@ -34,7 +34,11 @@ function fromYaml(str, errors){
 
   function getType(str)
   {
-    return typeMap[str] || 'string';
+    if(str[str.length-1]===']'){
+      str=str.substr(0,str.length-2);
+    }
+
+    return typeMap[str] || str || 'string';
   }
 
   var visitor   = this.getVisitor();
@@ -79,6 +83,43 @@ function fromYaml(str, errors){
           });
           state.types.push(type);
         });
+      },
+      'root'    : function(arr){
+        var entitysets  = [];
+        var singletons  = [];
+        var operations  = [];
+        
+        this.visitArr(arr, function(item){
+          if(!item.type){
+            var operation = {};
+            this.visitObj(item, {
+              'name'    : function(obj){operation.name=obj;},
+              'params'  : function(){
+              },
+              'returns' : function(){}
+            });
+            operations.push(operation);
+            return;
+          }
+
+          // entityset or singleton
+          var mt = getType(item.type);
+          var et = {
+            name : item.name,
+            type : mt
+          };
+          
+          if(item.type[item.type.length-1]===']'){
+            entitysets.push(et);
+          }else{
+            singletons.push(et);
+          }
+        });
+
+        state.container = {};
+        if(entitysets.length>0)state.container.entitysets=entitysets;
+        if(singletons.length>0)state.container.singletons=singletons;
+        if(operations.length>0)state.container.operations=operations;
       }
   });
 

@@ -60,6 +60,31 @@ types:\n\
       [{'properties':[{'name':'p1','type':'Int64'},{'name':'p2'}],'name':'type1'}]));      
 });
 
+describe('[YAML] root section tests', function() {
+  it ('EntitySet should work', fromYamlRootTest(
+'\
+root:\n\
+  # Collection\n\
+  - name: things\n\
+    url: things # Optional\n\
+    type: thing[]\n\
+    allows: [read, create, update, delete, query, order, page] # Optional\n\
+  # Singleton\n\
+  - name: me\n\
+    type: user\n\
+  # Operation\n\
+  - name: getFavoriteThings\n\
+    params: # Optional\n\
+      - name: userId\n\
+        type: integer # Optional\n\
+    returns: thing[] # Optional\n',
+  {
+    'entitysets':[{'name':'things','type':'thing'}],
+    'singletons':[{'name':'me','type':'user'}],
+    'operations':[{'name':'getFavoriteThings'}]
+  }));
+});
+
 describe('[YAML] Error test', function() {
   it('Error check', function() {
     var input='\
@@ -77,15 +102,22 @@ types:\n\
   });
 });
 
-function fromYamlTypeTest(input, types)
+function fromYamlRootTest(input, root)
 {
-  return fromYamlTest(input, {'types':types});
+  return fromYamlTest(input, root, 'container');
 }
 
-var morpho = new Morpho(window.morphoTestConfig);
-function fromYamlTest(input, json){
+function fromYamlTypeTest(input, types)
+{
+  return fromYamlTest(input, types, 'types');
+}
+
+function fromYamlTest(input, json, section){
   return function(){
-    var actual = Morpho.convert(input, 'yaml', 'json');
-    expect(actual.model).toEqual(JSON.stringify(json));
+    var actual = Morpho.convert(input, 'yaml', 'json', {returnJSON:true}).model;
+    if(section){
+      actual = actual[section];
+    }
+    expect('\n'+JSON.stringify(actual)).toEqual('\n'+JSON.stringify(json));
   };
 }

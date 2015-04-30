@@ -1,6 +1,5 @@
 // JSON format representing the resource model.
 // This is actually reflects the MorphoModel object.
-
 (function(){
     function fromJson(jsonStr)
     {
@@ -10,7 +9,11 @@
 
     function toJson(model, errors, option)
     {
-      if(option && option.format){
+      if(option.returnJSON){
+        return model;
+      }
+
+      if(option.format){
         return JSON.stringify(model, null, 2);
       }
 
