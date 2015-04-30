@@ -5,12 +5,17 @@ function Morpho()
 Morpho.log = function(){};
 Morpho.convertFrom  = {};
 Morpho.convertTo    = {};
+Morpho.conventions  = {};
 Morpho.registerFrom = function(name, fromFunc){
   this.convertFrom[name] = fromFunc;
 };
 
 Morpho.registerTo    = function(name, toFunc) {
   this.convertTo[name] = toFunc;
+};
+
+Morpho.registerConvention = function(name, conventionFunc){
+  this.conventions[name] = conventionFunc;
 };
 
 Morpho.convert= function(source, sourceFormat, targetFormat, option){
@@ -33,6 +38,16 @@ Morpho.convert= function(source, sourceFormat, targetFormat, option){
     model     : result,
     errors    : errors
   };
+};
+
+Morpho.applyConvention = function(model, conventionName)
+{
+  var conventionFunc = Morpho.conventions[conventionName];
+  if(!conventionFunc){
+    throw 'Target format ' + targetFormat + ' not supported.';
+  }
+
+  conventionFunc.call(this, model);
 };
 
 

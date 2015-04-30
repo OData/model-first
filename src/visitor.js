@@ -58,7 +58,7 @@ Visitor.prototype.visitArr=function(arr, func)
   var na = [].concat(arr);
   this.visitWrap(function(){
     for(var i in na) {
-      this.log('Arr['+i+']:'+na[i]);
+      this.log('Arr['+i+']:'+ JSON.stringify(na[i]));
       func.call(this, na[i]);
     }
   });

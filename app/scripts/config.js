@@ -5,6 +5,7 @@
       case 'csdl' :
         return 'xml';
       case 'json' :
+      case 'swagger' :
         return {name: 'javascript', json: true};
       case 'yaml' :
         return 'yaml';
@@ -13,7 +14,7 @@
 
   window.morphoEditorConfig = {
     soruceFormats  : ['yaml'],
-    targetFormats  : ['csdl', 'json'],
+    targetFormats  : ['csdl', 'json', 'swagger'],
     formats                 : {
       'csdl'  : {
         displayName   : 'CSDL',
@@ -26,6 +27,10 @@
       'yaml'  : {
         displayName   : 'YAML',
         cmMode        : getcmMode('yaml')
+      },
+      'swagger'  : {
+        displayName   : 'Swagger',
+        cmMode        : getcmMode('swagger')
       }
     },
 

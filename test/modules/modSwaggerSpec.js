@@ -1,30 +1,58 @@
 'use strict';
 
 describe('[Swagger] To Swagger test', function() {
-  xit('Empty complex type should work.', function() {
+  it('To Swagger should work.', function() {
+    var jsonModel = 
+      {
+        'types':
+        [
+          {
+            'name'        : 'Book',
+            'properties'  : 
+            [
+              {
+                'name'    : 'id',
+                'type'    : 'Int64'
+              },
+              {
+                'name'    : 'title',
+                'type'    : 'String'
+              }
+            ]
+          }
+        ]
+      };
 
-  var jsonModel = 
-    {
-      'types':
-      [
-        {
-          'name'        : 'pet',
-          'properties'  : 
-          [
-            {
-              'name'    : 'id'
-            }
-          ]
+    Morpho.applyConvention(jsonModel, 'defaultType');
+
+    var expected  = {
+      'Book': {
+        'properties': {
+          'id': {
+            'type': 'integer',
+            'format': 'int64'
+          },
+          'title': {
+            'type': 'string'
+          }
         }
-      ]
+      }
     };
 
-    expect(json2Swagger(jsonModel)).toEqual('<ComplexType Name="x" />\n');
+    assertDefinition(jsonModel, expected);
   });
 });
 
 
-var morpho = new Morpho(window.morphoTestConfig);
-function json2Swagger(input){
-  return Morpho.convert(JSON.stringify(input), 'json', 'swagger').model;
+function assertDefinition(input, output){
+  expect('\n' + toSwagger(input, 'definitions')).toEqual('\n' + JSON.stringify(output));
+}
+
+function toSwagger(input, section){
+  var result = Morpho.convertTo.swagger.call(Morpho, input, {}, {returnJSON:true});
+  if(section){
+    result = result[section];
+  }
+
+  return JSON.stringify(result);
 }

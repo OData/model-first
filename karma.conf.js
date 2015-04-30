@@ -9,11 +9,12 @@ module.exports = function(config) {
       'src/morpho.js',
       'src/visitor.js',
       'src/modules/*.js',
+      'src/conventions/*.js',
       'test/modules/*.js',
     ],
 
     exclude: [],
-    reporters: ['spec'],
+    reporters: ['progress'],
     logLevel: config.LOG_INFO,
     autoWatch: true,
     browsers: ['PhantomJS'],
