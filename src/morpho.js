@@ -1,19 +1,8 @@
-function MorphoModel()
+function Morpho()
 {
-  this.service  = {};
-  this.types    = {};
 }
 
-function Morpho(config)
-{
-  this.config = config || {};
-
-  this.log = (function(enableLog){
-    function nop(){}
-    return enableLog ? console.log : nop;
-  })(this.config.trace);
-}
-
+Morpho.log = function(){};
 Morpho.convertFrom  = {};
 Morpho.convertTo    = {};
 Morpho.registerFrom = function(name, fromFunc){
@@ -24,7 +13,7 @@ Morpho.registerTo    = function(name, toFunc) {
   this.convertTo[name] = toFunc;
 };
 
-Morpho.prototype.convert= function(source, sourceFormat, targetFormat, option){
+Morpho.convert= function(source, sourceFormat, targetFormat, option){
   if(!Morpho.convertFrom[sourceFormat]){
     throw 'Source format ' + sourceFormat + ' not supported.';
   }

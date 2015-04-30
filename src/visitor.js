@@ -1,4 +1,4 @@
-Morpho.prototype.getVisitor = function(){
+Morpho.getVisitor = function(){
   var visitor = new Visitor();
   visitor.log = this.log;
   return visitor;

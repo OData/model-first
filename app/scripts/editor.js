@@ -3,7 +3,7 @@
 $(function (){
   function convert(){
     var input = source.getValue();
-    var out = new Morpho().convert(input, config.sourceFormat, config.targetFormat, {format: true});
+    var out = Morpho.convert(input, config.sourceFormat, config.targetFormat, {format: true});
 
     if(out.errors.length > 0){
       target.setValue('');

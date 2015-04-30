@@ -1,6 +1,6 @@
 'use strict';
 
-describe('To CSDL test', function() {
+describe('[CSDL] To CSDL test', function() {
   it('Empty complex type should work.', function() {
     var json = '{"types":[{"name":"x","properties":[]}]}';
     expect(json2Csdl(json)).toEqual('<ComplexType Name="x" />\n');
@@ -16,5 +16,5 @@ describe('To CSDL test', function() {
 
 var morpho = new Morpho(window.morphoTestConfig);
 function json2Csdl(input){
-  return morpho.convert(input, 'json', 'csdl').model;
+  return Morpho.convert(input, 'json', 'csdl').model;
 }

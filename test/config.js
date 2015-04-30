@@ -1,3 +1,1 @@
-window.morphoTestConfig= {
-  trace: true
-};
+Morpho.log = console.log;
