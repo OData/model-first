@@ -68,6 +68,8 @@
         }
       });
 
+    var paths = Morpho.applyConvention(model, 'addPaths');
+    state.paths=paths;
 
     if(option.returnJSON){
       return state;

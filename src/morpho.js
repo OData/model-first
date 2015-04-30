@@ -33,7 +33,7 @@ Morpho.convert= function(source, sourceFormat, targetFormat, option){
   if(model){
     result = Morpho.convertTo[targetFormat].call(this, model, errors, option);
   }
-  
+
   return {
     model     : result,
     errors    : errors
@@ -44,10 +44,10 @@ Morpho.applyConvention = function(model, conventionName)
 {
   var conventionFunc = Morpho.conventions[conventionName];
   if(!conventionFunc){
-    throw 'Target format ' + targetFormat + ' not supported.';
+    throw 'Convention ' + conventionName + ' not found.';
   }
 
-  conventionFunc.call(this, model);
+  return conventionFunc.call(this, model);
 };
 
 

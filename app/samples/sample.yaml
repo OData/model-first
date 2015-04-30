@@ -10,3 +10,9 @@ types:
       - name: ID
         type: long
     requiredProperties: Title
+root:
+  # Collection
+  - name: Books
+    type: Book[]
+  - name: OneBlog
+    type: Blog
