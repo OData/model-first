@@ -1,6 +1,8 @@
 # Handcrafted YAML representation of http://services.odata.org/V4/TripPinServiceRW/$metadata
 service:
   name: "TripPin OData Reference Service"
+  version:
+    current: 1.0.0
   description: "TripPin is a fictional reference service demonstrating the capabilities of OData v4."
   auth: none
   conformance: minimal

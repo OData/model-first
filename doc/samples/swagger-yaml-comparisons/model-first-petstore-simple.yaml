@@ -1,6 +1,8 @@
 # Handcrafted YAML representation of http://services.odata.org/V4/TripPinServiceRW/$metadata
 service:
   name: Swagger Petstore (Simple)
+  version:
+    current: 1.0.0
   description: A sample API that uses a petstore as an example to demonstrate features in the swagger-2.0 specification
   auth: none
   conformance: minimal
