@@ -40,11 +40,9 @@ serviceRoot:
     returns: airport
   - name: resetDataSource
 
-enums:
+types:
   - name: personGender
     members: [unknown, female, male]
-
-types:
   - name: city
     requiredProperties: [countryRegion, name, region]
   - name: location
