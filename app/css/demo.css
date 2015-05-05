@@ -27,3 +27,7 @@
   border: 1px solid #eee;
   border-radius: 3px;
 }
+
+.CodeMirror {
+  height: 650px;
+}

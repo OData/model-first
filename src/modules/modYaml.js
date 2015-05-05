@@ -32,13 +32,21 @@ function fromYaml(str, errors){
     'timeOfDay': 'TimeOfDay',
   };
 
-  function getType(str)
-  {
-    if(str[str.length-1]===']'){
-      str=str.substr(0,str.length-2);
+  function detectCollectionType(yamlType){
+    var type, col;
+
+    if(yamlType[yamlType.length-1] === ']'){
+      type  = yamlType.substr(0, yamlType.length-2);
+      col   = true;
+    } else {
+      type  = yamlType;
+      col   = false;
     }
 
-    return typeMap[str] || str || 'string';
+    return {
+      'type'  : type,
+      'isCol' : col
+    };
   }
 
   var visitor   = this.getVisitor();
@@ -48,38 +56,50 @@ function fromYaml(str, errors){
       'types'   : function(arr){
         state.types = [];
         this.visitArr(arr, function(item){
-          function handleProperty(obj){
+          function handleProperty(obj, extend){
             var property;
-            if( typeof obj === 'string' ){
-              property = {
-                'name': obj
-              };
+            if(typeof obj === 'string'){
+              property = { 'name': obj };
             }else{
-              property = obj;
-              if(property.type){
-                property.type=getType(property.type);
+              property = { 'name': obj.name };
+              if(obj.type){
+                var typeInfo    = detectCollectionType(obj.type);
+                property.type   = typeMap[typeInfo.type] || typeInfo.type;
+                if(typeInfo.isCol){
+                  property.isCollection   = typeInfo.isCol;
+                }
               }
             }
 
+            if(extend) extend(property);
+            
             return property;
           }
 
-          var type={properties:[]};
+          var type={ properties:[] };
           this.visitObj(item, {
             'name'  : function(obj){ type.name = obj; },
             'key'   : function(obj){
                         this.visitArr(obj, function(obj){
-                          var property = handleProperty(obj);
-                          type.properties.push(property);
+                          type.properties.push(handleProperty(obj, function(p){
+                            p.isKey       = true;
+                          }));
                         });
                       },
-            'requiredProperties'   : 
+            'requiredProperties'   :
                       function(obj){
-                          this.visitArr(obj, function(obj){
-                            var property = handleProperty(obj);
-                            type.properties.push(property);
-                          });
-                       }
+                        this.visitArr(obj, function(obj){
+                          type.properties.push(handleProperty(obj));
+                        });
+                      },
+            'optionalProperties'    :
+                      function(obj){
+                        this.visitArr(obj, function(obj){
+                          type.properties.push(handleProperty(obj, function(p){
+                            p.isNullable    = true;
+                          }));
+                        });
+                      }
           });
           state.types.push(type);
         });
@@ -94,8 +114,7 @@ function fromYaml(str, errors){
             var operation = {};
             this.visitObj(item, {
               'name'    : function(obj){operation.name=obj;},
-              'params'  : function(){
-              },
+              'params'  : function(){},
               'returns' : function(){}
             });
             operations.push(operation);
@@ -103,13 +122,13 @@ function fromYaml(str, errors){
           }
 
           // entityset or singleton
-          var mt = getType(item.type);
+          var mt = detectCollectionType(item.type);
           var et = {
             name : item.name,
-            type : mt
+            type : mt.type
           };
           
-          if(item.type[item.type.length-1]===']'){
+          if(mt.isCol){
             entitysets.push(et);
           }else{
             singletons.push(et);

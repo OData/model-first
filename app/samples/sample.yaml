@@ -10,6 +10,13 @@ types:
       - name: ID
         type: long
     requiredProperties: Title
+    optionalProperties: # Optional
+      - name: owner
+        type: user # Optional
+        contained: true # Optional
+      - name: price
+        type: decimal # Optional
+        isoCurrency: USD # Optional
 root:
   # Collection
   - name: Books

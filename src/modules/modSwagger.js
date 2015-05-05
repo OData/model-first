@@ -15,6 +15,9 @@
     'date'      : new SwaggerType('string'  , 'date'    ),
     'dateTime'  : new SwaggerType('string'  , 'date-time'),
     'password'  : new SwaggerType('string'  , 'password'),
+    // The follwing types are not defined in Swagger schema
+    'decimal'   : new SwaggerType('number'  , 'decimal' ),
+    'short'     : new SwaggerType('number'  , 'int16'   ),
   };
 
   var typeMap = {
@@ -23,11 +26,11 @@
       'Byte'    : SwaggerTypes.byte,
       'Date'    : SwaggerTypes.date,
       // 'DateTimeOffset': undefined,
-      // 'Decimal' : undefined,
+      'Decimal' : SwaggerTypes.decimal,
       'Double'  : SwaggerTypes.double,
       // 'Duration': 'Edm.Duration',
       // 'Guid': 'Edm.Guid',
-      // 'Int16': 'Edm.Int16',
+      'Int16'   : SwaggerTypes.short,
       'Int32'   : SwaggerTypes.integer,
       'Int64'   : SwaggerTypes.long,
       // 'SByte'   : 'Edm.SByte',
@@ -37,8 +40,11 @@
       // 'TimeOfDay': 'Edm.TimeOfDay',
     };
 
-  function getSwaggerType(type){
-    return typeMap[type] || SwaggerTypes.string;
+  function getSwaggerType(type, isCollection){
+    var sType = type === undefined  ?
+                SwaggerTypes.string :
+                typeMap[type] || {'$ref': '#/definitions/' + type};
+    return isCollection ? {'type' : 'array', 'items' : sType } : sType;
   }
 
   Morpho.registerTo('swagger', function (model, errors, option){
@@ -57,9 +63,16 @@
           this.visitArr(arr, function(item){
             var type = {properties:{}};
             visitor.visitArr(item.properties, function(item){
-              var swType = getSwaggerType(item.type);
-              var propertyType = { type: swType.type};
-              if(swType.format) propertyType.format= swType.format;
+              var swType = getSwaggerType(item.type, item.isCollection);
+              var propertyType;
+              if(swType.type){
+                propertyType = { type: swType.type };
+                if(swType.format) propertyType.format = swType.format;
+                if(swType.items) propertyType.items = swType.items;
+              }else{
+                propertyType = swType;
+              }
+
               type.properties[item.name] = propertyType;
             });
 

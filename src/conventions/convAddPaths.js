@@ -7,7 +7,6 @@ function addPaths(model)
   }
 
 
-  this.log('addPaths begin');
   if(!model.container) return;
   var paths= {};
   var visitor   = this.getVisitor();

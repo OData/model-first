@@ -14,7 +14,7 @@
 
   window.morphoEditorConfig = {
     soruceFormats  : ['yaml'],
-    targetFormats  : ['csdl', 'json', 'swagger'],
+    targetFormats  : [/* 'csdl', */ 'json', 'swagger'],
     formats                 : {
       'csdl'  : {
         displayName   : 'CSDL',

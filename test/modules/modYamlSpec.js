@@ -58,6 +58,23 @@ types:\n\
         type: long\n\
       - p2',
       [{'properties':[{'name':'p1','type':'Int64'},{'name':'p2'}],'name':'type1'}]));      
+
+  it('Key and Nullable facets should work.',
+    fromYamlTypeTest(
+'\
+types:\n\
+  - name: type1\n\
+    key: [s1, s2]\n\
+    optionalProperties:\n\
+      - name: p1\n\
+        type: long\n',
+      [{'properties':[
+          {'name':'s1','isKey':true},
+          {'name':'s2','isKey':true},
+          {'name':'p1','type':'Int64','isNullable':true}
+        ],
+        'name':'type1'}
+      ]));      
 });
 
 describe('[YAML] root section tests', function() {

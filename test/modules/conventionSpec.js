@@ -1,7 +1,7 @@
 'use strict';
 
 describe('[CONVENTION] To CSDL test', function() {
-  it('Empty complex type should work.', function() {
+  xit('Empty complex type should work.', function() {
     var input = {
       'container' : {
         'entitysets':[{'name':'things','type':'thing'}],

@@ -1,7 +1,7 @@
 'use strict';
 
 describe('[Swagger] To Swagger test', function() {
-  it('To Swagger should work.', function() {
+  it('Definitions should work.', function() {
     var jsonModel = 
       {
         'types':
@@ -16,8 +16,18 @@ describe('[Swagger] To Swagger test', function() {
               },
               {
                 'name'    : 'title',
-                'type'    : 'String'
-              }
+                //'type'    : 'String',
+              },
+              {
+                'name'    : 'keywords',
+                'type'    : 'String',
+                'isCollection' : true
+              },
+              {
+                'name'    : 'author',
+                'type'    : 'person',
+                'isCollection' : false
+              },
             ]
           }
         ]
@@ -34,6 +44,15 @@ describe('[Swagger] To Swagger test', function() {
           },
           'title': {
             'type': 'string'
+          },
+          'keywords': {
+            'type'  : 'array',
+            'items' : {
+              'type': 'string'
+            }
+          },
+          'author': {
+            '$ref'  :'#/definitions/person'
           }
         }
       }

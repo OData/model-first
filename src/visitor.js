@@ -32,9 +32,9 @@ Visitor.prototype.decreaseLevel=function(){
 Visitor.prototype.visitWrap=function(func)
 {
   this.increaseLevel();
-  this.log('--<');
+  this.log('<--');
   func.call(this);
-  this.log('--<');
+  this.log('-->');
   this.decreaseLevel();
 };
 
