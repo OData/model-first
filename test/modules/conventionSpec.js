@@ -1,8 +1,23 @@
 'use strict';
 
-describe('[CONVENTION] Path', function() {
+xdescribe('[CONVENTION] Path', function() {
   it('Add Paths should work.', function() {
     var input = {
+      'types' : [
+        {
+          'properties': [
+            {
+              'name': 'uid',
+              'isKey': true
+            },
+            {
+              'name': 'title',
+              'isKey': true
+            }
+          ],
+          'name': 'book'
+        }
+      ],     
       'container' : {
         'entitysets':[{'name':'books','type':'book'}],
         //'singletons':[{'name':'me','type':'user'}],
@@ -50,6 +65,36 @@ describe('[CONVENTION] Path', function() {
   });
 });
 
+describe('[CONVENTION] Key', function() {
+  xit('Add Key should work.', function() {
+    var input = {
+      'types': [
+        {
+          'properties': [
+            {
+              'name': 'ID',
+              'isKey': true
+            },
+            {
+              'name': 'name',
+              'isKey': true
+            }
+          ],
+          'name': 'Person'
+        }
+      ]
+    };
+
+    var expected = { 'Person' : ['ID','name']};
+
+    expect('\n' + JSON.stringify(applyAddKeys(input))).toEqual('\n' + JSON.stringify(expected));
+  });
+});
+
+function applyAddKeys(model){
+  return Morpho.applyConvention(model, 'addKeys');
+}
+
 function applyPath(model){
-  return Morpho.applyConvention(model, 'addPaths');
+  return addPaths(model, function(t){return t;});
 }

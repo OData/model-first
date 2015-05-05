@@ -1,6 +1,5 @@
 Morpho.getVisitor = function(){
   var visitor = new Visitor();
-  visitor.log = this.log;
   return visitor;
 };
 
@@ -9,12 +8,12 @@ function Visitor()
 {
   this._level   = 0;
   this._prefix  = '';
+  this.log      = Morpho.log;
 }
 
 Visitor.prototype.log=function()
 {
   var args = Array.prototype.slice.call(arguments); 
-  // args.unshift(this._prefix);
   args[0] = this._prefix + args[0];
   this.log.apply(null, args);
 };

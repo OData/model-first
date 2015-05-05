@@ -142,6 +142,8 @@ function fromYaml(str, errors){
       }
   });
 
+  // Morpho.applyConvention(state, 'addKeys');
+
   return state;
 }
 

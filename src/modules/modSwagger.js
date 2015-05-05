@@ -57,11 +57,15 @@
       },
       'paths'     : {}
     };
+
+    var keys = {};
+
     visitor.visitObj(model, {
         'types'   : function(arr){
           state.definitions = {};
           this.visitArr(arr, function(item){
             var type = {properties:{}};
+            var keyProperty = null;
             visitor.visitArr(item.properties, function(item){
               var swType = getSwaggerType(item.type, item.isCollection);
               var propertyType;
@@ -74,15 +78,32 @@
               }
 
               type.properties[item.name] = propertyType;
+
+              if(!keyProperty && item.isKey){
+                keyProperty = {
+                  'name'  : item.name,
+                  'type'  : swType.type,
+                  'format': swType.format
+                };
+              }
             });
+
+            if(keyProperty){
+              keys[item.name] = keyProperty;
+            }
 
             state.definitions[item.name] = type;
           });
         }
       });
 
-    var paths = Morpho.applyConvention(model, 'addPaths');
-    state.paths=paths;
+    // var keys = Morpho.applyConvention(model, 'addKeys');
+    // model.keys
+
+    state.paths = addPaths(model, function(type){
+      return keys[type];
+    });
+    
 
     if(option.returnJSON){
       return state;
