@@ -6,7 +6,6 @@ function addPaths(model)
     return isCollection ? {'type'  : 'array', 'items' : sref} : sref;
   }
 
-
   if(!model.container) return;
   var paths= {};
   var visitor   = this.getVisitor();
@@ -17,9 +16,11 @@ function addPaths(model)
         var schema = getSchema(item.type, true);
         var path = {};
         var getRoute = {
+          'tags'        : [ item.type ],
+          'description' : 'Returns all items from ' + item.name + '.',
           'responses':{
             '200' : {
-              'description' : 'Get the ' + item.name,
+              'description' : 'An array of ' + item.type + ' items.',
               'schema' : schema
             }
           }
@@ -28,19 +29,21 @@ function addPaths(model)
         path.get = getRoute;
         var singleSchema = getSchema(item.type, false);
         var postRoute= {
-          "description": "Post a new entity to EntitySet" + item.name,
-          "parameters": [
+          'tags'        : [ item.type ],
+          'description' : 'Adds a new ' + item.type + ' to ' + item.name + '.',
+          'parameters'  : [
             {
-              "name": item.type,
-              "in": "body",
-              "description": "The entity to post",
-              "schema": singleSchema
+              'name'        : item.type,
+              'in'          : 'body',
+              'description' : 'The new ' + item.type + ' item.',
+              'required'    : true,
+              'schema'      : singleSchema
             }
           ],
-          "responses": {
-            "201": {
-              "description": "EntitySet " + item.name,
-              "schema": singleSchema
+          'responses': {
+            '201': {
+              'description' : 'The newly added ' + item.type + ' item.',
+              'schema'      : singleSchema
             },
           }
         };

@@ -1,25 +1,24 @@
 service:
   name: Service
 types:
-  - name: Book
+  - name: Person
+    key: ID
     requiredProperties:
-      - Title
-      - Author
+      - name
   - name: Blog
     key:
       - name: ID
         type: long
     requiredProperties: Title
     optionalProperties: # Optional
-      - name: owner
-        type: user # Optional
+      - name: author
+        type: Person
         contained: true # Optional
-      - name: price
-        type: decimal # Optional
-        isoCurrency: USD # Optional
 root:
   # Collection
-  - name: Books
-    type: Book[]
+  - name: Blogs
+    type: Blog[]
   - name: OneBlog
     type: Blog
+  - name: People
+    type: Person[]

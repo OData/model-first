@@ -52,7 +52,7 @@
     var state     = {
       'swagger'   : '2.0',
       'info'      : {
-        'title'   : 'demo',
+        'title'   : 'Demo',
         'version' : '0.1'
       },
       'paths'     : {}
