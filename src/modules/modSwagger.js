@@ -52,8 +52,137 @@
   {
     function getSchema(type, isCollection){
       var sref= { '$ref': '#/definitions/' + type };
-
       return isCollection ? {'type'  : 'array', 'items' : sref} : sref;
+    }
+
+    function routeGet(name, type, isCollection, swKey){
+      var parameters;
+
+      if (swKey){
+        parameters = [
+          {
+            'name'        : swKey.name,
+            'in'          : 'path',
+            'description' : 'The key.',
+            'required'    : true,
+            'type'        : swKey.type,
+            'format'      : swKey.format
+          }
+        ];
+      }
+
+      var route = {
+        'tags'        : [ type ],
+        'description' : isCollection ?
+            'Returns all items from ' + name + '.' :
+            swKey ? 
+              'Returns a single item from ' + name + '.' :
+              'Returns ' + name + '.',
+        'parameters'  : parameters,
+        'responses':{
+          '200' : {
+            'description' : isCollection ?
+              'An array of ' + type + ' items.' :
+              'A single ' + type + ' item.',
+            'schema' : getSchema(type, isCollection)
+          }
+        }
+      };
+
+      return route;
+    }
+
+    function routePost(name, type){
+      var singleSchema = getSchema(type, false);
+      return {
+        'tags'        : [ type ],
+        'description' : 'Adds a new ' + type + ' to ' + name + '.',
+        'parameters'  : [
+          {
+            'name'        : type,
+            'in'          : 'body',
+            'description' : 'The new ' + type + ' item.',
+            'required'    : true,
+            'schema'      : singleSchema
+          }
+        ],
+        'responses': {
+          '201': {
+            'description' : 'The newly added ' + type + ' item.',
+            'schema'      : singleSchema
+          },
+        }
+      };
+    }
+
+    function routePut(name, type, swKey){
+      var route = {
+        'tags'        : [ type ],
+        'description' : swKey ?
+          'Update an existing ' + type + ' item.' :
+          'Update ' + name + '.',
+        'parameters'  : [
+          {
+            'name'        : type,
+            'in'          : 'body',
+            'description' : 'The new ' + type + ' item.',
+            'required'    : true,
+            'schema'      : getSchema(type, false)
+          },
+          {
+            'name': 'If-Match',
+            'in': 'header',
+            'description': 'If-Match header.',
+            'type': 'string'
+          }
+        ],
+        'responses': {
+          '204': {
+            'description' : 'Successful.'
+          },
+        }
+      };
+
+      if(swKey){
+        route.parameters.unshift({
+            'name'        : swKey.name,
+            'in'          : 'path',
+            'description' : 'The key.',
+            'required'    : true,
+            'type'        : swKey.type,
+            'format'      : swKey.format
+          });
+      }
+
+      return route;
+    }
+
+    function routeDelete(name, type, swKey){
+      return {
+        'tags'        : [ type ],
+        'description' : 'Delete an item from ' + name + '.',
+        'parameters'  : [
+          {
+            'name'        : swKey.name,
+            'in'          : 'path',
+            'description' : 'The key.',
+            'required'    : true,
+            'type'        : swKey.type,
+            'format'      : swKey.format
+          },
+          {
+            'name': 'If-Match',
+            'in': 'header',
+            'description': 'If-Match header.',
+            'type': 'string'
+          }
+        ],
+        'responses': {
+          '204': {
+            'description' : 'Successful.'
+          },
+        }
+      };
     }
 
     if(!model.container) return;
@@ -63,102 +192,34 @@
     visitor.visitObj(model.container,{
       'entitysets'  : function(arr){
         visitor.visitArr(arr, function(item){
-          var responseType = {};
-          var schema = getSchema(item.type, true);
-          var path = {};
-
-          path.get = {
-            'tags'        : [ item.type ],
-            'description' : 'Returns all items from ' + item.name + '.',
-            'responses':{
-              '200' : {
-                'description' : 'An array of ' + item.type + ' items.',
-                'schema' : schema
-              }
-            }
+          paths['/' + item.name] = {
+            'get'   : routeGet(item.name, item.type, true),
+            'post'  : routePost(item.name, item.type)
           };
 
           var singleSchema = getSchema(item.type, false);
-          path.post = {
-            'tags'        : [ item.type ],
-            'description' : 'Adds a new ' + item.type + ' to ' + item.name + '.',
-            'parameters'  : [
-              {
-                'name'        : item.type,
-                'in'          : 'body',
-                'description' : 'The new ' + item.type + ' item.',
-                'required'    : true,
-                'schema'      : singleSchema
-              }
-            ],
-            'responses': {
-              '201': {
-                'description' : 'The newly added ' + item.type + ' item.',
-                'schema'      : singleSchema
-              },
-            }
-          };
-
-          paths['/' + item.name] = path;
-
           var swKey = resolveKey(item.type);
           if(swKey){
-            spath = {};
-            var key = swKey.name;
-
-            spath.put = {
-              'tags'        : [ item.type ],
-              'description' : 'Update an existing ' + item.type + ' item.',
-              'parameters'  : [
-                {
-                  'name'        : key,
-                  'in'          : 'path',
-                  'description' : 'The key.',
-                  'required'    : true,
-                  'type'        : swKey.type,
-                  'format'      : swKey.format
-                },
-                {
-                  'name'        : item.type,
-                  'in'          : 'body',
-                  'description' : 'The new ' + item.type + ' item.',
-                  'required'    : true,
-                  'schema'      : singleSchema
-                }
-              ],
-              'responses': {
-                '204': {
-                  'description' : 'Successful.'
-                },
-              }
+            paths['/' + item.name + '/{' + swKey.name + '}' ] = {
+              'get'   : routeGet(item.name, item.type, false, swKey),
+              'put'   : routePut(item.name, item.type, swKey),
+              'delete': routeDelete(item.name, item.type, swKey)
             };
-
-            paths['/' + item.name + '/{' + key + '}' ] = spath;
           }
         });
       },
       'singletons'  : function(arr){
         visitor.visitArr(arr, function(item){
-          var responseType = {};
-          var path = {};
-          var getRoute = {
-            'responses':{
-              '200' : {
-                'description' : 'Get the ' + item.name,
-                'schema' : getSchema(item.type, false)
-              }
-            }
+          paths['/' + item.name] = {
+            'get' : routeGet(item.name, item.type, false),
+            'put' : routePut(item.name, item.type),
           };
-
-          path.get = getRoute;
-          paths['/' + item.name] = path;
         });
       },
     });
 
     return paths;
   }
-
 
   Morpho.registerTo('swagger', function (model, errors, option){
     var visitor   = this.getVisitor();

@@ -59,7 +59,7 @@ describe('[Swagger] To Swagger test', function() {
     assertDefinition(jsonModel, expected);
   });
 
-  xit('Add Paths should work.', function() {
+  it('Add Paths should work.', function() {
     var input = {
       'types' : [
         {
@@ -78,7 +78,7 @@ describe('[Swagger] To Swagger test', function() {
       ],     
       'container' : {
         'entitysets':[{'name':'books','type':'book'}],
-        //'singletons':[{'name':'me','type':'user'}],
+        'singletons':[{'name':'me','type':'user'}],
         //'operations':[{'name':'getFavoriteThings'}]
       }
     };
@@ -116,6 +116,114 @@ describe('[Swagger] To Swagger test', function() {
             }
           }
         }
+      },
+      '/books/{uid}': {
+        'get': {
+          'tags': ['book'],
+          'description': 'Returns a single item from books.',
+          'parameters':[{
+            'name':'uid',
+            'in':'path',
+            'description':'The key.',
+            'required':true,
+            'type':'string'
+          }],
+          'responses':{
+            '200': {
+              'description': 'A single book item.',
+              'schema':{'$ref':'#/definitions/book'}
+            }
+          }
+        },
+        'put': {
+          'tags': ['book'],
+          'description': 'Update an existing book item.',
+          'parameters':[{
+              'name':'uid',
+              'in':'path',
+              'description':'The key.',
+              'required':true,
+              'type':'string'
+            },
+            {
+              'name':'book',
+              'in':'body',
+              'description':'The new book item.',
+              'required':true,
+              'schema':{'$ref':'#/definitions/book'}
+            },
+            {
+              'name': 'If-Match',
+              'in': 'header',
+              'description': 'If-Match header.',
+              'type': 'string'
+            }
+          ],
+          'responses':{
+            '204':{
+              'description':'Successful.'
+            }
+          }
+        },
+        'delete': {
+          'tags': ['book'],
+          'description': 'Delete an item from books.',
+          'parameters':[{
+            'name':'uid',
+            'in':'path',
+            'description':'The key.',
+            'required':true,
+            'type':'string'
+          },
+          {
+            'name':'If-Match',
+            'in':'header',
+            'description':'If-Match header.',
+            'type':'string'
+          }
+          ],
+          'responses':{
+            '204':{
+              'description':'Successful.'
+            }
+          }
+        }
+      },
+      '/me': {
+        'get': {
+          'tags': ['user'],
+          'description': 'Returns me.',
+          'responses': {
+            '200': {
+              'description': 'A single user item.',
+              'schema': { '$ref': '#/definitions/user' }
+            }
+          }
+        },
+        'put': {
+          'tags': ['user'],
+          'description': 'Update me.',
+          'parameters':[
+            {
+              'name':'user',
+              'in':'body',
+              'description':'The new user item.',
+              'required':true,
+              'schema':{'$ref':'#/definitions/user'}
+            },
+            {
+              'name': 'If-Match',
+              'in': 'header',
+              'description': 'If-Match header.',
+              'type': 'string'
+            }
+          ],
+          'responses':{
+            '204':{
+              'description':'Successful.'
+            }
+          }
+        },
       }
     };
 

@@ -17,14 +17,15 @@ Morpho.addDefaults = function(model)
     },
     'container'  : function(obj){
       //allows: [read, create, update, delete]
-      function updateCol(el){
-
-      }
-
       visitor.visitObj(obj,{
-        'entitysets'  : function(entitysets){
-          visitor.visitArr(entitysets, function(entityset){
-            if(!entityset.allows) entityset.allows = ['read'];
+        'entitysets'  : function(es){
+          visitor.visitArr(es, function(e){
+            if(!e.allows) e.allows = ['read'];
+          });
+        },
+        'singletons'  : function(es){
+          visitor.visitArr(es, function(e){
+            if(!e.allows) e.allows = ['read'];
           });
         }
       });

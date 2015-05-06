@@ -22,7 +22,8 @@ describe('[CONVENTION] Defaults', function() {
         'entitysets' : [
           {
             'name'  : 'People',
-            'type'  : 'Person'
+            'type'  : 'Person',
+            'allows': ['read', 'update']
           }
         ],
         'singletons' : [
@@ -56,13 +57,14 @@ describe('[CONVENTION] Defaults', function() {
           {
             'name'  : 'People',
             'type'  : 'Person',
-            'allows': ['read']
+            'allows': ['read', 'update']
           }
         ],
         'singletons' : [
           {
             'name'  : 'Me',
-            'type'  : 'Person'
+            'type'  : 'Person',
+            'allows': ['read']
           }
         ]
       }
