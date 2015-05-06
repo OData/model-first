@@ -219,19 +219,19 @@ describe('[Swagger] To Swagger test', function() {
         'get': {
           'tags': ['book'],
           'description': 'Returns a single item from books.',
+          'responses':{
+            '200': {
+              'description': 'A single book item.',
+              'schema':{'$ref':'#/definitions/book'}
+            }
+          },
           'parameters':[{
             'name':'uid',
             'in':'path',
             'description':'The key.',
             'required':true,
             'type':'string'
-          }],
-          'responses':{
-            '200': {
-              'description': 'A single book item.',
-              'schema':{'$ref':'#/definitions/book'}
-            }
-          }
+          }]
         },
         'put': {
           'tags': ['book'],

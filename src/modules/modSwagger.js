@@ -67,10 +67,25 @@
     }
 
     function routeGet(name, type, isCollection, swKey){
-      var parameters = [];
+      var route = {
+        'tags'        : [ type ],
+        'description' : isCollection ?
+            'Returns all items from ' + name + '.' :
+            swKey ? 
+              'Returns a single item from ' + name + '.' :
+              'Returns ' + name + '.',
+        'responses':{
+          '200' : {
+            'description' : isCollection ?
+              'An array of ' + type + ' items.' :
+              'A single ' + type + ' item.',
+            'schema' : getSchema(type, isCollection)
+          }
+        }
+      };
 
       if (swKey){
-        parameters = [
+        route.parameters = [
           {
             'name'        : swKey.name,
             'in'          : 'path',
@@ -81,24 +96,6 @@
           }
         ];
       }
-
-      var route = {
-        'tags'        : [ type ],
-        'description' : isCollection ?
-            'Returns all items from ' + name + '.' :
-            swKey ? 
-              'Returns a single item from ' + name + '.' :
-              'Returns ' + name + '.',
-        'parameters'  : parameters,
-        'responses':{
-          '200' : {
-            'description' : isCollection ?
-              'An array of ' + type + ' items.' :
-              'A single ' + type + ' item.',
-            'schema' : getSchema(type, isCollection)
-          }
-        }
-      };
 
       return route;
     }
@@ -216,29 +213,28 @@
       'entitysets'  : function(arr){
         visitor.visitArr(arr, function(item){
           var allows = genAllows(item.allows);
-          paths['/' + item.name] = {
-            'get'   : allows.read    ? routeGet(item.name, item.type, true) : undefined,
-            'post'  : allows.create  ? routePost(item.name, item.type)      : undefined
-          };
+          var routes = {};
+          if(allows.read) routes.get = routeGet(item.name, item.type, true);
+          if(allows.create) routes.post = routePost(item.name, item.type);
+          paths['/' + item.name] = routes;
 
-          var singleSchema = getSchema(item.type, false);
           var swKey = resolveKey(item.type);
           if(swKey){
-            paths['/' + item.name + '/{' + swKey.name + '}' ] = {
-              'get'   : allows.read    ? routeGet(item.name, item.type, false, swKey)  : undefined,
-              'put'   : allows.update  ? routePut(item.name, item.type, swKey)         : undefined,
-              'delete': allows.delete  ? routeDelete(item.name, item.type, swKey)      : undefined,
-            };
+            var sRoutes = {};
+            if(allows.read) sRoutes.get = routeGet(item.name, item.type, false, swKey) ;
+            if(allows.update) sRoutes.put = routePut(item.name, item.type, swKey);
+            if(allows.delete) sRoutes.delete = routeDelete(item.name, item.type, swKey);
+            paths['/' + item.name + '/{' + swKey.name + '}' ] = sRoutes;
           }
         });
       },
       'singletons'  : function(arr){
         visitor.visitArr(arr, function(item){
           var allows = genAllows(item.allows);
-          paths['/' + item.name] = {
-            'get' : allows.read    ? routeGet(item.name, item.type, false) : undefined,
-            'put' : allows.update  ? routePut(item.name, item.type)        : undefined,
-          };
+          var routes = {};
+          if(allows.read) routes.get = routeGet(item.name, item.type, false);
+          if(allows.update) routes.put = routePut(item.name, item.type);
+          paths['/' + item.name] = routes;
         });
       },
     });
