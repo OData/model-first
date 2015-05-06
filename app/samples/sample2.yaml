@@ -1,9 +1,0 @@
-service:
-  name: Service
-types:
-  - name: Book
-  - name: Blog
-    key:
-      - name: ID
-        type: guid
-    requiredProperties: Title

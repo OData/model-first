@@ -36,7 +36,7 @@
 
     samples       : 
     // sample
-      ['sample.yaml', 'sample2.yaml']
+      ['sample.yaml', 'tripPin.yaml']
     // endsample
   };
 })();

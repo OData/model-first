@@ -18,7 +18,9 @@
     // The follwing types are not defined in Swagger schema
     'decimal'   : new SwaggerType('number'  , 'decimal' ),
     'short'     : new SwaggerType('number'  , 'int16'   ),
-    'guid'      : new SwaggerType('string'  , 'guid'    )
+    'guid'      : new SwaggerType('string'  , 'guid'    ),
+    'dateTimeOffset'      : new SwaggerType('string'  , 'dateTimeOffset'    ),
+    'duration'  : new SwaggerType('string'  , 'duration'),
   };
 
   var typeMap = {
@@ -26,10 +28,10 @@
       'Boolean' : SwaggerTypes.boolean,
       'Byte'    : SwaggerTypes.byte,
       'Date'    : SwaggerTypes.date,
-      // 'DateTimeOffset': undefined,
+      'DateTimeOffset': SwaggerTypes.dateTimeOffset,
       'Decimal' : SwaggerTypes.decimal,
       'Double'  : SwaggerTypes.double,
-      // 'Duration': 'Edm.Duration',
+      'Duration': SwaggerTypes.duration,
       'Guid'    : SwaggerTypes.guid,
       'Int16'   : SwaggerTypes.short,
       'Int32'   : SwaggerTypes.integer,
@@ -44,7 +46,16 @@
   function getSwaggerType(type, isCollection){
     var sType = type === undefined  ?
                 SwaggerTypes.string :
-                typeMap[type] || {'$ref': '#/definitions/' + type};
+                typeMap[type];
+
+    if(!sType){
+      if(type.length>4 && type.slice(0,4) === 'edm.'){
+        sType = new SwaggerType('string', type);
+      }else{
+        sType = {'$ref': '#/definitions/' + type};
+      }
+    }
+
     return isCollection ? {'type' : 'array', 'items' : sType } : sType;
   }
 

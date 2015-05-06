@@ -25,6 +25,7 @@ function fromYaml(str, errors, config){
     'short': 'Int16',
     'int': 'Int32',
     'long': 'Int64',
+    'int64': 'Int64',
     'sbyte': 'SByte',
     'single': 'Single',
     'stream': 'Stream',
@@ -47,6 +48,43 @@ function fromYaml(str, errors, config){
       'type'  : type,
       'isCol' : col
     };
+  }
+
+  function parseRoot(arr){
+    var entitysets  = [];
+    var singletons  = [];
+    var operations  = [];
+    
+    this.visitArr(arr, function(item){
+      if(!item.type){
+        var operation = {};
+        this.visitObj(item, {
+          'name'    : function(obj){operation.name=obj;},
+          'params'  : function(){},
+          'returns' : function(){}
+        });
+        operations.push(operation);
+        return;
+      }
+
+      // entityset or singleton
+      var mt = detectCollectionType(item.type);
+      var et = {
+        name : item.name,
+        type : mt.type
+      };
+      
+      if(mt.isCol){
+        entitysets.push(et);
+      }else{
+        singletons.push(et);
+      }
+    });
+
+    state.container = {};
+    if(entitysets.length>0)state.container.entitysets=entitysets;
+    if(singletons.length>0)state.container.singletons=singletons;
+    if(operations.length>0)state.container.operations=operations;
   }
 
   var visitor   = this.getVisitor();
@@ -104,42 +142,8 @@ function fromYaml(str, errors, config){
           state.types.push(type);
         });
       },
-      'root'    : function(arr){
-        var entitysets  = [];
-        var singletons  = [];
-        var operations  = [];
-        
-        this.visitArr(arr, function(item){
-          if(!item.type){
-            var operation = {};
-            this.visitObj(item, {
-              'name'    : function(obj){operation.name=obj;},
-              'params'  : function(){},
-              'returns' : function(){}
-            });
-            operations.push(operation);
-            return;
-          }
-
-          // entityset or singleton
-          var mt = detectCollectionType(item.type);
-          var et = {
-            name : item.name,
-            type : mt.type
-          };
-          
-          if(mt.isCol){
-            entitysets.push(et);
-          }else{
-            singletons.push(et);
-          }
-        });
-
-        state.container = {};
-        if(entitysets.length>0)state.container.entitysets=entitysets;
-        if(singletons.length>0)state.container.singletons=singletons;
-        if(operations.length>0)state.container.operations=operations;
-      }
+      'root'    : parseRoot,
+      'serviceRoot' : parseRoot
   });
 
   if(config.addDefaults){
