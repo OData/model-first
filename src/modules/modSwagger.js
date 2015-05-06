@@ -1,7 +1,7 @@
 (function(){
   function SwaggerType(type, format){
     this.type   = type;
-    this.format = format;
+    if(format) this.format = format;
   }
 
   var SwaggerTypes = {
@@ -85,16 +85,17 @@
       };
 
       if (swKey){
-        route.parameters = [
-          {
+        var parameter = 
+        {
             'name'        : swKey.name,
             'in'          : 'path',
             'description' : 'The key.',
             'required'    : true,
             'type'        : swKey.type,
-            'format'      : swKey.format
-          }
-        ];
+        };
+        if(swKey.format) parameter.format = swKey.format;
+
+        route.parameters = [ parameter ];
       }
 
       return route;
@@ -152,32 +153,36 @@
       };
 
       if(swKey){
-        route.parameters.unshift({
-            'name'        : swKey.name,
-            'in'          : 'path',
-            'description' : 'The key.',
-            'required'    : true,
-            'type'        : swKey.type,
-            'format'      : swKey.format
-          });
+        var parameter = {
+          'name'        : swKey.name,
+          'in'          : 'path',
+          'description' : 'The key.',
+          'required'    : true,
+          'type'        : swKey.type,
+        };
+
+        if(swKey.format) parameter.format = swKey.format;
+        route.parameters.unshift(parameter);
       }
 
       return route;
     }
 
     function routeDelete(name, type, swKey){
+      var parameter = {
+        'name'        : swKey.name,
+        'in'          : 'path',
+        'description' : 'The key.',
+        'required'    : true,
+        'type'        : swKey.type,
+      };
+      if(swKey.format) parameter.format = swKey.format;
+
       return {
         'tags'        : [ type ],
         'description' : 'Delete an item from ' + name + '.',
         'parameters'  : [
-          {
-            'name'        : swKey.name,
-            'in'          : 'path',
-            'description' : 'The key.',
-            'required'    : true,
-            'type'        : swKey.type,
-            'format'      : swKey.format
-          },
+          parameter,
           {
             'name': 'If-Match',
             'in': 'header',
@@ -278,6 +283,7 @@
                 keyProperty = {
                   'name'  : item.name,
                   'type'  : swType.type,
+                  // add paths would check whether format undefined.
                   'format': swType.format
                 };
               }
