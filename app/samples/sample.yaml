@@ -1,24 +1,25 @@
 service:
   name: Service
 types:
-  - name: Person
-    key: ID
+  - name: person
+    key: id
     requiredProperties:
       - name
-  - name: Blog
+  - name: blog
     key:
-      - name: ID
-        type: long
-    requiredProperties: Title
+      - name: gid
+        type: guid
+    requiredProperties: title
     optionalProperties: # Optional
       - name: author
-        type: Person
+        type: person
         contained: true # Optional
 root:
   # Collection
-  - name: Blogs
-    type: Blog[]
-  - name: OneBlog
-    type: Blog
-  - name: People
-    type: Person[]
+  - name: blogs
+    type: blog[]
+    allows: [read, create, update, delete]
+  - name: me
+    type: person
+  - name: people
+    type: person[]

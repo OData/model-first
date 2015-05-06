@@ -13,8 +13,6 @@ describe('[CSDL] To CSDL test', function() {
   });
 });
 
-
-var morpho = new Morpho(window.morphoTestConfig);
 function json2Csdl(input){
   return Morpho.convert(input, 'json', 'csdl').model;
 }

@@ -1,21 +1,19 @@
 Morpho.getVisitor = function(){
-  var visitor = new Visitor();
-  return visitor;
+  return new Visitor();
 };
-
 
 function Visitor()
 {
   this._level   = 0;
   this._prefix  = '';
-  this.log      = Morpho.log;
+  this._log     = Morpho.log;
 }
 
 Visitor.prototype.log=function()
 {
   var args = Array.prototype.slice.call(arguments); 
   args[0] = this._prefix + args[0];
-  this.log.apply(null, args);
+  this._log.apply(null, args);
 };
 
 Visitor.prototype.increaseLevel=function(){

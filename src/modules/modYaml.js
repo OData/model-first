@@ -1,4 +1,4 @@
-function fromYaml(str, errors){
+function fromYaml(str, errors, config){
   var obj;
   try {
     obj       = jsyaml.load(str);
@@ -142,8 +142,10 @@ function fromYaml(str, errors){
       }
   });
 
-  // Morpho.applyConvention(state, 'addKeys');
-
+  if(config.addDefaults){
+    Morpho.addDefaults(state);
+  }
+  
   return state;
 }
 

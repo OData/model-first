@@ -2,8 +2,9 @@
 
 $(function (){
   function convert(){
+    var defaultConfig = {addDefaults: true, format: true};
     var input = source.getValue();
-    var out = Morpho.convert(input, config.sourceFormat, config.targetFormat, {format: true});
+    var out = Morpho.convert(input, config.sourceFormat, config.targetFormat, defaultConfig);
 
     if(out.errors.length > 0){
       target.setValue('');

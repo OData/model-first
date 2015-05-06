@@ -6,7 +6,7 @@ service:\n\
   name: Service0\n';
 
   it('Service name should match', function() {
-    var model = Morpho.convertFrom.yaml.call(Morpho, input);
+    var model = Morpho.convertFrom.yaml.call(Morpho, input, {}, {});
     expect(model.service.name).toEqual('Service0');
   });
 });
@@ -58,6 +58,21 @@ types:\n\
         type: long\n\
       - p2',
       [{'properties':[{'name':'p1','type':'Int64'},{'name':'p2'}],'name':'type1'}]));      
+
+  it('Combined Property case should work, default type should be set.',
+    fromYamlTypeTest(
+'\
+types:\n\
+  - name: type1\n\
+    requiredProperties:\n\
+      - name: p1\n\
+        type: long\n\
+      - p2',
+      [{'properties':[
+        {'name':'p1','type':'Int64'},
+        {'name':'p2','type':'String'}
+      ],'name':'type1'}],
+      true));      
 
   it('Key and Nullable facets should work.',
     fromYamlTypeTest(
@@ -124,17 +139,16 @@ function fromYamlRootTest(input, root)
   return fromYamlTest(input, root, 'container');
 }
 
-function fromYamlTypeTest(input, types)
+function fromYamlTypeTest(input, types, addDefaults)
 {
-  return fromYamlTest(input, types, 'types');
+  return fromYamlTest(input, types, 'types', addDefaults);
 }
 
-function fromYamlTest(input, json, section){
+function fromYamlTest(input, json, section, addDefaults){
   return function(){
-    var actual = Morpho.convert(input, 'yaml', 'json', {returnJSON:true}).model;
-    if(section){
-      actual = actual[section];
-    }
+    var actual = Morpho.convert(input, 'yaml', 'json', {addDefaults:addDefaults, returnJSON:true}).model;
+    if(section) actual = actual[section];
+    
     expect('\n'+JSON.stringify(actual)).toEqual('\n'+JSON.stringify(json));
   };
 }
