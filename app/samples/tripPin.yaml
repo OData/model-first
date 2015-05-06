@@ -7,38 +7,40 @@ service:
   auth: none
   conformance: minimal
   supportsFilterFunctions: [contains, endswith, startswith, length, indexof, substring, tolower, toupper, trim, concat, year, month, day, hour, minute, second, round, floor, ceiling, cast, isof]
+  host: services.odata.org
+  basePath: /V4/(S(cnbm44wtbc1v5bgrlek5lpcc))/TripPinServiceRW
 
 serviceRoot:
-  - name: photos
+  - name: Photos
     type: photo[]
     searchable: true
     insertable: true
-  - name: people
+  - name: People
     type: person[]
     searchable: true
     insertable: true
     concurrencyProperties: concurrency
     disallowNavigation: friends
     disallowInsert: [trips, friends]
-  - name: airlines
+  - name: Airlines
     type: airline[]
     searchable: true
     insertable: true
-  - name: airports
+  - name: Airports
     type: airport[]
     searchable: true
     insertable: false
     deletable: false
-  - name: me
+  - name: Me
     type: person
-  - name: getNearestAirport
+  - name: GetNearestAirport
     params:
       - name: lat
         type: double
       - name: lon
         type: double
     returns: airport
-  - name: resetDataSource
+  - name: ResetDataSource
 
 types:
   - name: personGender

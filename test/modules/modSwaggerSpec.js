@@ -1,6 +1,29 @@
 'use strict';
 
 describe('[Swagger] To Swagger test', function() {
+  it('service should work.', function() {
+    var jsonModel = 
+      {
+        'service':{
+          'name' : 'service1',
+          'description' : 'this is service1',
+          'host': 'var1.org',
+          'basePath': '/ab/(S(cnbm44wtbc1v5bgrlek5lpcc))/dat'
+        }
+      };
+
+    var info  = {
+      'title'       : 'service1',
+      'version'     : '0.1',
+      'description' : 'this is service1'
+    };
+
+    var sw = toSwagger(jsonModel, undefined, true);
+    expect('\n' + JSON.stringify(sw.info)).toEqual('\n' + JSON.stringify(info));
+    expect('\n' + JSON.stringify(sw.host)).toEqual('\n' + '"var1.org"');
+    expect('\n' + JSON.stringify(sw.basePath)).toEqual('\n' + '"/ab/(S(cnbm44wtbc1v5bgrlek5lpcc))/dat"');
+  });
+
   it('Definitions should work.', function() {
     var jsonModel = 
       {
@@ -59,7 +82,7 @@ describe('[Swagger] To Swagger test', function() {
     assertDefinition(jsonModel, expected);
   });
 
-  it('Allows Paths should work.', function() {
+  it('Allows should work.', function() {
     var input = {
       'types' : [
         {
@@ -337,11 +360,11 @@ function assertPaths(input, output){
   expect('\n' + toSwagger(input, 'paths')).toEqual('\n' + JSON.stringify(output));
 }
 
-function toSwagger(input, section){
+function toSwagger(input, section, returnJson){
   var result = Morpho.convertTo.swagger.call(Morpho, input, {}, {returnJSON:true});
   if(section){
     result = result[section];
   }
 
-  return JSON.stringify(result);
+  return returnJson ? result : JSON.stringify(result);
 }

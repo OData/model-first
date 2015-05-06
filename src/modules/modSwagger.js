@@ -261,6 +261,22 @@
     var keys = {};
 
     visitor.visitObj(model, {
+        'service' : function(service){
+          this.visitObj(service, {
+            'name'  : function(name){
+              state.info.title  = name;
+            },
+            'description' : function(description){
+              state.info.description = description;
+            },
+            'host' : function(obj){
+              state.host = obj;
+            },
+            'basePath' : function(obj){
+              state.basePath = obj;
+            }
+          });
+        },
         'types'   : function(arr){
           state.definitions = {};
           this.visitArr(arr, function(item){
