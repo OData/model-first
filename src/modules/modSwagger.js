@@ -67,7 +67,7 @@
     }
 
     function routeGet(name, type, isCollection, swKey){
-      var parameters;
+      var parameters = [];
 
       if (swKey){
         parameters = [

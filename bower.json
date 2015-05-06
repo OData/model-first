@@ -1,6 +1,6 @@
 {
   "name": "morpho",
-  "version": "0.0.1-alpha.4",
+  "version": "0.0.1-alpha.5",
   "ignore": [
     "**/.*",
     "/*.js",
@@ -11,6 +11,6 @@
     "test"
   ],
   "dependencies": {
-    "js-yaml": "~3.3.0"
+    "js-yaml": "^3.3.0"
   }
 }
