@@ -111,7 +111,10 @@ root:\n\
         type: integer # Optional\n\
     returns: thing[] # Optional\n',
   {
-    'entitysets':[{'name':'things','type':'thing'}],
+    'entitysets':[{
+      'name':'things',
+      'type':'thing',
+      'allows':['read', 'create', 'update', 'delete', 'query', 'order', 'page']}],
     'singletons':[{'name':'me','type':'user'}],
     'operations':[{'name':'getFavoriteThings'}]
   }));

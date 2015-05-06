@@ -196,34 +196,48 @@
       };
     }
 
+    function genAllows(allows){
+      if(!allows) return {'read' : true};
+
+      var ac = {};
+      for(var i = 0; i < allows.length; i++){
+        ac[allows[i]] = true;
+      }
+
+      return ac;
+    }
+
     if(!model.container) return;
 
     var paths= {};
     var visitor   = new Visitor();
+    
     visitor.visitObj(model.container,{
       'entitysets'  : function(arr){
         visitor.visitArr(arr, function(item){
+          var allows = genAllows(item.allows);
           paths['/' + item.name] = {
-            'get'   : routeGet(item.name, item.type, true),
-            'post'  : routePost(item.name, item.type)
+            'get'   : allows.read    ? routeGet(item.name, item.type, true) : undefined,
+            'post'  : allows.create  ? routePost(item.name, item.type)      : undefined
           };
 
           var singleSchema = getSchema(item.type, false);
           var swKey = resolveKey(item.type);
           if(swKey){
             paths['/' + item.name + '/{' + swKey.name + '}' ] = {
-              'get'   : routeGet(item.name, item.type, false, swKey),
-              'put'   : routePut(item.name, item.type, swKey),
-              'delete': routeDelete(item.name, item.type, swKey)
+              'get'   : allows.read    ? routeGet(item.name, item.type, false, swKey)  : undefined,
+              'put'   : allows.update  ? routePut(item.name, item.type, swKey)         : undefined,
+              'delete': allows.delete  ? routeDelete(item.name, item.type, swKey)      : undefined,
             };
           }
         });
       },
       'singletons'  : function(arr){
         visitor.visitArr(arr, function(item){
+          var allows = genAllows(item.allows);
           paths['/' + item.name] = {
-            'get' : routeGet(item.name, item.type, false),
-            'put' : routePut(item.name, item.type),
+            'get' : allows.read    ? routeGet(item.name, item.type, false) : undefined,
+            'put' : allows.update  ? routePut(item.name, item.type)        : undefined,
           };
         });
       },

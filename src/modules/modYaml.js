@@ -70,8 +70,9 @@ function fromYaml(str, errors, config){
       // entityset or singleton
       var mt = detectCollectionType(item.type);
       var et = {
-        name : item.name,
-        type : mt.type
+        name  : item.name,
+        type  : mt.type,
+        allows: item.allows
       };
       
       if(mt.isCol){

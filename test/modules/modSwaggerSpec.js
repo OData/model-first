@@ -59,6 +59,104 @@ describe('[Swagger] To Swagger test', function() {
     assertDefinition(jsonModel, expected);
   });
 
+  it('Allows Paths should work.', function() {
+    var input = {
+      'types' : [
+        {
+          'properties': [
+            {
+              'name': 'uid',
+              'isKey': true
+            },
+            {
+              'name': 'title',
+              'isKey': true
+            }
+          ],
+          'name': 'book'
+        }
+      ],     
+      'container' : {
+        'entitysets':[{'name':'books','type':'book','allows':['create','delete']}],
+        'singletons':[{'name':'me','type':'user','allows':['update']}],
+      }
+    };
+
+    var expected = {
+      '/books': {
+        'post': {
+          'tags':['book'],
+          'description':'Adds a new book to books.',
+          'parameters':[{
+            'name':'book',
+            'in':'body',
+            'description':'The new book item.',
+            'required':true,
+            'schema':{'$ref':'#/definitions/book'}}],
+          'responses':{
+            '201':{
+              'description':'The newly added book item.',
+              'schema':{'$ref':'#/definitions/book'}
+            }
+          }
+        }
+      },
+      '/books/{uid}': {
+        'delete': {
+          'tags': ['book'],
+          'description': 'Delete an item from books.',
+          'parameters':[{
+            'name':'uid',
+            'in':'path',
+            'description':'The key.',
+            'required':true,
+            'type':'string'
+          },
+          {
+            'name':'If-Match',
+            'in':'header',
+            'description':'If-Match header.',
+            'type':'string'
+          }
+          ],
+          'responses':{
+            '204':{
+              'description':'Successful.'
+            }
+          }
+        }
+      },
+      '/me': {
+        'put': {
+          'tags': ['user'],
+          'description': 'Update me.',
+          'parameters':[
+            {
+              'name':'user',
+              'in':'body',
+              'description':'The new user item.',
+              'required':true,
+              'schema':{'$ref':'#/definitions/user'}
+            },
+            {
+              'name': 'If-Match',
+              'in': 'header',
+              'description': 'If-Match header.',
+              'type': 'string'
+            }
+          ],
+          'responses':{
+            '204':{
+              'description':'Successful.'
+            }
+          }
+        },
+      }
+    };
+
+    assertPaths(input, expected);
+  });
+
   it('Add Paths should work.', function() {
     var input = {
       'types' : [
@@ -77,8 +175,8 @@ describe('[Swagger] To Swagger test', function() {
         }
       ],     
       'container' : {
-        'entitysets':[{'name':'books','type':'book'}],
-        'singletons':[{'name':'me','type':'user'}],
+        'entitysets':[{'name':'books','type':'book','allows':['read','create','update','delete']}],
+        'singletons':[{'name':'me','type':'user','allows':['read','update']}],
         //'operations':[{'name':'getFavoriteThings'}]
       }
     };
