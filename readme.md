@@ -1,6 +1,13 @@
 # Model first tooling
 
-A tool for RESTful API design.
+A tool for RESTful API design. 
+
+The tool contains 2 parts:
+
+```
+src/  the core logic module for model converting
+app/  a simple UI that uses the core module
+```
 
 ### Documentation
 Please check out documentations and samples under doc.
@@ -17,6 +24,10 @@ Build:
 ```
 # Install required components from npm and bower
 npm install
+bower install
+
+# Install components for UI
+cd app
 bower install
 
 # Run test
