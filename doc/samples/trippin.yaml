@@ -42,7 +42,15 @@ serviceRoot:
 
 types:
   - name: personGender
-    members: [unknown, female, male]
+    members:
+      - name: unknown
+        value: 0
+      - name: female
+        value: -1
+      - name: male
+        value: 2
+    isFlags: false
+    underlyingType: int32
   - name: city
     requiredProperties: [countryRegion, name, region]
   - name: location
