@@ -115,37 +115,9 @@ function fromYaml(str, errors, config){
             return property;
           }
 
-          function handleMember(obj){
-            var member;
-
-            if(typeof obj === 'string'){
-              member = { 'name': obj };
-            }else{
-              member = { 'name': obj.name };
-              if(obj.value >= 0 || obj.value < 0){
-                member.value = obj.value;
-              }
-            }
-            
-            return member;
-          }
-		  
-          var type={properties:[]};
+          var type={ properties:[] };
           this.visitObj(item, {
             'name'  : function(obj){ type.name = obj; },
-			'members' : function(obj){
- 						type.members = [];
-						delete type.properties;
-                        this.visitArr(obj, function(obj){
-                          type.members.push(handleMember(obj));
-                        });
-			},
-			'isFlags': function(obj){
-				type.isFlags = obj;
-			},
-			'underlyingType': function(obj){
-				type.underlyingType = obj;
-			},
             'key'   : function(obj){
                         this.visitArr(obj, function(obj){
                           type.properties.push(handleProperty(obj, function(p){
