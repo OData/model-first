@@ -140,8 +140,8 @@ function fromYaml(str, errors, config){
                           type.members.push(handleMember(obj));
                         });
 			},
-			'isFlags': function(obj){
-				type.isFlags = obj;
+			'flags': function(obj){
+				type.flags = obj;
 			},
 			'underlyingType': function(obj){
 				type.underlyingType = obj;

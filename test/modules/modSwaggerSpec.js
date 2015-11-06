@@ -24,6 +24,113 @@ describe('[Swagger] To Swagger test', function() {
     expect('\n' + JSON.stringify(sw.basePath)).toEqual('\n' + '"/ab/(S(cnbm44wtbc1v5bgrlek5lpcc))/dat"');
   });
 
+    it('Definitions of enum should work.', function() {
+    var jsonModel = 
+      {
+        'types':
+        [
+			{
+			  'name': 'oringialColors',
+			  'members': [
+				{
+				  'name': 'red'
+				},
+				{
+				  'name': 'yellow'
+				},
+				{
+				  'name': 'blue'
+				}
+			  ]
+			},
+			{
+		  'name': 'personGender',
+		  'members': [
+			{
+			  'name': 'unknown',
+			  'value': 0
+			},
+			{
+			  'name': 'female',
+			  'value': -1
+			},
+			{
+			  'name': 'male',
+			  'value': 2
+			}
+		  ],
+		  'flags': false,
+		  'underlyingType': 'int32'
+		},
+          {
+            'name'        : 'Book',
+            'properties'  : 
+            [
+              {
+                'name'    : 'id',
+                'type'    : 'Int64'
+              },
+              {
+                'name'    : 'title',
+                //'type'    : 'String',
+              },
+              {
+                'name'    : 'keywords',
+                'type'    : 'String',
+                'isCollection' : true
+              },
+              {
+                'name'    : 'author',
+                'type'    : 'person',
+                'isCollection' : false
+              },
+            ]
+          }
+        ]
+      };
+
+    var expected  = {
+		'oringialColors': {
+      'type': 'String',
+      'enum': [
+        'red',
+        'yellow',
+        'blue'
+      ]
+    },
+	  'personGender': {
+      'type': 'String',
+      'enum': [
+        'unknown',
+        'female',
+        'male'
+      ]
+    },
+      'Book': {
+        'properties': {
+          'id': {
+            'type': 'integer',
+            'format': 'int64'
+          },
+          'title': {
+            'type': 'string'
+          },
+          'keywords': {
+            'type'  : 'array',
+            'items' : {
+              'type': 'string'
+            }
+          },
+          'author': {
+            '$ref'  :'#/definitions/person'
+          }
+        }
+      }
+    };
+
+    assertDefinition(jsonModel, expected);
+  });
+  
   it('Definitions should work.', function() {
     var jsonModel = 
       {
