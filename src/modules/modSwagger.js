@@ -296,7 +296,7 @@
 			
 			this.visitObj(item, {
 				'members' : function(obj){
-							type.type = 'String'; 
+							type.type = 'string'; 
 							type['enum'] = [];
 							delete type.properties;
 							this.visitArr(obj, function(obj){

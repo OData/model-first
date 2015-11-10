@@ -49,7 +49,7 @@ types:
         value: -1
       - name: male
         value: 2
-    isFlags: false
+    flags: false
     underlyingType: int32
   - name: city
     requiredProperties: [countryRegion, name, region]

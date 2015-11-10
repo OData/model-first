@@ -115,7 +115,7 @@ function fromYaml(str, errors, config){
             return property;
           }
 
-          function handleMember(obj){
+		  function handleMember(obj){
             var member;
 
             if(typeof obj === 'string'){
@@ -130,7 +130,7 @@ function fromYaml(str, errors, config){
             return member;
           }
 		  
-          var type={properties:[]};
+          var type={ properties:[] };
           this.visitObj(item, {
             'name'  : function(obj){ type.name = obj; },
 			'members' : function(obj){

@@ -1,4 +1,4 @@
-#Enumeration Type – Model-first Tooling
+#Enumeration Type - Model-first Tooling
 
 ##1.	Core JSON Model Enumeration Type Design
 
@@ -28,16 +28,16 @@ Here is an enumeration type sample for the core JSON model:
       "underlyingType": "int32"
     },
 	{
-	  “name": "originalColor”
-	  “members”: [
+	  "name": "originalColor"
+	  "members": [
 		{
-		  “name“: “red”
+		  "name": "red"
 		},
 		{
-		  “name“: ”yellow”
+		  "name": "yellow"
 		},
 		{
-		  “name”: ”blue”
+		  "name": "blue"
 		}
 	  ]
 	}
@@ -144,25 +144,26 @@ As per swagger spec, definitions element is a JSON object contains key-value pai
 {
   "definitions": {
      "personGender": {
-      "type": "String",
+      "type": "string",
       "enum": [
         "unknown",
         "female",
         "male"
       ]},
   "originalColor": {
-      "type": "String",
-      "enum": [“red”, “yellow”, “blue”]
+      "type": "string",
+      "enum": ["red", "yellow", "blue"]
     },
 }
 ```
 
-Each schema object would contain a enum field, which is also an array that contains the enum members; plus a type field to specify that the enumeration type is based on String.
+Each schema object would contain a enum field, which is also an array that contains the enum members; plus a type field to specify that the enumeration type is based on string.
 
 ----------------------------
 Field Name|	Description|
 -----------|----------------
 enum	|The array of the "member" in the enumeration type from JSON model.
-Type	|Indicates this enumeration type’s basic type is String.
+Type	|Indicates this enumeration type is based on string type.
 ----------------------------------------------------------------
 
+Warning: The current swagger design ignores the flags, underlyingType and value fields of enumeration type in simple YAML and JSON model. The order of enum member follows the member order in the simple YAML enumeration type.

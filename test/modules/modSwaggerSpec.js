@@ -91,7 +91,7 @@ describe('[Swagger] To Swagger test', function() {
 
     var expected  = {
 		'oringialColors': {
-      'type': 'String',
+      'type': 'string',
       'enum': [
         'red',
         'yellow',
@@ -99,7 +99,7 @@ describe('[Swagger] To Swagger test', function() {
       ]
     },
 	  'personGender': {
-      'type': 'String',
+      'type': 'string',
       'enum': [
         'unknown',
         'female',
