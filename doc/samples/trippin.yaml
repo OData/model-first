@@ -1,9 +1,17 @@
 # Handcrafted YAML representation of http://services.odata.org/V4/TripPinServiceRW/$metadata
 service:
-  name: "TripPin OData Reference Service"
+  name: TripPin OData Reference Service
   version:
     current: 1.0.0
-  description: "TripPin is a fictional reference service demonstrating the capabilities of OData v4."
+  description: TripPin is a fictional reference service demonstrating the capabilities of OData v4.
+  termsOfService: http://swagger.io/terms/
+  contact:
+    name: API Support
+    url: http://www.swagger.io/support
+    email: support@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
   auth: none
   conformance: minimal
   supportsFilterFunctions: [contains, endswith, startswith, length, indexof, substring, tolower, toupper, trim, concat, year, month, day, hour, minute, second, round, floor, ceiling, cast, isof]
