@@ -91,67 +91,95 @@ function fromYaml(str, errors, config){
   var visitor   = this.getVisitor();
   var state     = {};
   visitor.visitObj(obj, {
-      'service' : function(obj){ state.service  = obj; },
-      'types'   : function(arr){
-        state.types = [];
-        this.visitArr(arr, function(item){
-          function handleProperty(obj, extend){
-            var property;
-            if(typeof obj === 'string'){
-              property = { 'name': obj };
-            }else{
-              property = { 'name': obj.name };
-              if(obj.type){
-                var typeInfo    = detectCollectionType(obj.type);
-                property.type   = typeMap[typeInfo.type] || typeInfo.type;
-                if(typeInfo.isCol){
-                  property.isCollection   = typeInfo.isCol;
-                }
+    'service' : function(obj){ state.service  = obj; },
+    'types'   : function(arr){
+      state.types = [];
+      this.visitArr(arr, function(item){
+        function handleProperty(obj, extend){
+          var property;
+          if(typeof obj === 'string'){
+            property = { 'name': obj };
+          }else{
+            property = { 'name': obj.name };
+            if(obj.type){
+              var typeInfo    = detectCollectionType(obj.type);
+              property.type   = typeMap[typeInfo.type] || typeInfo.type;
+              if(typeInfo.isCol){
+                property.isCollection   = typeInfo.isCol;
               }
             }
-
-            if(extend) extend(property);
-            
-            return property;
           }
 
-          var type={ properties:[] };
-          this.visitObj(item, {
-            'name'  : function(obj){ type.name = obj; },
-            'key'   : function(obj){
-                        this.visitArr(obj, function(obj){
-                          type.properties.push(handleProperty(obj, function(p){
-                            p.isKey       = true;
-                          }));
-                        });
-                      },
-            'requiredProperties'   :
-                      function(obj){
-                        this.visitArr(obj, function(obj){
-                          type.properties.push(handleProperty(obj));
-                        });
-                      },
-            'optionalProperties'    :
-                      function(obj){
-                        this.visitArr(obj, function(obj){
-                          type.properties.push(handleProperty(obj, function(p){
-                            p.isNullable    = true;
-                          }));
-                        });
-                      }
-          });
-          state.types.push(type);
-        });
-      },
-      'root'    : parseRoot,
-      'serviceRoot' : parseRoot
-  });
+          if(extend) extend(property);
+          
+          return property;
+        }
 
-  if(config.addDefaults){
-    Morpho.addDefaults(state);
-  }
-  
-  return state;
+        function handleMember(obj){
+          var member;
+
+          if(typeof obj === 'string'){
+            member = { 'name': obj };
+          }else{
+            member = { 'name': obj.name };
+            if(obj.value >= 0 || obj.value < 0){
+              member.value = obj.value;
+            }
+          }
+          
+          return member;
+        }
+        
+        var type={ properties:[] };
+        this.visitObj(item, {
+          'name'  : function(obj){ type.name = obj; },
+          'members' : function(obj){
+           type.members = [];
+           delete type.properties;
+           this.visitArr(obj, function(obj){
+            type.members.push(handleMember(obj));
+          });
+         },
+         'flags': function(obj){
+          type.flags = obj;
+        },
+        'underlyingType': function(obj){
+          type.underlyingType = obj;
+        },
+        'key'   : function(obj){
+          this.visitArr(obj, function(obj){
+            type.properties.push(handleProperty(obj, function(p){
+              p.isKey       = true;
+            }));
+          });
+        },
+        'requiredProperties'   :
+        function(obj){
+          this.visitArr(obj, function(obj){
+            type.properties.push(handleProperty(obj));
+          });
+        },
+        'optionalProperties'    :
+        function(obj){
+          this.visitArr(obj, function(obj){
+            type.properties.push(handleProperty(obj, function(p){
+              p.isNullable    = true;
+            }));
+          });
+        }
+      });
+state.types.push(type);
+});
+},
+'root'    : parseRoot,
+'serviceRoot' : parseRoot
+});
+
+if(config.addDefaults){
+  Morpho.addDefaults(state);
+}
+
+return state;
 }
 
 Morpho.registerFrom('yaml', fromYaml);

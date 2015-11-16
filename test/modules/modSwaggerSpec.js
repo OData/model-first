@@ -3,14 +3,14 @@
 describe('[Swagger] To Swagger test', function() {
   it('service should work.', function() {
     var jsonModel = 
-      {
-        'service':{
-          'name' : 'service1',
-          'description' : 'this is service1',
-          'host': 'var1.org',
-          'basePath': '/ab/(S(cnbm44wtbc1v5bgrlek5lpcc))/dat'
-        }
-      };
+    {
+      'service':{
+        'name' : 'service1',
+        'description' : 'this is service1',
+        'host': 'var1.org',
+        'basePath': '/ab/(S(cnbm44wtbc1v5bgrlek5lpcc))/dat'
+      }
+    };
 
     var info  = {
       'title'       : 'service1',
@@ -24,21 +24,54 @@ describe('[Swagger] To Swagger test', function() {
     expect('\n' + JSON.stringify(sw.basePath)).toEqual('\n' + '"/ab/(S(cnbm44wtbc1v5bgrlek5lpcc))/dat"');
   });
 
-  it('Definitions should work.', function() {
+  it('Definitions of enum should work.', function() {
     var jsonModel = 
+    {
+      'types':
+      [
       {
-        'types':
-        [
-          {
-            'name'        : 'Book',
-            'properties'  : 
-            [
-              {
-                'name'    : 'id',
-                'type'    : 'Int64'
-              },
-              {
-                'name'    : 'title',
+       'name': 'oringialColors',
+       'members': [
+       {
+        'name': 'red'
+      },
+      {
+        'name': 'yellow'
+      },
+      {
+        'name': 'blue'
+      }
+      ]
+    },
+    {
+      'name': 'personGender',
+      'members': [
+      {
+       'name': 'unknown',
+       'value': 0
+     },
+     {
+       'name': 'female',
+       'value': -1
+     },
+     {
+       'name': 'male',
+       'value': 2
+     }
+     ],
+     'flags': false,
+     'underlyingType': 'int32'
+   },
+   {
+    'name'        : 'Book',
+    'properties'  : 
+    [
+    {
+      'name'    : 'id',
+      'type'    : 'Int64'
+    },
+    {
+      'name'    : 'title',
                 //'type'    : 'String',
               },
               {
@@ -51,71 +84,145 @@ describe('[Swagger] To Swagger test', function() {
                 'type'    : 'person',
                 'isCollection' : false
               },
+              ]
+            }
             ]
-          }
-        ]
-      };
+          };
 
-    var expected  = {
-      'Book': {
-        'properties': {
-          'id': {
-            'type': 'integer',
-            'format': 'int64'
-          },
-          'title': {
-            'type': 'string'
-          },
-          'keywords': {
-            'type'  : 'array',
-            'items' : {
-              'type': 'string'
-            }
-          },
-          'author': {
-            '$ref'  :'#/definitions/person'
-          }
-        }
-      }
-    };
-
-    assertDefinition(jsonModel, expected);
-  });
-
-  it('Allows should work.', function() {
-    var input = {
-      'types' : [
-        {
-          'properties': [
-            {
-              'name': 'uid',
-              'isKey': true
+          var expected  = {
+            'oringialColors': {
+              'type': 'string',
+              'enum': [
+              'red',
+              'yellow',
+              'blue'
+              ]
             },
-            {
-              'name': 'title',
-              'isKey': true
+            'personGender': {
+              'type': 'string',
+              'enum': [
+              'unknown',
+              'female',
+              'male'
+              ]
+            },
+            'Book': {
+              'properties': {
+                'id': {
+                  'type': 'integer',
+                  'format': 'int64'
+                },
+                'title': {
+                  'type': 'string'
+                },
+                'keywords': {
+                  'type'  : 'array',
+                  'items' : {
+                    'type': 'string'
+                  }
+                },
+                'author': {
+                  '$ref'  :'#/definitions/person'
+                }
+              }
             }
-          ],
-          'name': 'book'
-        }
-      ],     
-      'container' : {
-        'entitysets':[{'name':'books','type':'book','allows':['create','delete']}],
-        'singletons':[{'name':'me','type':'user','allows':['update']}],
-      }
-    };
+          };
 
-    var expected = {
-      '/books': {
-        'post': {
-          'tags':['book'],
-          'description':'Adds a new book to books.',
-          'parameters':[{
-            'name':'book',
-            'in':'body',
-            'description':'The new book item.',
-            'required':true,
-            'schema':{'$ref':'#/definitions/book'}}],
+          assertDefinition(jsonModel, expected);
+        });
+
+it('Definitions should work.', function() {
+  var jsonModel = 
+  {
+    'types':
+    [
+    {
+      'name'        : 'Book',
+      'properties'  : 
+      [
+      {
+        'name'    : 'id',
+        'type'    : 'Int64'
+      },
+      {
+        'name'    : 'title',
+                //'type'    : 'String',
+              },
+              {
+                'name'    : 'keywords',
+                'type'    : 'String',
+                'isCollection' : true
+              },
+              {
+                'name'    : 'author',
+                'type'    : 'person',
+                'isCollection' : false
+              },
+              ]
+            }
+            ]
+          };
+
+          var expected  = {
+            'Book': {
+              'properties': {
+                'id': {
+                  'type': 'integer',
+                  'format': 'int64'
+                },
+                'title': {
+                  'type': 'string'
+                },
+                'keywords': {
+                  'type'  : 'array',
+                  'items' : {
+                    'type': 'string'
+                  }
+                },
+                'author': {
+                  '$ref'  :'#/definitions/person'
+                }
+              }
+            }
+          };
+
+          assertDefinition(jsonModel, expected);
+        });
+
+it('Allows should work.', function() {
+  var input = {
+    'types' : [
+    {
+      'properties': [
+      {
+        'name': 'uid',
+        'isKey': true
+      },
+      {
+        'name': 'title',
+        'isKey': true
+      }
+      ],
+      'name': 'book'
+    }
+    ],     
+    'container' : {
+      'entitysets':[{'name':'books','type':'book','allows':['create','delete']}],
+      'singletons':[{'name':'me','type':'user','allows':['update']}],
+    }
+  };
+
+  var expected = {
+    '/books': {
+      'post': {
+        'tags':['book'],
+        'description':'Adds a new book to books.',
+        'parameters':[{
+          'name':'book',
+          'in':'body',
+          'description':'The new book item.',
+          'required':true,
+          'schema':{'$ref':'#/definitions/book'}}],
           'responses':{
             '201':{
               'description':'The newly added book item.',
@@ -154,19 +261,19 @@ describe('[Swagger] To Swagger test', function() {
           'tags': ['user'],
           'description': 'Update me.',
           'parameters':[
-            {
-              'name':'user',
-              'in':'body',
-              'description':'The new user item.',
-              'required':true,
-              'schema':{'$ref':'#/definitions/user'}
-            },
-            {
-              'name': 'If-Match',
-              'in': 'header',
-              'description': 'If-Match header.',
-              'type': 'string'
-            }
+          {
+            'name':'user',
+            'in':'body',
+            'description':'The new user item.',
+            'required':true,
+            'schema':{'$ref':'#/definitions/user'}
+          },
+          {
+            'name': 'If-Match',
+            'in': 'header',
+            'description': 'If-Match header.',
+            'type': 'string'
+          }
           ],
           'responses':{
             '204':{
@@ -180,26 +287,26 @@ describe('[Swagger] To Swagger test', function() {
     assertPaths(input, expected);
   });
 
-  it('Add Paths should work.', function() {
-    var input = {
-      'types' : [
-        {
-          'properties': [
-            {
-              'name': 'uid',
-              'isKey': true
-            },
-            {
-              'name': 'title',
-              'isKey': true
-            }
-          ],
-          'name': 'book'
-        }
-      ],     
-      'container' : {
-        'entitysets':[{'name':'books','type':'book','allows':['read','create','update','delete']}],
-        'singletons':[{'name':'me','type':'user','allows':['read','update']}],
+it('Add Paths should work.', function() {
+  var input = {
+    'types' : [
+    {
+      'properties': [
+      {
+        'name': 'uid',
+        'isKey': true
+      },
+      {
+        'name': 'title',
+        'isKey': true
+      }
+      ],
+      'name': 'book'
+    }
+    ],     
+    'container' : {
+      'entitysets':[{'name':'books','type':'book','allows':['read','create','update','delete']}],
+      'singletons':[{'name':'me','type':'user','allows':['read','update']}],
         //'operations':[{'name':'getFavoriteThings'}]
       }
     };
@@ -230,36 +337,36 @@ describe('[Swagger] To Swagger test', function() {
             'description':'The new book item.',
             'required':true,
             'schema':{'$ref':'#/definitions/book'}}],
-          'responses':{
-            '201':{
-              'description':'The newly added book item.',
-              'schema':{'$ref':'#/definitions/book'}
+            'responses':{
+              '201':{
+                'description':'The newly added book item.',
+                'schema':{'$ref':'#/definitions/book'}
+              }
             }
           }
-        }
-      },
-      '/books/{uid}': {
-        'get': {
-          'tags': ['book'],
-          'description': 'Returns a single item from books.',
-          'responses':{
-            '200': {
-              'description': 'A single book item.',
-              'schema':{'$ref':'#/definitions/book'}
-            }
-          },
-          'parameters':[{
-            'name':'uid',
-            'in':'path',
-            'description':'The key.',
-            'required':true,
-            'type':'string'
-          }]
         },
-        'put': {
-          'tags': ['book'],
-          'description': 'Update an existing book item.',
-          'parameters':[{
+        '/books/{uid}': {
+          'get': {
+            'tags': ['book'],
+            'description': 'Returns a single item from books.',
+            'responses':{
+              '200': {
+                'description': 'A single book item.',
+                'schema':{'$ref':'#/definitions/book'}
+              }
+            },
+            'parameters':[{
+              'name':'uid',
+              'in':'path',
+              'description':'The key.',
+              'required':true,
+              'type':'string'
+            }]
+          },
+          'put': {
+            'tags': ['book'],
+            'description': 'Update an existing book item.',
+            'parameters':[{
               'name':'uid',
               'in':'path',
               'description':'The key.',
@@ -279,52 +386,52 @@ describe('[Swagger] To Swagger test', function() {
               'description': 'If-Match header.',
               'type': 'string'
             }
-          ],
-          'responses':{
-            '204':{
-              'description':'Successful.'
+            ],
+            'responses':{
+              '204':{
+                'description':'Successful.'
+              }
             }
-          }
-        },
-        'delete': {
-          'tags': ['book'],
-          'description': 'Delete an item from books.',
-          'parameters':[{
-            'name':'uid',
-            'in':'path',
-            'description':'The key.',
-            'required':true,
-            'type':'string'
           },
-          {
-            'name':'If-Match',
-            'in':'header',
-            'description':'If-Match header.',
-            'type':'string'
-          }
-          ],
-          'responses':{
-            '204':{
-              'description':'Successful.'
+          'delete': {
+            'tags': ['book'],
+            'description': 'Delete an item from books.',
+            'parameters':[{
+              'name':'uid',
+              'in':'path',
+              'description':'The key.',
+              'required':true,
+              'type':'string'
+            },
+            {
+              'name':'If-Match',
+              'in':'header',
+              'description':'If-Match header.',
+              'type':'string'
             }
-          }
-        }
-      },
-      '/me': {
-        'get': {
-          'tags': ['user'],
-          'description': 'Returns me.',
-          'responses': {
-            '200': {
-              'description': 'A single user item.',
-              'schema': { '$ref': '#/definitions/user' }
+            ],
+            'responses':{
+              '204':{
+                'description':'Successful.'
+              }
             }
           }
         },
-        'put': {
-          'tags': ['user'],
-          'description': 'Update me.',
-          'parameters':[
+        '/me': {
+          'get': {
+            'tags': ['user'],
+            'description': 'Returns me.',
+            'responses': {
+              '200': {
+                'description': 'A single user item.',
+                'schema': { '$ref': '#/definitions/user' }
+              }
+            }
+          },
+          'put': {
+            'tags': ['user'],
+            'description': 'Update me.',
+            'parameters':[
             {
               'name':'user',
               'in':'body',
@@ -338,18 +445,18 @@ describe('[Swagger] To Swagger test', function() {
               'description': 'If-Match header.',
               'type': 'string'
             }
-          ],
-          'responses':{
-            '204':{
-              'description':'Successful.'
+            ],
+            'responses':{
+              '204':{
+                'description':'Successful.'
+              }
             }
-          }
-        },
-      }
-    };
+          },
+        }
+      };
 
-    assertPaths(input, expected);
-  });
+      assertPaths(input, expected);
+    });
 });
 
 function assertDefinition(input, output){

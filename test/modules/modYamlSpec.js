@@ -12,6 +12,31 @@ service:\n\
 });
 
 describe('[YAML] Type section test', function() {
+
+  it('Enum with values should work',
+    fromYamlTypeTest(
+'\
+types:\n\
+  - name: personGender\n\
+    members:\n\
+      - name: unknown\n\
+        value: 0\n\
+      - name: female\n\
+        value: -1\n\
+      - name: male\n\
+        value: 2\n\
+    flags: false\n\
+    underlyingType: int32',
+      [{'name': 'personGender', 'members': [{'name': 'unknown', 'value': 0}, {'name': 'female', 'value': -1}, {'name': 'male', 'value': 2}], 'flags': false, 'underlyingType': 'int32'}]));	
+
+  it('Enum without values should work',
+    fromYamlTypeTest(
+'\
+types:\n\
+  - name: personGender\n\
+    members: [unknown, female, male]',
+      [{'name': 'personGender', 'members': [{'name': 'unknown'}, {'name': 'female'}, {'name': 'male'}]}]));
+	  
   it('Single property should work.',
     fromYamlTypeTest(
 '\
