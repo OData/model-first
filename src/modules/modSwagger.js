@@ -41,7 +41,10 @@
       // 'Stream': 'Edm.Stream',
       'String'  : SwaggerTypes.string,
       // 'TimeOfDay': 'Edm.TimeOfDay',
-    };
+  };
+
+  // Stores the mappings from entity-type to singleton/entity-set.
+  var entitySetMappings = {};
 
   function getSwaggerType(type, isCollection){
     var sType = type === undefined  ?
@@ -59,8 +62,195 @@
     return isCollection ? {'type' : 'array', 'items' : sType } : sType;
   }
 
-  function addPaths(model, resolveKey)
-  {
+  // Gets a singleton/entity-set's name.
+  // params:
+  // 'entityType': Inputs a entity type name.
+  // returns:
+  // An object contains a entity-set's name and a convertion result (true/false).
+  function getEntitySet(entityType){
+    var result = entitySetMappings[entityType];
+    var success = false;
+    if(result){
+      success = true;
+    }
+
+    return {
+      'entitySet': result,
+      'success': success
+    };
+  }
+
+  function detectCollectionType(targetType){
+    var type, col;
+    if(targetType[targetType.length - 1] === ']'){
+      type = targetType.substr(0, targetType.length - 2);
+      col = true;
+    }
+    else{
+      type = targetType;
+      col = false;
+    }
+
+    return {
+      'type'  : type,
+      'isCol' : col
+    };
+  }
+
+  function routeAction(name, operationType, params, parentType, swKey, returns){
+    var parameters = [];
+    var ifMatchHeader = {
+      'name': 'If-Match',
+      'type': 'string',
+      'in': 'header',
+      'description': 'The If-Match header.',
+      'required': false
+    };
+    parameters.push(ifMatchHeader);
+    if('Bound' === operationType){
+      var bindingParam = {
+        'name': swKey.name,
+        'type': swKey.type,
+        'in': 'path',
+        'description': 'The key.',
+        'required': true
+      };
+      parameters.push(bindingParam);
+    }
+    for(var i in params){
+      var isCollection = params[i].type[params[i].type.length - 1] === ']';
+      var param = {
+        'name': params[i].name,
+        'type': getSwaggerType(params[i].type, isCollection),
+        'in': 'formData',
+        'description': 'The parameter.',
+        'required': true
+      };
+      parameters.push(param);
+    }
+    var path;
+    if('Bound' === operationType){
+      var temp = getEntitySet(parentType);
+      if(temp.success){
+        path = '/' + temp.entitySet + '/{' + swKey.name + '}/' + name;
+      }
+      else{
+        path = '/' + parentType + '/' + name;
+      }
+    }
+    else if('Unbound' === operationType){
+      path = '/' + name;
+    }
+
+    var responses = {
+      '201': {
+        'description': 'The action has been created new entities.'
+      },
+      '204': {
+        'description': 'The action is without a return type.'
+      }
+    };
+    if(returns){
+      var returnType = detectCollectionType(returns);
+      var schema = getSwaggerType(returnType.type, returnType.isCol);
+
+      responses['200'] = {
+        'description': 'The function has been returned results.',
+        'schema': schema
+      };
+    }
+
+    return {
+      'route': {
+        'tags': [ 'Action', operationType ],
+        'description': operationType + ' ' + 'action: ' + name + '.', 
+        'parameters': parameters,
+        'responses': responses
+      },
+      'path': path
+    };
+  }
+
+  function routeFunction(name, operationType, params, parentType, swKey, returns){
+    var parameters = [];
+    if('Bound' === operationType){
+      var bindingParam = {
+        'name': swKey.name,
+        'type': swKey.type,
+        'in': 'path',
+        'description': 'The key.',
+        'required': true
+      };
+      parameters.push(bindingParam);
+    }
+    for(var i in params){
+      var isCollection = params[i].type[params[i].type.length - 1] === ']';
+      var param = {
+        'name': params[i].name,
+        'type': getSwaggerType(params[i].type, isCollection),
+        'in': 'formData',
+        'description': 'The parameter.',
+        'required': true
+      };
+      parameters.push(param);
+    }
+    var path;
+    if('Bound' === operationType){
+      var temp = getEntitySet(parentType);
+      if(temp.success){
+        path = '/' + temp.entitySet + '/{' + swKey.name + '}/' + name;
+      }
+      else{
+        path = '/' + parentType + '/' + name;
+      }
+    }
+    else if('Unbound' === operationType){
+      path = '/' + name;
+    }
+
+    var responses = {
+      '204': {
+        'description': 'The function is without a return type.'
+      },
+      '400': {
+        'description': 'A single entity function with a non-nullable return type has no result.'
+      },
+      '4xx': {
+        'description': 'A single-valued function with a non-nullable return type has no result, or a composable function the processing is stopped.'
+      }
+    };
+    var schema;
+    if(returns){
+      var returnType = detectCollectionType(returns);
+      var schema = getSwaggerType(returnType.type, returnType.isCol);
+
+      responses['200'] = {
+        'description': 'The function has been returned results.',
+        'schema': schema
+      };
+    }
+
+    return {
+      'route': {
+        'tags': [ 'Function', operationType ],
+        'description': operationType + ' ' + 'function: ' + name + '.', 
+        'parameters': parameters,
+        'responses': responses
+      },
+      'path': path
+    };
+  }
+
+  function routeOperation(name, type, operationType, params, parentType, swKey, returns){
+    if('Action' === type){
+      return routeAction(name, operationType, params, parentType, swKey, returns);
+    }
+    else if('Function' === type){
+      return routeFunction(name, operationType, params, parentType, swKey, returns);
+    }
+  }
+
+  function addPaths(model, resolveKey){
     function getSchema(type, isCollection){
       var sref= { '$ref': '#/definitions/' + type };
       return isCollection ? {'type'  : 'array', 'items' : sref} : sref;
@@ -213,7 +403,6 @@
 
     var paths= {};
     var visitor   = new Visitor();
-    
     visitor.visitObj(model.container,{
       'entitysets'  : function(arr){
         visitor.visitArr(arr, function(item){
@@ -242,6 +431,25 @@
           paths['/' + item.name] = routes;
         });
       },
+      // Unbound operations.
+      'operations': function(arr){
+        visitor.visitArr(arr, function(item){
+          if('Action' === item.type){
+            var temp = routeOperation(item.name, item.type, item.operationType, item.params, null, null, item.returns);
+            var routes = {
+              'post': temp.route
+            };
+            paths[temp.path] = routes;
+          }
+          else if('Function' === item.type){
+            var temp = routeOperation(item.name, item.type, item.operationType, item.params, null, null, item.returns);
+            var routes = {
+              'get': temp.route
+            };
+            paths[temp.path] = routes;
+          }
+        });
+      }
     });
 
     return paths;
@@ -259,7 +467,7 @@
     };
 
     var keys = {};
-
+    var boundOpPaths = {};
     visitor.visitObj(model, {
         'service' : function(service){
           this.visitObj(service, {
@@ -277,31 +485,48 @@
             }
           });
         },
+        'container': function(container){
+          this.visitObj(container, {
+            'entitysets': function(arr){
+              visitor.visitArr(arr, function(item){
+                entitySetMappings[item.type] = item.name;
+              });
+            },
+            'singletons': function(arr){
+              visitor.visitArr(arr, function(item){
+                //entitySetMappings[item.type] = item.name;
+              });
+            }
+          });
+        },
         'types'   : function(arr){
           state.definitions = {};
           this.visitArr(arr, function(item){
             var type = {properties:{}};
             var keyProperty = null;
+            var parentTypeName = item.name;
             visitor.visitArr(item.properties, function(item){
-              var swType = getSwaggerType(item.type, item.isCollection);
-              var propertyType;
-              if(swType.type){
-                propertyType = { type: swType.type };
-                if(swType.format) propertyType.format = swType.format;
-                if(swType.items) propertyType.items = swType.items;
-              }else{
-                propertyType = swType;
-              }
+              if(!item.operationType){
+                var swType = getSwaggerType(item.type, item.isCollection);
+                var propertyType;
+                if(swType.type){
+                  propertyType = { type: swType.type };
+                  if(swType.format) propertyType.format = swType.format;
+                  if(swType.items) propertyType.items = swType.items;
+                }else{
+                  propertyType = swType;
+                }
 
-              type.properties[item.name] = propertyType;
+                type.properties[item.name] = propertyType;
 
-              if(!keyProperty && item.isKey){
-                keyProperty = {
-                  'name'  : item.name,
-                  'type'  : swType.type,
-                  // add paths would check whether format undefined.
-                  'format': swType.format
-                };
+                if(!keyProperty && item.isKey){
+                  keyProperty = {
+                    'name'  : item.name,
+                    'type'  : swType.type,
+                    // add paths would check whether format undefined.
+                    'format': swType.format
+                  };
+                }
               }
             });
 
@@ -309,19 +534,44 @@
               keys[item.name] = keyProperty;
             }
 
+            // Convert bound operations (actions and functions).
+            visitor.visitArr(item.properties, function(item){ 
+              if(item.operationType){
+                var swKey = keys[parentTypeName];
+                if(swKey){
+                  if('Action' === item.type){
+                    var temp = routeOperation(item.name, item.type, item.operationType, item.params, parentTypeName, swKey, item.returns);
+                    var routes = {
+                      'post': temp.route
+                    };
+                    boundOpPaths[temp.path] = routes;
+                  }
+                  else if('Function' === item.type){
+                    var temp = routeOperation(item.name, item.type, item.operationType, item.params, parentTypeName, swKey, item.returns);
+                    var routes = {
+                      'get': temp.route
+                    };
+                    boundOpPaths[temp.path] = routes;
+                  }
+                }             
+              }
+            });
             state.definitions[item.name] = type;
           });
         }
-      });
+    });
 
     state.paths = addPaths(model, function(type){
       return keys[type];
     });
+    for(var i in boundOpPaths){
+       state.paths[i] = boundOpPaths[i];
+    }
     
-
     if(option.returnJSON){
       return state;
-    }else if(option.format){
+    }
+    else if(option.format){
       return JSON.stringify(state, null, 2);
     }
 
