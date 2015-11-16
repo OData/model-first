@@ -146,21 +146,19 @@ function fromYaml(str, errors, config){
         'underlyingType': function(obj){
           type.underlyingType = obj;
         },
-        'key'   : function(obj){
+        'key' : function(obj){
           this.visitArr(obj, function(obj){
             type.properties.push(handleProperty(obj, function(p){
               p.isKey       = true;
             }));
           });
         },
-        'requiredProperties'   :
-        function(obj){
+        'requiredProperties' : function(obj){
           this.visitArr(obj, function(obj){
             type.properties.push(handleProperty(obj));
           });
         },
-        'optionalProperties'    :
-        function(obj){
+        'optionalProperties' : function(obj){
           this.visitArr(obj, function(obj){
             type.properties.push(handleProperty(obj, function(p){
               p.isNullable    = true;

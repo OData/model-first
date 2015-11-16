@@ -266,6 +266,21 @@ Morpho.registerTo('swagger', function (model, errors, option){
         'name'  : function(name){
           state.info.title  = name;
         },
+        'version' : function(version){
+          if(version.current || version.current === 0)
+            state.info.version = version.current;
+          else
+            state.info.version = version;
+        },
+        'termsOfService' : function(termsOfService){
+          state.info.termsOfService = termsOfService;
+        },
+        'contact' : function(obj){
+          state.info.contact= obj;
+        },
+        'license' : function(obj){
+          state.info.license = obj;
+        },
         'description' : function(description){
           state.info.description = description;
         },
