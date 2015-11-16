@@ -24,6 +24,154 @@ describe('[Swagger] To Swagger test', function() {
     expect('\n' + JSON.stringify(sw.basePath)).toEqual('\n' + '"/ab/(S(cnbm44wtbc1v5bgrlek5lpcc))/dat"');
   });
 
+	it('Info object related service fields should match', function() {
+    var jsonModel = 
+      {
+		'service': {
+		  'name': 'TripPin OData Reference Service',
+          'version': {
+            'current': '1.0.0'
+          },
+          'description': 'TripPin is a fictional reference service demonstrating the capabilities of OData v4.',
+          'termsOfService': 'http://swagger.io/terms/',
+          'contact': {
+            'name': 'API Support',
+            'url': 'http://www.swagger.io/support',
+            'email': 'support@swagger.io'
+          },
+          'license': {
+            'name': 'Apache 2.0',
+            'url': 'http://www.apache.org/licenses/LICENSE-2.0.html'
+          },
+	    }
+	  };
+
+    var expected  = {
+		'title': 'TripPin OData Reference Service',
+		'version': '1.0.0',
+		'description': 'TripPin is a fictional reference service demonstrating the capabilities of OData v4.',
+		'termsOfService': 'http://swagger.io/terms/',
+		'contact': {
+		  'name': 'API Support',
+		  'url': 'http://www.swagger.io/support',
+		  'email': 'support@swagger.io'
+		},
+		'license': {
+		  'name': 'Apache 2.0',
+		  'url': 'http://www.apache.org/licenses/LICENSE-2.0.html'
+		}
+	};
+
+    assertService(jsonModel, expected);
+  });
+  
+    it('Definitions of enum should work.', function() {
+    var jsonModel = 
+      {
+        'types':
+        [
+			{
+			  'name': 'oringialColors',
+			  'members': [
+				{
+				  'name': 'red'
+				},
+				{
+				  'name': 'yellow'
+				},
+				{
+				  'name': 'blue'
+				}
+			  ]
+			},
+			{
+		  'name': 'personGender',
+		  'members': [
+			{
+			  'name': 'unknown',
+			  'value': 0
+			},
+			{
+			  'name': 'female',
+			  'value': -1
+			},
+			{
+			  'name': 'male',
+			  'value': 2
+			}
+		  ],
+		  'flags': false,
+		  'underlyingType': 'int32'
+		},
+          {
+            'name'        : 'Book',
+            'properties'  : 
+            [
+              {
+                'name'    : 'id',
+                'type'    : 'Int64'
+              },
+              {
+                'name'    : 'title',
+                //'type'    : 'String',
+              },
+              {
+                'name'    : 'keywords',
+                'type'    : 'String',
+                'isCollection' : true
+              },
+              {
+                'name'    : 'author',
+                'type'    : 'person',
+                'isCollection' : false
+              },
+            ]
+          }
+        ]
+      };
+
+    var expected  = {
+		'oringialColors': {
+      'type': 'string',
+      'enum': [
+        'red',
+        'yellow',
+        'blue'
+      ]
+    },
+	  'personGender': {
+      'type': 'string',
+      'enum': [
+        'unknown',
+        'female',
+        'male'
+      ]
+    },
+      'Book': {
+        'properties': {
+          'id': {
+            'type': 'integer',
+            'format': 'int64'
+          },
+          'title': {
+            'type': 'string'
+          },
+          'keywords': {
+            'type'  : 'array',
+            'items' : {
+              'type': 'string'
+            }
+          },
+          'author': {
+            '$ref'  :'#/definitions/person'
+          }
+        }
+      }
+    };
+
+    assertDefinition(jsonModel, expected);
+  });
+  
   it('Definitions should work.', function() {
     var jsonModel = 
       {
@@ -358,6 +506,10 @@ function assertDefinition(input, output){
 
 function assertPaths(input, output){
   expect('\n' + toSwagger(input, 'paths')).toEqual('\n' + JSON.stringify(output));
+}
+
+function assertService(input, output){
+  expect('\n' + toSwagger(input, 'info')).toEqual('\n' + JSON.stringify(output));
 }
 
 function toSwagger(input, section, returnJson){

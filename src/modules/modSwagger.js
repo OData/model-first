@@ -266,9 +266,24 @@
             'name'  : function(name){
               state.info.title  = name;
             },
+			'version' : function(version){
+				if(version.current || version.current === 0)
+					state.info.version = version.current;
+				else
+					state.info.version = version;
+			},
             'description' : function(description){
               state.info.description = description;
             },
+			'termsOfService' : function(termsOfService){
+				state.info.termsOfService = termsOfService;
+			},
+			'contact' : function(obj){
+				state.info.contact= obj;
+			},
+			'license' : function(obj){
+				state.info.license = obj;
+			},
             'host' : function(obj){
               state.host = obj;
             },
@@ -280,35 +295,61 @@
         'types'   : function(arr){
           state.definitions = {};
           this.visitArr(arr, function(item){
-            var type = {properties:{}};
-            var keyProperty = null;
-            visitor.visitArr(item.properties, function(item){
-              var swType = getSwaggerType(item.type, item.isCollection);
-              var propertyType;
-              if(swType.type){
-                propertyType = { type: swType.type };
-                if(swType.format) propertyType.format = swType.format;
-                if(swType.items) propertyType.items = swType.items;
-              }else{
-                propertyType = swType;
-              }
+			var type = {properties:{}};
+			
+			function handleMember(obj){
+            var member;
 
-              type.properties[item.name] = propertyType;
-
-              if(!keyProperty && item.isKey){
-                keyProperty = {
-                  'name'  : item.name,
-                  'type'  : swType.type,
-                  // add paths would check whether format undefined.
-                  'format': swType.format
-                };
-              }
-            });
-
-            if(keyProperty){
-              keys[item.name] = keyProperty;
+            if(typeof obj === 'string'){
+              member = obj;
+            }else{
+              member = obj.name;
             }
+            
+            return member;
+          }
+			
+			this.visitObj(item, {
+				'members' : function(obj){
+							type.type = 'string'; 
+							type['enum'] = [];
+							delete type.properties;
+							this.visitArr(obj, function(obj){
+							  type['enum'].push(handleMember(obj));
+							});
+				}
+			 }
+			);  
+			  
+            var keyProperty = null;
+			if(item.properties){
+				visitor.visitArr(item.properties, function(item){
+				  var swType = getSwaggerType(item.type, item.isCollection);
+				  var propertyType;
+				  if(swType.type){
+					propertyType = { type: swType.type };
+					if(swType.format) propertyType.format = swType.format;
+					if(swType.items) propertyType.items = swType.items;
+				  }else{
+					propertyType = swType;
+				  }
 
+				  type.properties[item.name] = propertyType;
+
+				  if(!keyProperty && item.isKey){
+					keyProperty = {
+					  'name'  : item.name,
+					  'type'  : swType.type,
+					  // add paths would check whether format undefined.
+					  'format': swType.format
+					};
+				  }
+				});
+				
+				if(keyProperty){
+				  keys[item.name] = keyProperty;
+				}
+			}
             state.definitions[item.name] = type;
           });
         }
