@@ -3,12 +3,52 @@
 describe('[YAML] Service section test', function() {
   var input='\
 service:\n\
-  name: Service0\n';
+  name: Service0\n\
+  version: 3';
 
   it('Service name should match', function() {
     var model = Morpho.convertFrom.yaml.call(Morpho, input, {}, {});
     expect(model.service.name).toEqual('Service0');
   });
+  
+  it('Service version without current format should match', function() {
+    var model = Morpho.convertFrom.yaml.call(Morpho, input, {}, {});
+    expect(model.service.version).toEqual(3);
+  });
+  
+  it('Service info object fields should match', 
+    fromYamlServiceTest(
+	'service:\n\
+  name: TripPin OData Reference Service\n\
+  version:\n\
+    current: 1.2.3\n\
+  description: TripPin is a fictional reference service demonstrating the capabilities of OData v4.\n\
+  termsOfService: http://swagger.io/terms/\n\
+  contact:\n\
+    name: API Support\n\
+    url: http://www.swagger.io/support\n\
+    email: support@swagger.io\n\
+  license:\n\
+    name: Apache 2.0\n\
+    url: http://www.apache.org/licenses/LICENSE-2.0.html',
+	{
+    'name': 'TripPin OData Reference Service',
+    'version': {
+      'current': '1.2.3'
+    },
+    'description': 'TripPin is a fictional reference service demonstrating the capabilities of OData v4.',
+    'termsOfService': 'http://swagger.io/terms/',
+    'contact': {
+      'name': 'API Support',
+      'url': 'http://www.swagger.io/support',
+      'email': 'support@swagger.io'
+    },
+    'license': {
+      'name': 'Apache 2.0',
+      'url': 'http://www.apache.org/licenses/LICENSE-2.0.html'
+	}
+    })
+  );
 });
 
 describe('[YAML] Type section test', function() {
@@ -145,6 +185,11 @@ function fromYamlRootTest(input, root)
 function fromYamlTypeTest(input, types, addDefaults)
 {
   return fromYamlTest(input, types, 'types', addDefaults);
+}
+
+function fromYamlServiceTest(input, service, addDefaults)
+{
+  return fromYamlTest(input, service, 'service', addDefaults);
 }
 
 function fromYamlTest(input, json, section, addDefaults){
