@@ -1,5 +1,5 @@
 # Handcrafted YAML representation of http://services.odata.org/V4/TripPinServiceRW/$metadata
-service:
+api:
   name: "TripPin OData Reference Service"
   version:
     current: 1.0.0
@@ -8,7 +8,7 @@ service:
   conformance: minimal
   supportsFilterFunctions: [contains, endswith, startswith, length, indexof, substring, tolower, toupper, trim, concat, year, month, day, hour, minute, second, round, floor, ceiling, cast, isof]
 
-serviceRoot:
+root:
   - name: photos
     type: photo[]
     searchable: true
