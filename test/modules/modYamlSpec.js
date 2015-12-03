@@ -355,14 +355,159 @@ types:\n\
     });
 });
 
+<<<<<<< HEAD
+// Testing for operations
+// 1. Testing for all kinds of actions.
+describe('[YAML] Actions test', function(){
+  var unboundActionWithYAML = '\
+  root:\n\
+    # Unbound Action\n\
+    - name: actionTest\n\
+      params:\n\
+        - name: p1\n\
+          type: int\n\
+        - name: str1\n\
+        - str2';
+  var unboundActionWithJSON = 
+  {
+    'operations': [
+      {
+        'type': 'Action',
+        'operationType': 'Unbound',
+        'name': 'actionTest',
+        'params': [
+        {
+          'name': 'p1',
+          'type': 'Int32'
+        },
+        {
+          'name': 'str1',
+          'type': 'String'
+        },
+        {
+          'name': 'str2',
+          'type': 'String'
+        }]
+      }
+    ]
+  };
+  
+  fit ('Unbound action without return types should work', fromYamlRootTest(unboundActionWithYAML, unboundActionWithJSON));
+
+  var boundActionWithYAML = '\
+  types:\n\
+    - operations:\n\
+        - name: actionTest\n\
+          params:\n\
+            - name: p1\n\
+              type: int\n\
+            - name: str1\n\
+            - str2';
+  var boundActionWithJSON = [
+  {
+    'properties': [
+      {
+        'name': 'actionTest',
+        'type': 'Action',
+        'params': [
+        {
+          'name': 'p1',
+          'type': 'Int32'
+        },
+        {
+          'name': 'str1',
+          'type': 'String'
+        },
+        {
+          'name': 'str2',
+          'type': 'String'
+        }],
+        'operationType': 'Bound'
+      }
+    ]
+  }];
+
+  fit ('Bound action without return types should work', fromYamlTypeTest(boundActionWithYAML, boundActionWithJSON));
+});
+
+// 2. Testing for all kinds of functions.
+describe('[YAML] Functions test', function(){
+  var unboundFunctionWithYAML = '\
+  root:\n\
+    - name: functionTest\n\
+      params:\n\
+        - name: friend\n\
+          type: person\n\
+      returns: person[]';
+  var unboundFunctionWithJSON = 
+  {
+    'operations': [
+      {
+        'type': 'Function',
+        'operationType': 'Unbound',
+        'name': 'functionTest',
+        'params': [
+        {
+          'name': 'friend',
+          'type': 'person'
+        }],
+        'returns': 'person[]'
+      }
+    ]
+  };
+
+  fit ('Unbound function with a return type should work', fromYamlRootTest(unboundFunctionWithYAML, unboundFunctionWithJSON));
+
+  var boundFunctionWithYAML = '\
+  types:\n\
+    - operations:\n\
+        - name: functionTest\n\
+          params:\n\
+            - name: id\n\
+              type: int64\n\
+          returns: string';
+  var boundFunctionWithJSON = [
+  {
+    'properties': [
+      {
+        'name': 'functionTest',
+        'type': 'Function',
+        'params': [
+        {
+          'name': 'id',
+          'type': 'Int64'
+        }],
+        'returns': 'String',
+        'operationType': 'Bound'  
+      }
+    ]
+  }];
+
+  fit ('Bound function with a return type should work', fromYamlTypeTest(boundFunctionWithYAML, boundFunctionWithJSON));
+});
+
+function fromYamlRootTest(input, root)
+{
+  return fromYamlTest(input, root, 'container');
+=======
 function fromYamlRootTest(input, root) {
     return fromYamlTest(input, root, 'container');
+>>>>>>> c46690800166a7a4fba377294505dc8d04086eb9
 }
 
 function fromYamlTypeTest(input, types, addDefaults) {
     return fromYamlTest(input, types, 'types', addDefaults);
 }
 
+<<<<<<< HEAD
+function fromYamlTest(input, json, section, addDefaults){
+  return function(){
+    var actual = Morpho.convert(input, 'yaml', 'json', { addDefaults: addDefaults, returnJSON: true }).model;
+    if(section) actual = actual[section];
+    
+    expect('\n'+JSON.stringify(actual)).toEqual('\n'+JSON.stringify(json));
+  };
+=======
 function fromYamlServiceTest(input, service, addDefaults) {
     return fromYamlTest(input, service, 'service', addDefaults);
 }
@@ -374,4 +519,5 @@ function fromYamlTest(input, json, section, addDefaults) {
 
         expect('\n' + JSON.stringify(actual)).toEqual('\n' + JSON.stringify(json));
     };
+>>>>>>> c46690800166a7a4fba377294505dc8d04086eb9
 }
