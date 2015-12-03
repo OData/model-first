@@ -1,14 +1,22 @@
 # Handcrafted YAML representation of http://services.odata.org/V4/TripPinServiceRW/$metadata
-service:
+api:
   name: "TripPin OData Reference Service"
   version:
     current: 1.0.0
   description: "TripPin is a fictional reference service demonstrating the capabilities of OData v4."
+  termsOfService: http://swagger.io/terms/
+  contact:
+    name: API Support
+    url: http://www.swagger.io/support
+    email: support@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
   auth: none
   conformance: minimal
   supportsFilterFunctions: [contains, endswith, startswith, length, indexof, substring, tolower, toupper, trim, concat, year, month, day, hour, minute, second, round, floor, ceiling, cast, isof]
 
-serviceRoot:
+root:
   - name: photos
     type: photo[]
     searchable: true
@@ -42,7 +50,15 @@ serviceRoot:
 
 types:
   - name: personGender
-    members: [unknown, female, male]
+    members:
+      - name: unknown
+        value: 0
+      - name: female
+        value: -1
+      - name: male
+        value: 2
+    flags: false
+    underlyingType: int32
   - name: city
     requiredProperties: [countryRegion, name, region]
   - name: location
@@ -78,7 +94,7 @@ types:
       - name: addressInfo
         type: location[]
       - name: gender
-        type: gender
+        type: personGender
       - name: concurrency
         type: int64
         computed: true
