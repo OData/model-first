@@ -94,50 +94,49 @@ function fromYaml(str, errors, config){
     var operations  = [];
     
     this.visitArr(arr, function(item){
-      if(item.type){
-        // Parse unbound operations.
-        if('action' === item.type.toString().toLowerCase() ||
-           'function' === item.type.toString().toLowerCase()){
-          var operation = {};
-          if('action' === item.type.toString().toLowerCase()){
-            operation.type = 'Action';
-          }
-          else{
-            operation.type = 'Function';
-          }
-          operation.operationType = 'Unbound';
-          this.visitObj(item, {
-            'name'    : function(obj){
-              operation.name = obj;
-            },
-            'params'  : function(arr){
-              operation.params = parseParams(arr);
-            },
-            'returns' : function(obj){
-              if(obj){
-                operation.returns = typeMap[obj] || obj;
-              }
-            }
-          });
-          operations.push(operation);
+      
+      // Parse unbound operations.
+      if(!item.type){
+        var operation = {};
+        if(!item.returns){
+          operation.type = 'Action';
         }
         else{
-          // entityset or singleton
-          var mt = detectCollectionType(item.type);
-          var et = {
-            name  : item.name,
-            type  : mt.type,
-            allows: item.allows
-          };
-          
-          if(mt.isCol){
-            entitysets.push(et);
+          operation.type = 'Function';
+        }
+        operation.operationType = 'Unbound';
+        this.visitObj(item, {
+          'name'    : function(obj){
+            operation.name = obj;
+          },
+          'params'  : function(arr){
+            operation.params = parseParams(arr);
+          },
+          'returns' : function(obj){
+            if(obj){
+              operation.returns = typeMap[obj] || obj;
+            }
           }
-          else{
-            singletons.push(et);
-          }
-        }  
+        });
+        operations.push(operation);
       }
+      else{
+        // entityset or singleton
+        var mt = detectCollectionType(item.type);
+        var et = {
+          name  : item.name,
+          type  : mt.type,
+          allows: item.allows
+        };
+        
+        if(mt.isCol){
+          entitysets.push(et);
+        }
+        else{
+          singletons.push(et);
+        }
+      }  
+      
     });
 
     state.container = {};
@@ -180,36 +179,31 @@ function fromYaml(str, errors, config){
             
             return property;
           }
+          // Parse Operations (Actions/Functions).
           function handleOperation(obj){
             var operation;
-            if(obj.name && obj.type){
+            if(obj.name){
               operation = { 'name': obj.name };
-
-              // Parse Operations (Actions/Functions).
-              if('action' === obj.type.toString().toLowerCase() ||
-                 'function' === obj.type.toString().toLowerCase()){
-
-                // Parse type of an operation.
-                if('action' === obj.type.toString().toLowerCase()){
-                  operation.type = 'Action';
-                }
-                else{
-                  operation.type = 'Function';
-                }
-                
-                // Parse parameters.
-                if(obj.params){
-                  operation.params = parseParams(obj.params);
-                }
-
-                // Parse return type.
-                if(obj.returns){
-                  operation.returns = typeMap[obj.returns] || obj.returns;
-                }
-
-                // Parse operation-type (Bound/Unbound).
-                operation.operationType = 'Bound';
+              // Parse type of an operation.
+              if(!obj.returns){
+                operation.type = 'Action';
               }
+              else{
+                operation.type = 'Function';
+              }
+              
+              // Parse parameters.
+              if(obj.params){
+                operation.params = parseParams(obj.params);
+              }
+
+              // Parse return type.
+              if(obj.returns){
+                operation.returns = typeMap[obj.returns] || obj.returns;
+              }
+
+              // Parse operation-type (Bound/Unbound).
+              operation.operationType = 'Bound';
             }
 
             return operation;
