@@ -11,6 +11,7 @@
     "test"
   ],
   "dependencies": {
-    "js-yaml": "^3.2.5"
+    "js-yaml": "^3.2.5",
+    "yaml-worker": "~2.0.1"
   }
 }

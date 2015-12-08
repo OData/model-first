@@ -9,7 +9,7 @@ window.Morpho = {
   registerTo    : function(name, toFunc) {
     this.convertTo[name] = toFunc;
   },
-  convert       : function(source, sourceFormat, targetFormat, option){
+  convert       : function(source, sourceFormat, targetFormat, option, callback){
     if(!Morpho.convertFrom[sourceFormat]){
       throw 'Source format ' + sourceFormat + ' not supported.';
     }
@@ -19,7 +19,7 @@ window.Morpho = {
     }
 
     var errors = [];
-    var model = Morpho.convertFrom[sourceFormat].call(this, source, errors, option);
+    var model = Morpho.convertFrom[sourceFormat].call(this, source, errors, option, callback);
     var result;
     if(model){
       result = Morpho.convertTo[targetFormat].call(this, model, errors, option);
