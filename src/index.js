@@ -2291,6 +2291,7 @@ module.exports={
           "type": "string"
         },
         "conformance": {
+          "description": "Must be one of minimal, intermediate, advanced.",
           "type": "string",
           "enum": [
             "minimal", "intermediate", "advanced"
@@ -2299,6 +2300,7 @@ module.exports={
         "supportsFilterFunctions": {
           "type": "array",
           "items": {
+            "description": "Must be one of contains, endswith, startswith, length, indexof, substring, tolower, toupper, trim, concat, year, month, day, hour, minute, second, round, floor, ceiling, cast, isof.",
             "enum": [
               "contains", "endswith", "startswith", "length", "indexof", "substring", "tolower", "toupper", "trim", "concat", "year", "month", "day", "hour", "minute", "second", "round", "floor", "ceiling", "cast", "isof"
             ]
@@ -2363,6 +2365,7 @@ module.exports={
         "insertable": {"type": "boolean"},
         "deletable": {"type": "boolean"},
         "allows": {
+          "description": "Must be one of create, read, update, delete",
           "type": "array",
           "items":{
             "enum":["create","read","update","delete"]
@@ -2474,7 +2477,7 @@ module.exports={
         "underlyingType": {
           "type": "string",
           "enum": [
-            "int32", "Int32", "string"
+            "int", "int32", "Int32", "string", "String"
           ]}
       },
       "additionalProperties": false
@@ -3267,6 +3270,7 @@ function validateSimpleYamlTypereferences(api)
   var primitiveTypes = [
     'binary',
     'bool',
+    'boolean',
     'byte',
     'date',
     'dateTimeOffset',
@@ -3386,7 +3390,7 @@ function validateSimpleYamlTypereferences(api)
         if(_.isObject(param) && param.type)
         {
           var typeName =trimRight(param.type, '[]');
-          if(!_.includes(customTypes, typeName) && !_.includes(primitiveTypes, trimLeft(param.type, 'edm.')))
+          if(!_.includes(customTypes, typeName) && !_.includes(primitiveTypes, trimLeft(typeName, 'edm.')))
           {
             response.errors.push({
               code: 'INVALID_TYPE',
@@ -3400,7 +3404,7 @@ function validateSimpleYamlTypereferences(api)
 
     if(service.returns){
       var typeName =trimRight(service.returns, '[]');
-      if(!_.includes(customTypes, typeName) && !_.includes(primitiveTypes, trimLeft(param.type, 'edm.')))
+      if(!_.includes(customTypes, typeName) && !_.includes(primitiveTypes, trimLeft(typeName, 'edm.')))
       {
         response.errors.push({
           code: 'INVALID_TYPE',
