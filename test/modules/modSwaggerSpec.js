@@ -521,38 +521,38 @@ describe('[Swagger] Actions test', function () {
 
         var expected =
         {
-            "/actionTest": {
-                "post": {
-                    "tags": [
-                        "Action",
-                        "Unbound"
+            '/actionTest': {
+                'post': {
+                    'tags': [
+                        'Action',
+                        'Unbound'
                     ],
-                    "description": "Unbound action: actionTest.",
-                    "parameters": [
+                    'description': 'Unbound action: actionTest.',
+                    'parameters': [
                         {
-                            "name": "If-Match",
-                            "type": "string",
-                            "in": "header",
-                            "description": "The If-Match header.",
-                            "required": false
+                            'name': 'If-Match',
+                            'type': 'string',
+                            'in': 'header',
+                            'description': 'The If-Match header.',
+                            'required': false
                         },
                         {
-                            "name": "p1",
-                            "type": {
-                                "type": "integer",
-                                "format": "int32"
+                            'name': 'p1',
+                            'type': {
+                                'type': 'integer',
+                                'format': 'int32'
                             },
-                            "in": "formData",
-                            "description": "The parameter.",
-                            "required": true
+                            'in': 'formData',
+                            'description': 'The parameter.',
+                            'required': true
                         }
                     ],
-                    "responses": {
-                        "201": {
-                            "description": "The action has been created new entities."
+                    'responses': {
+                        '201': {
+                            'description': 'The action has been created new entities.'
                         },
-                        "204": {
-                            "description": "The action is without a return type."
+                        '204': {
+                            'description': 'The action is without a return type.'
                         }
                     }
                 }
@@ -565,110 +565,110 @@ describe('[Swagger] Actions test', function () {
     it('Bound action should work.', function () {
         var input =
         {
-            "container": {
-                "entitysets": [
+            'container': {
+                'entitysets': [
                     {
-                        "name": "people",
-                        "type": "person",
-                        "allows": [
-                            "read"
+                        'name': 'people',
+                        'type': 'person',
+                        'allows': [
+                            'read'
                         ]
                     }
                 ]
             },
-            "types": [
+            'types': [
                 {
-                    "properties": [
+                    'properties': [
                         {
-                            "name": "userName",
-                            "type": "String",
-                            "isKey": true
+                            'name': 'userName',
+                            'type': 'String',
+                            'isKey': true
                         },
                         {
-                            "name": "actionTest",
-                            "type": "Action",
-                            "operationType": "Bound"
+                            'name': 'actionTest',
+                            'type': 'Action',
+                            'operationType': 'Bound'
                         }
                     ],
-                    "name": "person"
+                    'name': 'person'
                 }
             ]
         };
 
         var expected = {
-            "/people": {
-                "get": {
-                    "tags": [
-                        "person"
+            '/people': {
+                'get': {
+                    'tags': [
+                        'person'
                     ],
-                    "description": "Returns all items from people.",
-                    "responses": {
-                        "200": {
-                            "description": "An array of person items.",
-                            "schema": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/definitions/person"
+                    'description': 'Returns all items from people.',
+                    'responses': {
+                        '200': {
+                            'description': 'An array of person items.',
+                            'schema': {
+                                'type': 'array',
+                                'items': {
+                                    '$ref': '#/definitions/person'
                                 }
                             }
                         }
                     }
                 }
             },
-            "/people/{userName}": {
-                "get": {
-                    "tags": [
-                        "person"
+            '/people/{userName}': {
+                'get': {
+                    'tags': [
+                        'person'
                     ],
-                    "description": "Returns a single item from people.",
-                    "responses": {
-                        "200": {
-                            "description": "A single person item.",
-                            "schema": {
-                                "$ref": "#/definitions/person"
+                    'description': 'Returns a single item from people.',
+                    'responses': {
+                        '200': {
+                            'description': 'A single person item.',
+                            'schema': {
+                                '$ref': '#/definitions/person'
                             }
                         }
                     },
-                    "parameters": [
+                    'parameters': [
                         {
-                            "name": "userName",
-                            "in": "path",
-                            "description": "The key.",
-                            "required": true,
-                            "type": "string"
+                            'name': 'userName',
+                            'in': 'path',
+                            'description': 'The key.',
+                            'required': true,
+                            'type': 'string'
                         }
                     ]
                 }
             },
-            "/people/{userName}/actionTest": {
-                "post": {
-                    "tags": [
-                        "Action",
-                        "Bound"
+            '/people/{userName}/actionTest': {
+                'post': {
+                    'tags': [
+                        'Action',
+                        'Bound'
                     ],
-                    "description": "Bound action: actionTest.",
-                    "parameters": [
+                    'description': 'Bound action: actionTest.',
+                    'parameters': [
                         {
-                            "name": "If-Match",
-                            "type": "string",
-                            "in": "header",
-                            "description": "The If-Match header.",
-                            "required": false
+                            'name': 'If-Match',
+                            'type': 'string',
+                            'in': 'header',
+                            'description': 'The If-Match header.',
+                            'required': false
                         },
                         {
-                            "name": "userName",
-                            "type": "string",
-                            "in": "path",
-                            "description": "The key.",
-                            "required": true
+                            'name': 'userName',
+                            'type': 'string',
+                            'in': 'path',
+                            'description': 'The key.',
+                            'required': true
                         }
                     ],
-                    "responses": {
-                        "201": {
-                            "description": "The action has been created new entities."
+                    'responses': {
+                        '201': {
+                            'description': 'The action has been created new entities.'
                         },
-                        "204": {
-                            "description": "The action is without a return type."
+                        '204': {
+                            'description': 'The action is without a return type.'
                         }
                     }
                 }
@@ -685,57 +685,54 @@ describe('[Swagger] Functions test', function () {
         var input =
         {
             'container': {
-                "operations": [
+                'operations': [
                     {
-                        "type": "Function",
-                        "operationType": "Unbound",
-                        "name": "functionTest",
-                        "params": [
+                        'type': 'Function',
+                        'operationType': 'Unbound',
+                        'name': 'functionTest',
+                        'params': [
                             {
-                                "name": "p1",
-                                "type": "Int32"
+                                'name': 'p1',
+                                'type': 'Int32'
                             }
                         ],
-                        "returns": "Int32"
+                        'returns': 'Int32'
                     }]
             }
         };
 
         var expected = {
-            "/functionTest": {
-                "get": {
-                    "tags": [
-                        "Function",
-                        "Unbound"
+            '/functionTest': {
+                'get': {
+                    'tags': [
+                        'Function',
+                        'Unbound'
                     ],
-                    "description": "Unbound function: functionTest.",
-                    "parameters": [
+                    'description': 'Unbound function: functionTest.',
+                    'parameters': [
                         {
-                            "name": "p1",
-                            "type": {
-                                "type": "integer",
-                                "format": "int32"
+                            'name': 'p1',
+                            'type': {
+                                'type': 'integer',
+                                'format': 'int32'
                             },
-                            "in": "formData",
-                            "description": "The parameter.",
-                            "required": true
+                            'in': 'formData',
+                            'description': 'The parameter.',
+                            'required': true
                         }
                     ],
-                    "responses": {
-                        "204": {
-                            "description": "The function is without a return type."
+                    'responses': {
+                        '204': {
+                            'description': 'The function is without a return type.'
                         },
-                        "400": {
-                            "description": "A single entity function with a non-nullable return type has no result."
+                        '400': {
+                            'description': 'A single entity function with a non-nullable return type has no result.'
                         },
-                        "4xx": {
-                            "description": "A single-valued function with a non-nullable return type has no result, or a composable function the processing is stopped."
-                        },
-                        "200": {
-                            "description": "The function has been returned results.",
-                            "schema": {
-                                "type": "integer",
-                                "format": "int32"
+                        '200': {
+                            'description': 'The function has been returned results.',
+                            'schema': {
+                                'type': 'integer',
+                                'format': 'int32'
                             }
                         }
                     }
@@ -749,106 +746,103 @@ describe('[Swagger] Functions test', function () {
     it('Bound function should work.', function () {
         var input =
         {
-            "container": {
-                "entitysets": [
+            'container': {
+                'entitysets': [
                     {
-                        "name": "people",
-                        "type": "person",
-                        "allows": [
-                            "read"
+                        'name': 'people',
+                        'type': 'person',
+                        'allows': [
+                            'read'
                         ]
                     }
                 ]
             },
-            "types": [
+            'types': [
                 {
-                    "properties": [
+                    'properties': [
                         {
-                            "name": "userName",
-                            "type": "String",
-                            "isKey": true
+                            'name': 'userName',
+                            'type': 'String',
+                            'isKey': true
                         },
                         {
-                            "name": "functionTest",
-                            "type": "Function",
-                            "operationType": "Bound"
+                            'name': 'functionTest',
+                            'type': 'Function',
+                            'operationType': 'Bound'
                         }
                     ],
-                    "name": "person"
+                    'name': 'person'
                 }
             ]
         };
 
         var expected = {
-            "/people": {
-                "get": {
-                    "tags": [
-                        "person"
+            '/people': {
+                'get': {
+                    'tags': [
+                        'person'
                     ],
-                    "description": "Returns all items from people.",
-                    "responses": {
-                        "200": {
-                            "description": "An array of person items.",
-                            "schema": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/definitions/person"
+                    'description': 'Returns all items from people.',
+                    'responses': {
+                        '200': {
+                            'description': 'An array of person items.',
+                            'schema': {
+                                'type': 'array',
+                                'items': {
+                                    '$ref': '#/definitions/person'
                                 }
                             }
                         }
                     }
                 }
             },
-            "/people/{userName}": {
-                "get": {
-                    "tags": [
-                        "person"
+            '/people/{userName}': {
+                'get': {
+                    'tags': [
+                        'person'
                     ],
-                    "description": "Returns a single item from people.",
-                    "responses": {
-                        "200": {
-                            "description": "A single person item.",
-                            "schema": {
-                                "$ref": "#/definitions/person"
+                    'description': 'Returns a single item from people.',
+                    'responses': {
+                        '200': {
+                            'description': 'A single person item.',
+                            'schema': {
+                                '$ref': '#/definitions/person'
                             }
                         }
                     },
-                    "parameters": [
+                    'parameters': [
                         {
-                            "name": "userName",
-                            "in": "path",
-                            "description": "The key.",
-                            "required": true,
-                            "type": "string"
+                            'name': 'userName',
+                            'in': 'path',
+                            'description': 'The key.',
+                            'required': true,
+                            'type': 'string'
                         }
                     ]
                 }
             },
-            "/people/{userName}/functionTest": {
-                "get": {
-                    "tags": [
-                        "Function",
-                        "Bound"
+            '/people/{userName}/functionTest': {
+                'get': {
+                    'tags': [
+                        'Function',
+                        'Bound'
                     ],
-                    "description": "Bound function: functionTest.",
-                    "parameters": [
+                    'description': 'Bound function: functionTest.',
+                    'parameters': [
                         {
-                            "name": "userName",
-                            "type": "string",
-                            "in": "path",
-                            "description": "The key.",
-                            "required": true
+                            'name': 'userName',
+                            'type': 'string',
+                            'in': 'path',
+                            'description': 'The key.',
+                            'required': true
                         }
                     ],
-                    "responses": {
-                        "204": {
-                            "description": "The function is without a return type."
+                    'responses': {
+                        '204': {
+                            'description': 'The function is without a return type.'
                         },
-                        "400": {
-                            "description": "A single entity function with a non-nullable return type has no result."
-                        },
-                        "4xx": {
-                            "description": "A single-valued function with a non-nullable return type has no result, or a composable function the processing is stopped."
+                        '400': {
+                            'description': 'A single entity function with a non-nullable return type has no result.'
                         }
                     }
                 }

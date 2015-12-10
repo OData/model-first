@@ -213,9 +213,6 @@
             },
             '400': {
                 'description': 'A single entity function with a non-nullable return type has no result.'
-            },
-            '4xx': {
-                'description': 'A single-valued function with a non-nullable return type has no result, or a composable function the processing is stopped.'
             }
         };
         var schema;
