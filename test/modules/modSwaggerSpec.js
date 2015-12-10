@@ -21,6 +21,8 @@ describe('[Swagger] To Swagger test', function () {
 
         var sw = toSwagger(jsonModel, undefined, true);
         expect('\n' + JSON.stringify(sw.info)).toEqual('\n' + JSON.stringify(info));
+        expect('\n' + JSON.stringify(sw.info.title)).toEqual('\n' + '"service1"');
+        expect('\n' + JSON.stringify(sw.info.version)).toEqual('\n' + '"0.1"');
         expect('\n' + JSON.stringify(sw.host)).toEqual('\n' + '"var1.org"');
         expect('\n' + JSON.stringify(sw.basePath)).toEqual('\n' + '"/ab/(S(cnbm44wtbc1v5bgrlek5lpcc))/dat"');
     });
@@ -170,7 +172,134 @@ describe('[Swagger] To Swagger test', function () {
         assertDefinition(jsonModel, expected);
     });
 
-    it('Definitions should work.', function () {
+    it('Definitions multiple properties with all inner types.', function () {
+        var jsonModel =
+        {
+            'types': [
+                {
+                    'properties': [
+                        {
+                            'name': 'p1',
+                            'type': 'Boolean'
+                        },
+                        {
+                            'name': 'p2',
+                            'type': 'Byte'
+                        },
+                        {
+                            'name': 'p3',
+                            'type': 'Date'
+                        },
+                        {
+                            'name': 'p4',
+                            'type': 'DateTimeOffset'
+                        },
+                        {
+                            'name': 'p5',
+                            'type': 'Decimal'
+                        },
+                        {
+                            'name': 'p6',
+                            'type': 'Double'
+                        },
+                        {
+                            'name': 'p7',
+                            'type': 'Duration'
+                        },
+                        {
+                            'name': 'p8',
+                            'type': 'Guid'
+                        },
+                        {
+                            'name': 'p9',
+                            'type': 'Int16'
+                        },
+                        {
+                            'name': 'p10',
+                            'type': 'Int32'
+                        },
+                        {
+                            'name': 'p11',
+                            'type': 'Int64',
+                            'isNullable': true
+                        },
+                        {
+                            'name': 'p12',
+                            'type': 'Single',
+                            'isNullable': true
+                        },
+                        {
+                            'name': 'p13',
+                            'type': 'String',
+                            'isNullable': true
+                        }
+                    ],
+                    'name': 'type1'
+                }
+            ]
+        };
+
+        var expected = {
+            'type1': {
+                'properties': {
+                    'p1': {
+                        'type': 'boolean'
+                    },
+                    'p2': {
+                        'type': 'string',
+                        'format': 'byte'
+                    },
+                    'p3': {
+                        'type': 'string',
+                        'format': 'date'
+                    },
+                    'p4': {
+                        'type': 'string',
+                        'format': 'dateTimeOffset'
+                    },
+                    'p5': {
+                        'type': 'number',
+                        'format': 'decimal'
+                    },
+                    'p6': {
+                        'type': 'number',
+                        'format': 'double'
+                    },
+                    'p7': {
+                        'type': 'string',
+                        'format': 'duration'
+                    },
+                    'p8': {
+                        'type': 'string',
+                        'format': 'guid'
+                    },
+                    'p9': {
+                        'type': 'number',
+                        'format': 'int16'
+                    },
+                    'p10': {
+                        'type': 'integer',
+                        'format': 'int32'
+                    },
+                    'p11': {
+                        'type': 'integer',
+                        'format': 'int64'
+                    },
+                    'p12': {
+                        'type': 'number',
+                        'format': 'float'
+                    },
+                    'p13': {
+                        'type': 'string'
+                    }
+                }
+            }
+        };
+
+        assertDefinition(jsonModel, expected);
+    });
+
+    it('Definitions collection properties should work.', function () {
         var jsonModel =
         {
             'types': [
@@ -186,6 +315,11 @@ describe('[Swagger] To Swagger test', function () {
                             //'type'    : 'String',
                         },
                         {
+                            'name': 'day',
+                            'type': 'Date',
+                            'isCollection': false
+                        },
+                        {
                             'name': 'keywords',
                             'type': 'String',
                             'isCollection': true
@@ -195,6 +329,11 @@ describe('[Swagger] To Swagger test', function () {
                             'type': 'person',
                             'isCollection': false
                         },
+                        {
+                            'name': 'reader',
+                            'type': 'person',
+                            'isCollection': true
+                        }
                     ]
                 }
             ]
@@ -210,6 +349,10 @@ describe('[Swagger] To Swagger test', function () {
                     'title': {
                         'type': 'string'
                     },
+                    'day': {
+                        'type': 'string',
+                        'format': 'date'
+                    },
                     'keywords': {
                         'type': 'array',
                         'items': {
@@ -218,6 +361,13 @@ describe('[Swagger] To Swagger test', function () {
                     },
                     'author': {
                         '$ref': '#/definitions/person'
+                    },
+                    'reader': {
+                        'type': 'array',
+                        'items': {
+                            //'type': 'person',  //?
+                            '$ref': '#/definitions/person'
+                        }
                     }
                 }
             }
