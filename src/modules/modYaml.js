@@ -1,15 +1,38 @@
-function fromYaml(str, errors, config) {
-    var obj;
-    try {
-        obj = jsyaml.load(str);
-    }
-    catch (err) {
-        errors.push({
-            line: err.mark.line,
-            message: err.reason
-        });
-        return null;
-    }
+function fromYaml(str, errors, config, callback){
+  function OnMessage(message){
+    callback(message.data.errors);
+  }
+
+  function OnError(message){
+    callback(message.data.errors);
+  }
+
+  var obj;
+  try {
+    obj       = jsyaml.load(str);
+  }
+  catch(err) {
+    callback([{
+      yamlError: true,
+      lineNumber: err.mark.line,
+      message: err.reason
+    }]);
+    return null;
+  }
+
+  var worker = worker || new Worker('../bower_components/morpho/src/index.js');
+  worker.onmessage = OnMessage;
+  worker.onerror = OnError;
+  worker.postMessage({
+        definition: obj,
+        jsonRefs: {
+          location: window.location.href
+
+            // TODO: remove when this bug is fixed:
+            // https://github.com/apigee-127/sway/issues/24
+            .replace(/#.+/, '').replace(/\/$/, '')
+        }
+  });
 
     var typeMap =
     {

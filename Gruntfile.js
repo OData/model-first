@@ -77,7 +77,18 @@ module.exports = function(grunt) {
           keepalive: true
         }
       }
+    },
+	
+   uglify: {
+    options: {
+      mangle: false
+    },
+    simpleYamlWorker: {
+      files: {
+        'dist/bower_components/morpho/src/index.js': ['src/index.js']
+      }
     }
+  }
 
   });
 
@@ -88,6 +99,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-usemin');
   grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
 
   grunt.registerTask('default', ['karma:build', 'jshint']);
   grunt.registerTask('tdd', ['karma:dev']);
@@ -100,6 +112,7 @@ module.exports = function(grunt) {
     //'cssmin:generated',
     //'uglify:generated',
     //'filerev',
+	'uglify',
     'usemin'
   ]);
   grunt.registerTask('server', [
