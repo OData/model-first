@@ -234,3 +234,6 @@ $RECYCLE.BIN/
 bower_components/*
 app/bower_components/*
 dist/*
+
+# WebStorm
+.idea/
