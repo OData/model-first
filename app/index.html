@@ -11,11 +11,17 @@
 
     <!-- build:js scripts/lib.js -->
     <script src="../bower_components/js-yaml/dist/js-yaml.min.js"></script>
+    <script src="../bower_components/yaml-js/yaml.min.js"></script>
+    <script src="../bower_components/yaml-worker/index.js"></script>
+    <script src="../bower_components/yaml-js/yaml.min.js"></script>
+    <script src="../bower_components/yaml-worker/index.js"></script>
     <script src="bower_components/codemirror/lib/codemirror.js"></script>
     <script src="bower_components/codemirror/mode/yaml/yaml.js"></script>
     <script src="bower_components/codemirror/mode/xml/xml.js"></script>
     <script src="bower_components/codemirror/mode/javascript/javascript.js"></script>
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/jquery-tmpl/jquery.tmpl.min.js"></script>
+	
     <!-- endbuild -->
 
     <script src="scripts/config.js"></script>
@@ -33,6 +39,11 @@
     <!-- endbuild -->
   </head>
   <body>
+      <script id="errorTemp" type="text/x-jQuery-tmpl">
+        <span style="color:red">${errorType}</span>
+        <div>{{html errDes}}</div>
+        <p>lineNumber: ${ln}</p>
+      </script>
     <div>
        <select id="sampleList"></select>
        <button id="sampleLoad">Load</button>
@@ -46,9 +57,9 @@
       <div>
         <form id="targetFormatList"></form>
       </div>
+      <div id="errors">
+      </div>
       <textarea id="outputarea"></textarea>
-      Errors:
-      <textarea readonly id="errors"></textarea>
     </div>
   </body>
 </html>

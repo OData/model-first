@@ -6,8 +6,11 @@ module.exports = function(config) {
 
     files: [
       'bower_components/js-yaml/dist/js-yaml.min.js',
+	  'bower_components/yaml-js/yaml.min.js',
+	  'bower_components/yaml-worker/index.js',
       'src/morpho.js',
       'src/visitor.js',
+	  'src/index.js',
       'src/modules/*.js',
       'src/conventions/*.js',
       'test/modules/*.js',

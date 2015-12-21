@@ -1,4 +1,6 @@
-serviceRoot:
+api:
+  name: todo
+root:
   - name: todos
     type: todo[]
 types:

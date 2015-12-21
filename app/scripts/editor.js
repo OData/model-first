@@ -1,18 +1,111 @@
 'use strict';
 
 $(function (){
+  function positionRangeForPath(yamlSpec, path, cb) {
+  var MAP_TAG = 'tag:yaml.org,2002:map';
+  var SEQ_TAG = 'tag:yaml.org,2002:seq';
+    // Type check
+    if (typeof yamlSpec !== 'string') {
+      throw new TypeError('yamlSpec should be a string');
+    }
+    if (!Array.isArray(path)) {
+      throw new TypeError('path should be an array of strings');
+    }
+    if (typeof cb !== 'function') {
+      throw new TypeError('cb should be a function.');
+    }
+
+    var invalidRange = {
+      start: {line: -1, column: -1},
+      end: {line: -1, column: -1}
+    };
+    var i = 0;
+
+    function compose(error, ast) {
+
+      // simply walks the tree using current path recursively to the point that
+      // path is empty.
+      find(ast);
+
+      function find(current) {
+        if (current.tag === MAP_TAG) {
+          for (i = 0; i < current.value.length; i++) {
+            var pair = current.value[i];
+            var key = pair[0];
+            var value = pair[1];
+
+            if (key.value === path[0]) {
+              path.shift();
+              return find(value);
+            }
+          }
+        }
+
+        if (current.tag === SEQ_TAG) {
+          var item = current.value[path[0]];
+
+          if (item && item.tag) {
+            path.shift();
+            return find(item);
+          }
+        }
+
+        // if path is still not empty we were not able to find the node
+        if (path.length) {
+          return cb(invalidRange);
+        }
+
+        return cb({
+          /* jshint camelcase: false */
+          start: {
+            line: current.start_mark.line,
+            column: current.start_mark.column
+          },
+          end: {
+            line: current.end_mark.line,
+            column: current.end_mark.column
+          }
+        });
+      }
+    }
+
+    compose(null, yaml.compose(yamlSpec));
+  }
+
   function convert(){
+    function displayError(errors)
+    {
+      $('#errors').empty();
+      if(errors.length <= 0){return;}
+
+      for(var index in errors){
+        var error={errorType:null,errDes:'',ln:0};
+
+        error.errDes=!!( errors[index].description)? 
+          errors[index].description: errors[index].message;
+
+        if(errors[index].yamlError){
+          error.errorType = 'Yaml Error';
+          error.ln=errors[index].lineNumber;
+        } else {
+          error.errorType = 'Simple Yaml Error';
+          positionRangeForPath(input, errors[index].path,
+            function(range){
+            error.ln = range.start.line + 1;
+          });
+        }
+        console.log(error.errDes);
+        var t = $('#errorTemp').tmpl(error);
+        console.log(t);
+        t.appendTo('#errors');
+      }
+    }
+
     var defaultConfig = {addDefaults: true, format: true};
     var input = source.getValue();
-    var out = Morpho.convert(input, config.sourceFormat, config.targetFormat, defaultConfig);
+    var out = Morpho.convert(input, config.sourceFormat, config.targetFormat, defaultConfig, displayError);
 
-    if(out.errors.length > 0){
-      target.setValue('');
-      $('#errors').val(JSON.stringify(out.errors[0]));
-    }else{
-      target.setValue(out.model);
-      $('#errors').val('');
-    }
+    target.setValue(out.model);
   }
 
   var config  = window.morphoEditorConfig;
