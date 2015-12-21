@@ -1,4 +1,4 @@
-service:
+api:
   name: Swagger Petstore
   version:
     current: 1.0.0
@@ -9,35 +9,40 @@ service:
 
     For this sample, you can use the api key `special-key` to test the authorization filters
 
-serviceRoot:
+root:
   - name: pets
     type: pet[]
-    allows: [create, update, readSingle, delete]
-    operations:
-      - name: findByStatus
-        params: string[]
-        returns: pet[]
-      - name: findByTags
-        params: string[]
-        returns: pet[]
+    allows: [create, readSingle, update, delete]
   - name: orders
     type: order[]
-    allows: [create, delete, readSingle]
+    allows: [create, readSingle, delete]
   - name: users
     type: user[]
     allows: [create, readSingle, update, delete]
-    operations:
-      - name: createWithArray
-        params: user[]
-      - name: createWithList
-        params: user[]
-
+  - name: createWithArray
+    params: 
+      - name: users
+        type: user[]
+  - name: findByStatus
+    params: 
+      - name: status
+        type: string[]
+    returns: pet[]
+  - name: findByTags
+    params: 
+    -  name: tags
+       type: string[]
+    returns: pet[]
 types:
   - name: category
-    key: {name: id, type: int64}
+    key: 
+      - name: id
+        type: Int64
     optionalProperties: name
   - name: order
-    key: {name: id, type: int64}
+    key: 
+      - name: id
+        type: int64
     optionalProperties:
       - name: petId
         type: int64
@@ -49,7 +54,9 @@ types:
       - name: complete
         type: boolean
   - name: pet
-    key: {name: id, type: int64}
+    key: 
+      - name: id
+        type: int64}
     requiredProperties:
       - name: name
       - name: photoUrls
@@ -61,8 +68,12 @@ types:
         type: tag[]
       - name: status
   - name: tag
-    key: {name: id, type: int64}
+    key: 
+      - name: id
+        type: int64
     optionalProperties: name
   - name: user
-    key: {name: id, type: int64}
+    key: 
+      - name: id
+        type: int64
     optionalProperties: [username, firstName, lastName, email, password, phone, {name: userStatus, type: int32}]
