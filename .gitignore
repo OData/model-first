@@ -236,4 +236,4 @@ app/bower_components/*
 dist/*
 
 # WebStorm
-.idea/
+.idea/*
