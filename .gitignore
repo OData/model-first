@@ -237,3 +237,4 @@ dist/*
 
 # WebStorm
 .idea/*
+nbproject/*
