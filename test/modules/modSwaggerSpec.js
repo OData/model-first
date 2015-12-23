@@ -21,6 +21,8 @@ describe('[Swagger] To Swagger test', function () {
 
         var sw = toSwagger(jsonModel, undefined, true);
         expect('\n' + JSON.stringify(sw.info)).toEqual('\n' + JSON.stringify(info));
+        expect('\n' + JSON.stringify(sw.info.title)).toEqual('\n' + '"service1"');
+        expect('\n' + JSON.stringify(sw.info.version)).toEqual('\n' + '"0.1"');
         expect('\n' + JSON.stringify(sw.host)).toEqual('\n' + '"var1.org"');
         expect('\n' + JSON.stringify(sw.basePath)).toEqual('\n' + '"/ab/(S(cnbm44wtbc1v5bgrlek5lpcc))/dat"');
     });
@@ -170,7 +172,134 @@ describe('[Swagger] To Swagger test', function () {
         assertDefinition(jsonModel, expected);
     });
 
-    it('Definitions should work.', function () {
+    it('Definitions multiple properties with all inner types.', function () {
+        var jsonModel =
+        {
+            'types': [
+                {
+                    'properties': [
+                        {
+                            'name': 'p1',
+                            'type': 'Boolean'
+                        },
+                        {
+                            'name': 'p2',
+                            'type': 'Byte'
+                        },
+                        {
+                            'name': 'p3',
+                            'type': 'Date'
+                        },
+                        {
+                            'name': 'p4',
+                            'type': 'DateTimeOffset'
+                        },
+                        {
+                            'name': 'p5',
+                            'type': 'Decimal'
+                        },
+                        {
+                            'name': 'p6',
+                            'type': 'Double'
+                        },
+                        {
+                            'name': 'p7',
+                            'type': 'Duration'
+                        },
+                        {
+                            'name': 'p8',
+                            'type': 'Guid'
+                        },
+                        {
+                            'name': 'p9',
+                            'type': 'Int16'
+                        },
+                        {
+                            'name': 'p10',
+                            'type': 'Int32'
+                        },
+                        {
+                            'name': 'p11',
+                            'type': 'Int64',
+                            'isNullable': true
+                        },
+                        {
+                            'name': 'p12',
+                            'type': 'Single',
+                            'isNullable': true
+                        },
+                        {
+                            'name': 'p13',
+                            'type': 'String',
+                            'isNullable': true
+                        }
+                    ],
+                    'name': 'type1'
+                }
+            ]
+        };
+
+        var expected = {
+            'type1': {
+                'properties': {
+                    'p1': {
+                        'type': 'boolean'
+                    },
+                    'p2': {
+                        'type': 'string',
+                        'format': 'byte'
+                    },
+                    'p3': {
+                        'type': 'string',
+                        'format': 'date'
+                    },
+                    'p4': {
+                        'type': 'string',
+                        'format': 'dateTimeOffset'
+                    },
+                    'p5': {
+                        'type': 'number',
+                        'format': 'decimal'
+                    },
+                    'p6': {
+                        'type': 'number',
+                        'format': 'double'
+                    },
+                    'p7': {
+                        'type': 'string',
+                        'format': 'duration'
+                    },
+                    'p8': {
+                        'type': 'string',
+                        'format': 'guid'
+                    },
+                    'p9': {
+                        'type': 'number',
+                        'format': 'int16'
+                    },
+                    'p10': {
+                        'type': 'integer',
+                        'format': 'int32'
+                    },
+                    'p11': {
+                        'type': 'integer',
+                        'format': 'int64'
+                    },
+                    'p12': {
+                        'type': 'number',
+                        'format': 'float'
+                    },
+                    'p13': {
+                        'type': 'string'
+                    }
+                }
+            }
+        };
+
+        assertDefinition(jsonModel, expected);
+    });
+
+    it('Definitions collection properties should work.', function () {
         var jsonModel =
         {
             'types': [
@@ -186,6 +315,11 @@ describe('[Swagger] To Swagger test', function () {
                             //'type'    : 'String',
                         },
                         {
+                            'name': 'day',
+                            'type': 'Date',
+                            'isCollection': false
+                        },
+                        {
                             'name': 'keywords',
                             'type': 'String',
                             'isCollection': true
@@ -195,6 +329,11 @@ describe('[Swagger] To Swagger test', function () {
                             'type': 'person',
                             'isCollection': false
                         },
+                        {
+                            'name': 'reader',
+                            'type': 'person',
+                            'isCollection': true
+                        }
                     ]
                 }
             ]
@@ -210,6 +349,10 @@ describe('[Swagger] To Swagger test', function () {
                     'title': {
                         'type': 'string'
                     },
+                    'day': {
+                        'type': 'string',
+                        'format': 'date'
+                    },
                     'keywords': {
                         'type': 'array',
                         'items': {
@@ -218,6 +361,13 @@ describe('[Swagger] To Swagger test', function () {
                     },
                     'author': {
                         '$ref': '#/definitions/person'
+                    },
+                    'reader': {
+                        'type': 'array',
+                        'items': {
+                            //'type': 'person',  //?
+                            '$ref': '#/definitions/person'
+                        }
                     }
                 }
             }
@@ -521,38 +671,38 @@ describe('[Swagger] Actions test', function () {
 
         var expected =
         {
-            "/actionTest": {
-                "post": {
-                    "tags": [
-                        "Action",
-                        "Unbound"
+            '/actionTest': {
+                'post': {
+                    'tags': [
+                        'Action',
+                        'Unbound'
                     ],
-                    "description": "Unbound action: actionTest.",
-                    "parameters": [
+                    'description': 'Unbound action: actionTest.',
+                    'parameters': [
                         {
-                            "name": "If-Match",
-                            "type": "string",
-                            "in": "header",
-                            "description": "The If-Match header.",
-                            "required": false
+                            'name': 'If-Match',
+                            'type': 'string',
+                            'in': 'header',
+                            'description': 'The If-Match header.',
+                            'required': false
                         },
                         {
-                            "name": "p1",
-                            "type": {
-                                "type": "integer",
-                                "format": "int32"
+                            'name': 'p1',
+                            'type': {
+                                'type': 'integer',
+                                'format': 'int32'
                             },
-                            "in": "formData",
-                            "description": "The parameter.",
-                            "required": true
+                            'in': 'formData',
+                            'description': 'The parameter.',
+                            'required': true
                         }
                     ],
-                    "responses": {
-                        "201": {
-                            "description": "The action has been created new entities."
+                    'responses': {
+                        '201': {
+                            'description': 'The action has been created new entities.'
                         },
-                        "204": {
-                            "description": "The action is without a return type."
+                        '204': {
+                            'description': 'The action is without a return type.'
                         }
                     }
                 }
@@ -565,110 +715,110 @@ describe('[Swagger] Actions test', function () {
     it('Bound action should work.', function () {
         var input =
         {
-            "container": {
-                "entitysets": [
+            'container': {
+                'entitysets': [
                     {
-                        "name": "people",
-                        "type": "person",
-                        "allows": [
-                            "read"
+                        'name': 'people',
+                        'type': 'person',
+                        'allows': [
+                            'read'
                         ]
                     }
                 ]
             },
-            "types": [
+            'types': [
                 {
-                    "properties": [
+                    'properties': [
                         {
-                            "name": "userName",
-                            "type": "String",
-                            "isKey": true
+                            'name': 'userName',
+                            'type': 'String',
+                            'isKey': true
                         },
                         {
-                            "name": "actionTest",
-                            "type": "Action",
-                            "operationType": "Bound"
+                            'name': 'actionTest',
+                            'type': 'Action',
+                            'operationType': 'Bound'
                         }
                     ],
-                    "name": "person"
+                    'name': 'person'
                 }
             ]
         };
 
         var expected = {
-            "/people": {
-                "get": {
-                    "tags": [
-                        "person"
+            '/people': {
+                'get': {
+                    'tags': [
+                        'person'
                     ],
-                    "description": "Returns all items from people.",
-                    "responses": {
-                        "200": {
-                            "description": "An array of person items.",
-                            "schema": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/definitions/person"
+                    'description': 'Returns all items from people.',
+                    'responses': {
+                        '200': {
+                            'description': 'An array of person items.',
+                            'schema': {
+                                'type': 'array',
+                                'items': {
+                                    '$ref': '#/definitions/person'
                                 }
                             }
                         }
                     }
                 }
             },
-            "/people/{userName}": {
-                "get": {
-                    "tags": [
-                        "person"
+            '/people/{userName}': {
+                'get': {
+                    'tags': [
+                        'person'
                     ],
-                    "description": "Returns a single item from people.",
-                    "responses": {
-                        "200": {
-                            "description": "A single person item.",
-                            "schema": {
-                                "$ref": "#/definitions/person"
+                    'description': 'Returns a single item from people.',
+                    'responses': {
+                        '200': {
+                            'description': 'A single person item.',
+                            'schema': {
+                                '$ref': '#/definitions/person'
                             }
                         }
                     },
-                    "parameters": [
+                    'parameters': [
                         {
-                            "name": "userName",
-                            "in": "path",
-                            "description": "The key.",
-                            "required": true,
-                            "type": "string"
+                            'name': 'userName',
+                            'in': 'path',
+                            'description': 'The key.',
+                            'required': true,
+                            'type': 'string'
                         }
                     ]
                 }
             },
-            "/people/{userName}/actionTest": {
-                "post": {
-                    "tags": [
-                        "Action",
-                        "Bound"
+            '/people/{userName}/actionTest': {
+                'post': {
+                    'tags': [
+                        'Action',
+                        'Bound'
                     ],
-                    "description": "Bound action: actionTest.",
-                    "parameters": [
+                    'description': 'Bound action: actionTest.',
+                    'parameters': [
                         {
-                            "name": "If-Match",
-                            "type": "string",
-                            "in": "header",
-                            "description": "The If-Match header.",
-                            "required": false
+                            'name': 'If-Match',
+                            'type': 'string',
+                            'in': 'header',
+                            'description': 'The If-Match header.',
+                            'required': false
                         },
                         {
-                            "name": "userName",
-                            "type": "string",
-                            "in": "path",
-                            "description": "The key.",
-                            "required": true
+                            'name': 'userName',
+                            'type': 'string',
+                            'in': 'path',
+                            'description': 'The key.',
+                            'required': true
                         }
                     ],
-                    "responses": {
-                        "201": {
-                            "description": "The action has been created new entities."
+                    'responses': {
+                        '201': {
+                            'description': 'The action has been created new entities.'
                         },
-                        "204": {
-                            "description": "The action is without a return type."
+                        '204': {
+                            'description': 'The action is without a return type.'
                         }
                     }
                 }
@@ -685,57 +835,54 @@ describe('[Swagger] Functions test', function () {
         var input =
         {
             'container': {
-                "operations": [
+                'operations': [
                     {
-                        "type": "Function",
-                        "operationType": "Unbound",
-                        "name": "functionTest",
-                        "params": [
+                        'type': 'Function',
+                        'operationType': 'Unbound',
+                        'name': 'functionTest',
+                        'params': [
                             {
-                                "name": "p1",
-                                "type": "Int32"
+                                'name': 'p1',
+                                'type': 'Int32'
                             }
                         ],
-                        "returns": "Int32"
+                        'returns': 'Int32'
                     }]
             }
         };
 
         var expected = {
-            "/functionTest": {
-                "get": {
-                    "tags": [
-                        "Function",
-                        "Unbound"
+            '/functionTest': {
+                'get': {
+                    'tags': [
+                        'Function',
+                        'Unbound'
                     ],
-                    "description": "Unbound function: functionTest.",
-                    "parameters": [
+                    'description': 'Unbound function: functionTest.',
+                    'parameters': [
                         {
-                            "name": "p1",
-                            "type": {
-                                "type": "integer",
-                                "format": "int32"
+                            'name': 'p1',
+                            'type': {
+                                'type': 'integer',
+                                'format': 'int32'
                             },
-                            "in": "formData",
-                            "description": "The parameter.",
-                            "required": true
+                            'in': 'formData',
+                            'description': 'The parameter.',
+                            'required': true
                         }
                     ],
-                    "responses": {
-                        "204": {
-                            "description": "The function is without a return type."
+                    'responses': {
+                        '204': {
+                            'description': 'The function is without a return type.'
                         },
-                        "400": {
-                            "description": "A single entity function with a non-nullable return type has no result."
+                        '400': {
+                            'description': 'A single entity function with a non-nullable return type has no result.'
                         },
-                        "4xx": {
-                            "description": "A single-valued function with a non-nullable return type has no result, or a composable function the processing is stopped."
-                        },
-                        "200": {
-                            "description": "The function has been returned results.",
-                            "schema": {
-                                "type": "integer",
-                                "format": "int32"
+                        '200': {
+                            'description': 'The function has been returned results.',
+                            'schema': {
+                                'type': 'integer',
+                                'format': 'int32'
                             }
                         }
                     }
@@ -749,106 +896,103 @@ describe('[Swagger] Functions test', function () {
     it('Bound function should work.', function () {
         var input =
         {
-            "container": {
-                "entitysets": [
+            'container': {
+                'entitysets': [
                     {
-                        "name": "people",
-                        "type": "person",
-                        "allows": [
-                            "read"
+                        'name': 'people',
+                        'type': 'person',
+                        'allows': [
+                            'read'
                         ]
                     }
                 ]
             },
-            "types": [
+            'types': [
                 {
-                    "properties": [
+                    'properties': [
                         {
-                            "name": "userName",
-                            "type": "String",
-                            "isKey": true
+                            'name': 'userName',
+                            'type': 'String',
+                            'isKey': true
                         },
                         {
-                            "name": "functionTest",
-                            "type": "Function",
-                            "operationType": "Bound"
+                            'name': 'functionTest',
+                            'type': 'Function',
+                            'operationType': 'Bound'
                         }
                     ],
-                    "name": "person"
+                    'name': 'person'
                 }
             ]
         };
 
         var expected = {
-            "/people": {
-                "get": {
-                    "tags": [
-                        "person"
+            '/people': {
+                'get': {
+                    'tags': [
+                        'person'
                     ],
-                    "description": "Returns all items from people.",
-                    "responses": {
-                        "200": {
-                            "description": "An array of person items.",
-                            "schema": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/definitions/person"
+                    'description': 'Returns all items from people.',
+                    'responses': {
+                        '200': {
+                            'description': 'An array of person items.',
+                            'schema': {
+                                'type': 'array',
+                                'items': {
+                                    '$ref': '#/definitions/person'
                                 }
                             }
                         }
                     }
                 }
             },
-            "/people/{userName}": {
-                "get": {
-                    "tags": [
-                        "person"
+            '/people/{userName}': {
+                'get': {
+                    'tags': [
+                        'person'
                     ],
-                    "description": "Returns a single item from people.",
-                    "responses": {
-                        "200": {
-                            "description": "A single person item.",
-                            "schema": {
-                                "$ref": "#/definitions/person"
+                    'description': 'Returns a single item from people.',
+                    'responses': {
+                        '200': {
+                            'description': 'A single person item.',
+                            'schema': {
+                                '$ref': '#/definitions/person'
                             }
                         }
                     },
-                    "parameters": [
+                    'parameters': [
                         {
-                            "name": "userName",
-                            "in": "path",
-                            "description": "The key.",
-                            "required": true,
-                            "type": "string"
+                            'name': 'userName',
+                            'in': 'path',
+                            'description': 'The key.',
+                            'required': true,
+                            'type': 'string'
                         }
                     ]
                 }
             },
-            "/people/{userName}/functionTest": {
-                "get": {
-                    "tags": [
-                        "Function",
-                        "Bound"
+            '/people/{userName}/functionTest': {
+                'get': {
+                    'tags': [
+                        'Function',
+                        'Bound'
                     ],
-                    "description": "Bound function: functionTest.",
-                    "parameters": [
+                    'description': 'Bound function: functionTest.',
+                    'parameters': [
                         {
-                            "name": "userName",
-                            "type": "string",
-                            "in": "path",
-                            "description": "The key.",
-                            "required": true
+                            'name': 'userName',
+                            'type': 'string',
+                            'in': 'path',
+                            'description': 'The key.',
+                            'required': true
                         }
                     ],
-                    "responses": {
-                        "204": {
-                            "description": "The function is without a return type."
+                    'responses': {
+                        '204': {
+                            'description': 'The function is without a return type.'
                         },
-                        "400": {
-                            "description": "A single entity function with a non-nullable return type has no result."
-                        },
-                        "4xx": {
-                            "description": "A single-valued function with a non-nullable return type has no result, or a composable function the processing is stopped."
+                        '400': {
+                            'description': 'A single entity function with a non-nullable return type has no result.'
                         }
                     }
                 }

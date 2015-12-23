@@ -1,5 +1,5 @@
 # Handcrafted YAML representation of http://services.odata.org/V4/TripPinServiceRW/$metadata
-service:
+api:
   name: "TripPin OData Reference Service"
   version:
     current: 1.0.0
@@ -10,7 +10,7 @@ service:
   host: services.odata.org
   basePath: /V4/(S(cnbm44wtbc1v5bgrlek5lpcc))/TripPinServiceRW
 
-serviceRoot:
+root:
   - name: Photos
     type: photo[]
     searchable: true
@@ -80,7 +80,7 @@ types:
       - name: addressInfo
         type: location[]
       - name: gender
-        type: gender
+        type: personGender
       - name: concurrency
         type: int64
         computed: true
@@ -98,7 +98,7 @@ types:
         returns: trip[]
       - name: shareTrip
         params:
-          - userName
+          - sharedTo
           - name: tripId
             type: int32
   - name: airline
