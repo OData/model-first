@@ -93,7 +93,7 @@ describe('[YAML] Type section test', function () {
                 requiredProperties: p1\n',
             [{'properties': [{'name': 'p1'}], 'name': 'type1'}]));
 
-    it('Multiple property should work,using -.',
+    it('Multiple properties should work,using -.',
         fromYamlTypeTest(
             '\
             types:\n\
@@ -103,13 +103,78 @@ describe('[YAML] Type section test', function () {
                   - p3\n',
             [{'properties': [{'name': 'p1'}, {'name': 'p3'}], 'name': 'type1'}]));
 
-    it('Multiple property should work,using [].',
+    it('Multiple properties should work,using [].',
         fromYamlTypeTest(
             '\
             types:\n\
               - name: type1\n\
                 requiredProperties: [p1, p3]\n',
             [{'properties': [{'name': 'p1'}, {'name': 'p3'}], 'name': 'type1'}]));
+
+    it('Property with facets should work.',
+        fromYamlTypeTest(
+            '\
+            types:\n\
+              - name: type1\n\
+                requiredProperties:\n\
+                  - name: p1\n\
+                    type: binary\n\
+                  - name: p1\n\
+                    type: bool\n\
+                  - name: p1\n\
+                    type: byte\n\
+                  - name: p1\n\
+                    type: date\n\
+                  - name: p1\n\
+                    type: dateTimeOffset\n\
+                  - name: p1\n\
+                    type: decimal\n\
+                  - name: p1\n\
+                    type: double\n\
+                  - name: p1\n\
+                    type: duration\n\
+                  - name: p1\n\
+                    type: guid\n\
+                  - name: p1\n\
+                    type: short\n\
+                  - name: p1\n\
+                    type: int\n\
+                  - name: p1\n\
+                    type: long\n\
+                  - name: p1\n\
+                    type: int64\n\
+                  - name: p1\n\
+                    type: sbyte\n\
+                  - name: p1\n\
+                    type: single\n\
+                  - name: p1\n\
+                    type: stream\n\
+                  - name: p1\n\
+                    type: string\n\
+                  - name: p1\n\
+                    type: timeOfDay\n',
+            [{
+                'properties': [{'name': 'p1', 'type': 'Binary'}, {'name': 'p1', 'type': 'Boolean'}, {
+                    'name': 'p1',
+                    'type': 'Byte'
+                }, {'name': 'p1', 'type': 'Date'}, {'name': 'p1', 'type': 'DateTimeOffset'}, {
+                    'name': 'p1',
+                    'type': 'Decimal'
+                }, {'name': 'p1', 'type': 'Double'}, {'name': 'p1', 'type': 'Duration'}, {
+                    'name': 'p1',
+                    'type': 'Guid'
+                }, {'name': 'p1', 'type': 'Int16'}, {'name': 'p1', 'type': 'Int32'}, {
+                    'name': 'p1',
+                    'type': 'Int64'
+                }, {'name': 'p1', 'type': 'Int64'}, {'name': 'p1', 'type': 'SByte'}, {
+                    'name': 'p1',
+                    'type': 'Single'
+                }, {'name': 'p1', 'type': 'Stream'}, {'name': 'p1', 'type': 'String'}, {
+                    'name': 'p1',
+                    'type': 'TimeOfDay'
+                }],
+                'name': 'type1'
+            }]));
 
     it('Property with facets should work.',
         fromYamlTypeTest(
@@ -167,6 +232,40 @@ describe('[YAML] Type section test', function () {
                 'name': 'type1'
             }
             ]));
+
+    it('Combined Property case should work.',
+        fromYamlTypeTest(
+            '\
+            types:\n\
+              - name: type1\n\
+                requiredProperties:\n\
+                  - name: p1\n\
+                    type: long\n\
+                  - p2\n',
+            [{
+                'properties': [
+                    {'name': 'p1', 'type': 'Int64'},
+                    {'name': 'p2'}],
+                'name': 'type1'
+            }]));
+    it('Combined Property case should work, default type should be set.',
+        fromYamlTypeTest(
+            '\
+            types:\n\
+              - name: type1\n\
+                optionalProperties: [op1, op2]\n\
+                requiredProperties:\n\
+                  - name: p1\n\
+                    type: long\n\
+                  - p2\n',
+            [{
+                'properties': [
+                    {'name': 'op1', 'isNullable': true, 'type': 'String'},
+                    {'name': 'op2', 'isNullable': true, 'type': 'String'},
+                    {'name': 'p1', 'type': 'Int64'},
+                    {'name': 'p2', 'type': 'String'}],
+                'name': 'type1'
+            }], true));
 });
 
 // Testing for operations
@@ -335,6 +434,27 @@ describe('[YAML] Root section tests', function () {
                 }],
                 "returns": "thing[]"
             }]
+        }));
+
+    it('Empty EntitySet should work', fromYamlRootTest(
+        '\
+        root:\n\
+          - name: things\n\
+            url: things\n\
+            type: thing[]\n\
+          - name: thingsNew\n\
+            type: things[]\n\
+            allows: [create, update] \n',
+        {
+            'entitysets': [{
+                'name': 'things',
+                'type': 'thing'
+            },
+                {
+                    'name': 'thingsNew',
+                    'type': 'things',
+                    'allows': ['create', 'update']
+                }]
         }));
 });
 

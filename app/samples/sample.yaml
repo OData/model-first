@@ -1,4 +1,4 @@
-service:
+api:
   name: Service
 types:
   - name: person

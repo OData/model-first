@@ -112,7 +112,7 @@ types:
         returns: trip[]
       - name: shareTrip
         params:
-          - userName
+          - sharedTo
           - name: tripId
             type: int32
   - name: airline
