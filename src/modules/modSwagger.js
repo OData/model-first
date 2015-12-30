@@ -5,6 +5,62 @@
     }
 
     var SwaggerTypes = {
+        // Types are defined in Swagger Spec. 
+        'edm.int32': new SwaggerType('integer', 'int32'),
+        'edm.int64': new SwaggerType('integer', 'int64'),
+        'edm.single': new SwaggerType('number', 'float'),
+        'edm.double': new SwaggerType('number', 'double'),
+        'edm.string': new SwaggerType('string', undefined),
+        'edm.byte': new SwaggerType('string', 'byte'),
+        'edm.binary': new SwaggerType('string', 'binary'),
+        'edm.boolean': new SwaggerType('boolean', undefined),
+        'edm.date': new SwaggerType('string', 'date'),
+        // Extention types are not defined in Swagger Spec.
+        'edm.decimal': new SwaggerType('number', 'decimal'),
+        'edm.int16': new SwaggerType('integer', 'int16'),
+        'edm.sbyte': new SwaggerType('integer', 'sbyte') 
+    };
+
+    var typeMap = {
+        'edm.datetimeoffset': 'dateTimeOffset',
+        'edm.duration': 'duration',
+        'edm.guid': 'guid',
+        'edm.stream': 'stream',
+        'edm.timeofday': 'timeOfDay',
+        'edm.geography': 'geography',
+        'edm.geographypoint': 'geographyPoint',
+        'edm.geographylinestring': 'geographyLineString',
+        'edm.geographypolygon': 'geographyPolygon',
+        'edm.geographymultipoint': 'geographyMultiPoint',
+        'edm.geographymultilinestring': 'geographyMultiLineString',
+        'edm.geographymultipolygon': 'geographyMultiPolygon',
+        'edm.geographycollection': 'geographyCollection',
+        'edm.geometry': 'geometry',
+        'edm.geometrypoint': 'geometryPoint',
+        'edm.geometrylinestring': 'geometryLineString',
+        'edm.geometrypolygon': 'geometryPolygon',
+        'edm.geometrymultipoint': 'geometryMultiPoint',
+        'edm.geometrymultilinestring': 'geometryMultiLineString',
+        'edm.geometrymultipolygon': 'geometryMultiPolygon',
+        'edm.geometrycollection': 'geometryCollection'
+    };
+
+    function getSwaggerType(type, isCollection) {
+        var swgrType;
+        if(SwaggerTypes[type]){
+            swgrType = SwaggerTypes[type];
+        }
+        else if(typeMap[type]){
+            swgrType = new SwaggerType('string', 'string');
+        }
+        else{
+            swgrType = { '$ref': '#/definitions/' + type };
+        }
+
+        return isCollection ? { 'type': 'array', 'items': swgrType } : swgrType;
+    }
+
+    /*var SwaggerTypes = {
         'integer': new SwaggerType('integer', 'int32'),
         'long': new SwaggerType('integer', 'int64'),
         'float': new SwaggerType('number', 'float'),
@@ -41,11 +97,11 @@
         // 'Stream': 'Edm.Stream',
         'String': SwaggerTypes.string,
         // 'TimeOfDay': 'Edm.TimeOfDay',
-    };
+    };*/
 
     var entitySetMappings = {};
 
-    function getSwaggerType(type, isCollection) {
+    /*function getSwaggerType(type, isCollection) {
         var sType = type === undefined ?
             SwaggerTypes.string :
             typeMap[type];
@@ -59,7 +115,7 @@
         }
 
         return isCollection ? {'type': 'array', 'items': sType} : sType;
-    }
+    }*/
 
     // Gets a singleton/entity-set's name.
     // params:
