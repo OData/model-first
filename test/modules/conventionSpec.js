@@ -12,7 +12,7 @@ describe('[CONVENTION] Defaults', function () {
                         },
                         {
                             'name': 'name',
-                            'type': 'String'
+                            'type': 'edm.string'
                         }
                     ],
                     'name': 'Person'
@@ -42,11 +42,11 @@ describe('[CONVENTION] Defaults', function () {
                         {
                             'name': 'ID',
                             'isKey': true,
-                            'type': 'String'
+                            'type': 'edm.string'
                         },
                         {
                             'name': 'name',
-                            'type': 'String'
+                            'type': 'edm.string'
                         }
                     ],
                     'name': 'Person'
