@@ -8,7 +8,7 @@ Morpho.addDefaults = function(model)
           'properties' : function(properties){
             visitor.visitArr(properties, function(property){
               if(!property.type){
-                property.type = 'String';
+                property.type = 'edm.string';
               }
             });
           }

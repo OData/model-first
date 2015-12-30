@@ -157,13 +157,13 @@ function fromYaml(str, errors, config, callback){
                 else if (arr[i].name && !arr[i].type) {
                     tempObj = {
                         'name': arr[i].name,
-                        'type': 'String'
+                        'type': 'edm.string'
                     };
                 }
                 else {
                     tempObj = {
                         'name': arr[i],
-                        'type': 'String'
+                        'type': 'edm.string'
                     };
                 }
                 tempArr.push(tempObj);
@@ -172,7 +172,7 @@ function fromYaml(str, errors, config, callback){
         else {
             var tempObj = {
                 'name': arr,
-                'type': 'String'
+                'type': 'edm.string'
             };
             tempArr.push(tempObj);
         }
