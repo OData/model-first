@@ -60,62 +60,7 @@
         return isCollection ? { 'type': 'array', 'items': swgrType } : swgrType;
     }
 
-    /*var SwaggerTypes = {
-        'integer': new SwaggerType('integer', 'int32'),
-        'long': new SwaggerType('integer', 'int64'),
-        'float': new SwaggerType('number', 'float'),
-        'double': new SwaggerType('number', 'double'),
-        'string': new SwaggerType('string', undefined),
-        'byte': new SwaggerType('string', 'byte'),
-        'boolean': new SwaggerType('boolean', undefined),
-        'date': new SwaggerType('string', 'date'),
-        'dateTime': new SwaggerType('string', 'date-time'),
-        'password': new SwaggerType('string', 'password'),
-        // The follwing types are not defined in Swagger schema
-        'decimal': new SwaggerType('number', 'decimal'),
-        'short': new SwaggerType('number', 'int16'),
-        'guid': new SwaggerType('string', 'guid'),
-        'dateTimeOffset': new SwaggerType('string', 'dateTimeOffset'),
-        'duration': new SwaggerType('string', 'duration'),
-    };
-
-    var typeMap = {
-        'Binary': undefined,
-        'Boolean': SwaggerTypes.boolean,
-        'Byte': SwaggerTypes.byte,
-        'Date': SwaggerTypes.date,
-        'DateTimeOffset': SwaggerTypes.dateTimeOffset,
-        'Decimal': SwaggerTypes.decimal,
-        'Double': SwaggerTypes.double,
-        'Duration': SwaggerTypes.duration,
-        'Guid': SwaggerTypes.guid,
-        'Int16': SwaggerTypes.short,
-        'Int32': SwaggerTypes.integer,
-        'Int64': SwaggerTypes.long,
-        // 'SByte'   : 'Edm.SByte',
-        'Single': SwaggerTypes.float,
-        // 'Stream': 'Edm.Stream',
-        'String': SwaggerTypes.string,
-        // 'TimeOfDay': 'Edm.TimeOfDay',
-    };*/
-
     var entitySetMappings = {};
-
-    /*function getSwaggerType(type, isCollection) {
-        var sType = type === undefined ?
-            SwaggerTypes.string :
-            typeMap[type];
-
-        if (!sType) {
-            if (type.length > 4 && type.slice(0, 4) === 'edm.') {
-                sType = new SwaggerType('string', type);
-            } else {
-                sType = {'$ref': '#/definitions/' + type};
-            }
-        }
-
-        return isCollection ? {'type': 'array', 'items': sType} : sType;
-    }*/
 
     // Gets a singleton/entity-set's name.
     // params:

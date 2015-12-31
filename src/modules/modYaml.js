@@ -34,29 +34,6 @@ function fromYaml(str, errors, config, callback){
         }
   });
 
-    /*var typeMap =
-    {
-        'binary': 'Binary',
-        'bool': 'Boolean',
-        'byte': 'Byte',
-        'date': 'Date',
-        'dateTimeOffset': 'DateTimeOffset',
-        'decimal': 'Decimal',
-        'double': 'Double',
-        'duration': 'Duration',
-        'guid': 'Guid',
-        'short': 'Int16',
-        'int16': 'Int16',
-        'int': 'Int32',
-        'int32': 'Int32',
-        'long': 'Int64',
-        'int64': 'Int64',
-        'sbyte': 'SByte',
-        'single': 'Single',
-        'stream': 'Stream',
-        'string': 'String',
-        'timeOfDay': 'TimeOfDay',
-    };*/
     var typeMap = {
         'binary': 'edm.binary',
         'bool': 'edm.boolean',
