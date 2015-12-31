@@ -1,24 +1,24 @@
 'use strict';
 
-describe('[YAML] Service section test', function () {
+describe('[YAML] api section test', function () {
     var input = '\
-service:\n\
+api:\n\
   name: Service0\n\
   version: 3';
 
-    it('Service name should match', function () {
+    it('api name should match', function () {
         var model = Morpho.convertFrom.yaml.call(Morpho, input, {}, {});
-        expect(model.service.name).toEqual('Service0');
+        expect(model.api.name).toEqual('Service0');
     });
 
-    it('Service version without current format should match', function () {
+    it('api version without current format should match', function () {
         var model = Morpho.convertFrom.yaml.call(Morpho, input, {}, {});
-        expect(model.service.version).toEqual(3);
+        expect(model.api.version).toEqual(3);
     });
 
-    it('Service info object fields should match',
-        fromYamlServiceTest(
-            'service:\n\
+    it('api info object fields should match',
+        fromYamlApiTest(
+            'api:\n\
           name: TripPin OData Reference Service\n\
           version:\n\
             current: 1.2.3\n\
@@ -601,8 +601,8 @@ function fromYamlTypeTest(input, types, addDefaults) {
     return fromYamlTest(input, types, 'types', addDefaults);
 }
 
-function fromYamlServiceTest(input, service, addDefaults) {
-    return fromYamlTest(input, service, 'service', addDefaults);
+function fromYamlApiTest(input, api, addDefaults) {
+    return fromYamlTest(input, api, 'api', addDefaults);
 }
 
 function fromYamlTest(input, json, section, addDefaults) {

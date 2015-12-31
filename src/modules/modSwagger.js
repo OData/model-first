@@ -466,8 +466,8 @@
         var boundOpPaths = {};
 
         visitor.visitObj(model, {
-            'service': function (service) {
-                this.visitObj(service, {
+            'api': function (api) {
+                this.visitObj(api, {
                     'name': function (name) {
                         state.info.title = name;
                     },
