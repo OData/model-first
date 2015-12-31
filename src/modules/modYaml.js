@@ -168,8 +168,8 @@ function fromYaml(str, errors, config, callback){
     var visitor = this.getVisitor();
     var state = {};
     visitor.visitObj(obj, {
-        'service': function (obj) {
-            state.service = obj;
+        'api': function (obj) {
+            state.api = obj;
         },
         'types': function (arr) {
             state.types = [];

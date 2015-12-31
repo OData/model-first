@@ -1,10 +1,10 @@
 'use strict';
 
 describe('[Swagger] To Swagger test', function () {
-    it('service should work.', function () {
+    it('api should work.', function () {
         var jsonModel =
         {
-            'service': {
+            'api': {
                 'name': 'service1',
                 'version': '0.1',
                 'description': 'this is service1',
@@ -26,10 +26,10 @@ describe('[Swagger] To Swagger test', function () {
         expect('\n' + JSON.stringify(sw.host)).toEqual('\n' + '"var1.org"');
         expect('\n' + JSON.stringify(sw.basePath)).toEqual('\n' + '"/ab/(S(cnbm44wtbc1v5bgrlek5lpcc))/dat"');
     });
-    it('Info object related service fields should match', function () {
+    it('Info object related api fields should match', function () {
         var jsonModel =
         {
-            'service': {
+            'api': {
                 'name': 'TripPin OData Reference Service',
                 'version': {
                     'current': '1.0.0'
@@ -64,7 +64,7 @@ describe('[Swagger] To Swagger test', function () {
             }
         };
 
-        assertService(jsonModel, expected);
+        assertApi(jsonModel, expected);
     });
 
     it('Definitions of enum should work.', function () {
@@ -1010,7 +1010,7 @@ function assertPaths(input, output) {
     expect('\n' + toSwagger(input, 'paths')).toEqual('\n' + JSON.stringify(output));
 }
 
-function assertService(input, output) {
+function assertApi(input, output) {
     expect('\n' + toSwagger(input, 'info')).toEqual('\n' + JSON.stringify(output));
 }
 
