@@ -257,6 +257,9 @@ function fromYaml(str, errors, config, callback){
                     'underlyingType': function (obj) {
                         type.underlyingType = obj;
                     },
+					'baseType': function (obj) {
+                        type.baseType = obj;
+                    },
                     'key': function (obj) {
                         this.visitArr(obj, function (obj) {
                             type.properties.push(handleProperty(obj, function (p) {

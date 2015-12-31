@@ -513,6 +513,8 @@
             },
             'types': function (arr) {
                 state.definitions = {};
+				var baseTypeNames = [];
+					
                 this.visitArr(arr, function (item) {
                     var type = {properties: {}};
 
@@ -526,22 +528,12 @@
                         }
 
                         return member;
-                    }
-
-                    this.visitObj(item, {
-                        'members': function (obj) {
-                            type.type = 'string';
-                            type['enum'] = [];
-                            delete type.properties;
-                            this.visitArr(obj, function (obj) {
-                                type['enum'].push(handleMember(obj));
-                            });
-                        }
-                    });
-
-                    var keyProperty = null;
+                    }					
+					
+					var keyProperty = null;
                     var parentTypeName = item.name;
-                    if (item.properties) {
+					
+					if (item.properties) {
                         visitor.visitArr(item.properties, function (item) {
                             if (!item.operationType) {
                                 var swType = getSwaggerType(item.type, item.isCollection);
@@ -563,39 +555,129 @@
                                         // add paths would check whether format undefined.
                                         'format': swType.format
                                     };
+									
+									if (!item.isNullable)
+									{
+										if (!type.required)
+										{
+											type.required = [];
+										}
+										
+										type.required.push(item.name);
+									}
                                 }
                             }
                         });
-
-
-                        if (keyProperty) {
-                            keys[item.name] = keyProperty;
-                        }
-                        // Convert bound operations (actions and functions).
-                        visitor.visitArr(item.properties, function (item) {
-                            if (item.operationType) {
-                                var swKey = keys[parentTypeName];
-                                if (swKey) {
-                                    if ('Action' === item.type) {
-                                        var temp = routeOperation(item.name, item.type, item.operationType, item.params, parentTypeName, swKey, item.returns);
-                                        var routes = {
-                                            'post': temp.route
-                                        };
-                                        boundOpPaths[temp.path] = routes;
-                                    }
-                                    else if ('Function' === item.type) {
-                                        var temp = routeOperation(item.name, item.type, item.operationType, item.params, parentTypeName, swKey, item.returns);
-                                        var routes = {
-                                            'get': temp.route
-                                        };
-                                        boundOpPaths[temp.path] = routes;
-                                    }
-                                }
-                            }
-                        });
+                   
+                    if (keyProperty) {
+                        keys[item.name] = keyProperty;
                     }
+					
+                    // Convert bound operations (actions and functions).
+                    visitor.visitArr(item.properties, function (item) {
+                        if (item.operationType) {
+                            var swKey = keys[parentTypeName];
+                            if (swKey) {
+                                if ('Action' === item.type) {
+                                    var temp = routeOperation(item.name, item.type, item.operationType, item.params, parentTypeName, swKey, item.returns);
+                                    var routes = {
+                                        'post': temp.route
+                                    };
+                                    boundOpPaths[temp.path] = routes;
+                                }
+                                else if ('Function' === item.type) {
+                                    var temp = routeOperation(item.name, item.type, item.operationType, item.params, parentTypeName, swKey, item.returns);
+                                    var routes = {
+                                        'get': temp.route
+                                    };
+                                    boundOpPaths[temp.path] = routes;
+                                }
+                            }
+                        }
+                    });
+					}
+					
+				    this.visitObj(item, {
+                        'members': function (obj) {
+                            type.type = 'string';
+                            type['enum'] = [];
+                            delete type.properties;
+                            this.visitArr(obj, function (obj) {
+                                type['enum'].push(handleMember(obj));
+                            });
+                        },
+						'baseType': function (obj) {
+                            var typeValue = type;
+							type = {allOf:[]};
+							var baseTypeRef = {'$ref': '#/definitions/' + obj};
+							type.allOf.push(baseTypeRef);
+							type.allOf.push(typeValue);
+							
+							var isBaseTypeRegistered = false;
+							for (var k = 0; k < baseTypeNames.length; k++) { 
+								if(baseTypeNames[k]==obj)
+								{
+									isBaseTypeRegistered = true;
+								}
+							}
+							
+							if( !isBaseTypeRegistered )
+							{
+							   baseTypeNames.push(obj);
+							}
+                        },
+                    });
+					
                     state.definitions[item.name] = type;
                 });
+				
+				function handleBaseType(baseTypeName) {
+					if( !state.definitions[baseTypeName] ) return;
+					
+					var propertyName = baseTypeName + 'Type';
+						
+					var propertyContent = {
+								'type' : 'string'
+							};
+					
+					if( !state.definitions[baseTypeName].allOf )
+					{
+						if(state.definitions[baseTypeName].discriminator)
+							return;
+							
+						state.definitions[baseTypeName].properties[propertyName] = propertyContent;
+						if ( !state.definitions[baseTypeName].required )
+									state.definitions[baseTypeName].required = [];
+						state.definitions[baseTypeName].required.push(propertyName);
+						state.definitions[baseTypeName].discriminator = propertyName;
+					}
+					else
+					{
+						for (var j = 0; j < state.definitions[baseTypeName].allOf.length; j++) { 
+							if(state.definitions[baseTypeName].allOf[j].properties)
+							{
+								if(state.definitions[baseTypeName].allOf[j].discriminator)
+									return;
+								
+								state.definitions[baseTypeName].allOf[j].properties[propertyName] = propertyContent;
+								if ( !state.definitions[baseTypeName].allOf[j].required )
+									state.definitions[baseTypeName].allOf[j].required = [];
+								state.definitions[baseTypeName].allOf[j].required.push(propertyName);
+								state.definitions[baseTypeName].allOf[j].discriminator = propertyName;
+								break;
+							}
+						}
+					}
+					
+					
+					return;
+                }
+				
+				for (var i = 0; i < baseTypeNames.length; i++) { 
+					handleBaseType( baseTypeNames[i] );
+				}
+				
+				baseTypeNames = [];
             }
         });
 
