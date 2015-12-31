@@ -376,6 +376,192 @@ describe('[Swagger] To Swagger test', function () {
         assertDefinition(jsonModel, expected);
     });
 
+	it('Definitions of type inheritance should work.', function () {
+        var jsonModel =
+        {
+            'types': [
+                {
+				  'properties': [
+					{
+					  'name': 'planItemId',
+					  'isKey': true,
+					  'type': 'String'
+					},
+					{
+					  'name': 'confirmationCode',
+					  'isNullable': true,
+					  'type': 'String'
+					},
+					{
+					  'name': 'startsAt',
+					  'type': 'DateTimeOffset',
+					  'isNullable': true
+					},
+					{
+					  'name': 'endsAt',
+					  'type': 'DateTimeOffset',
+					  'isNullable': true
+					},
+					{
+					  'name': 'duration',
+					  'type': 'Duration',
+					  'isNullable': true
+					}
+				  ],
+				  'name': 'planItem'
+			  },
+			  { 
+				  'properties': [
+					{
+					  'name': 'seatNumber',
+					  'isNullable': true,
+					  'type': 'String'
+					}
+				  ],
+				  'name': 'publicTransportation',
+				  'baseType': 'planItem'
+  			  },
+			  {
+				  'properties': [
+					{
+					  'name': 'flightNumber',
+					  'type': 'String'
+					},
+					{
+					  'name': 'from',
+					  'type': 'airport',
+					  'isNullable': true
+					},
+					{
+					  'name': 'to',
+					  'type': 'airport',
+					  'isNullable': true
+					},
+					{
+					  'name': 'airline',
+					  'type': 'airline',
+					  'isNullable': true
+					}
+				  ],
+				  'name': 'flight',
+				  'baseType': 'publicTransportation'
+			  },
+			  {
+				  'properties': [
+					{
+					  'name': 'description',
+					  'isNullable': true,
+					  'type': 'String'
+					},
+					{
+					  'name': 'occursAt',
+					  'type': 'eventLocation',
+					  'isNullable': true
+					}
+				  ],
+				  'name': 'event',
+				  'baseType': 'planItem'
+			  }
+            ]
+        };
+
+        var expected = {
+            'planItem': {
+			  'properties': {
+				'planItemId': {
+				  'type': 'string'
+				},
+				'confirmationCode': {
+				  'type': 'string'
+				},
+				'startsAt': {
+				  'type': 'string',
+				  'format': 'dateTimeOffset'
+				},
+				'endsAt': {
+				  'type': 'string',
+				  'format': 'dateTimeOffset'
+				},
+				'duration': {
+				  'type': 'string',
+				  'format': 'duration'
+				},
+				'planItemType': {
+				  'type': 'string'
+				}
+			  },
+			  'required': [
+				'planItemId',
+				'planItemType'
+			  ],
+			  'discriminator': 'planItemType'
+			},
+			'publicTransportation': {
+			  'allOf': [
+				{
+				  '$ref': '#/definitions/planItem'
+				},
+				{
+				  'properties': {
+					'seatNumber': {
+					  'type': 'string'
+					},
+					'publicTransportationType': {
+					  'type': 'string'
+					}
+				  },
+				  'required': [
+					'publicTransportationType'
+				  ],
+				  'discriminator': 'publicTransportationType'
+				}
+			  ]
+			},
+			'flight': {
+			  'allOf': [
+				{
+				  '$ref': '#/definitions/publicTransportation'
+				},
+				{
+				  'properties': {
+					'flightNumber': {
+					  'type': 'string'
+					},
+					'from': {
+					  '$ref': '#/definitions/airport'
+					},
+					'to': {
+					  '$ref': '#/definitions/airport'
+					},
+					'airline': {
+					  '$ref': '#/definitions/airline'
+					}
+				  }
+				}
+			  ]
+			},
+			'event': {
+			  'allOf': [
+				{
+				  '$ref': '#/definitions/planItem'
+				},
+				{
+				  'properties': {
+					'description': {
+					  'type': 'string'
+					},
+					'occursAt': {
+					  '$ref': '#/definitions/eventLocation'
+					}
+				  }
+				}
+			  ]
+			}
+        };
+		
+        assertDefinition(jsonModel, expected);
+    });
+	
     it('Allows should work.', function () {
         var input = {
             'types': [
