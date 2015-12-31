@@ -1,5 +1,190 @@
 'use strict';
 
+describe('[Swagger] Primitive type definitions test', function(){
+    it('Predefined types in module should work well', function(){
+        var jsonModel = {
+        'types': [
+        {
+            'properties': [
+            {
+                'name': 'prop1',
+                'type': 'edm.binary'
+            },
+            {
+                'name': 'prop2',
+                'type': 'edm.boolean'
+            },
+            {
+                'name': 'prop3',
+                'type': 'edm.byte'
+            },
+            {
+                'name': 'prop4',
+                'type': 'edm.date'
+            },
+            {
+                'name': 'prop5',
+                'type': 'edm.datetimeoffset'
+            },
+            {
+                'name': 'prop6',
+                'type': 'edm.decimal'
+            },
+            {
+                'name': 'prop7',
+                'type': 'edm.double'
+            },
+            {
+                'name': 'prop8',
+                'type': 'edm.duration'
+            },
+            {
+                'name': 'prop9',
+                'type': 'edm.guid'
+            },
+            {
+                'name': 'prop10',
+                'type': 'edm.int16'
+            },
+            {
+                'name': 'prop11',
+                'type': 'edm.int32'
+            },
+            {
+                'name': 'prop12',
+                'type': 'edm.int64'
+            },
+            {
+                'name': 'prop13',
+                'type': 'edm.sbyte'
+            },
+            {
+                'name': 'prop14',
+                'type': 'edm.single'
+            },
+            {
+                'name': 'prop15',
+                'type': 'edm.stream'
+            },
+            {
+                'name': 'prop16',
+                'type': 'edm.string'
+            },
+            {
+                'name': 'prop17',
+                'type': 'edm.timeofday'
+            },
+            {
+                'name': 'prop18',
+                'type': 'edm.geography'
+            },
+            {
+                'name': 'prop19',
+                'type': 'edm.geographypoint'
+            },
+            {
+                'name': 'prop20',
+                'type': 'edm.geographylinestring'
+            },
+            {
+                'name': 'prop21',
+                'type': 'edm.geographypolygon'
+            },
+            {
+                'name': 'prop22',
+                'type': 'edm.geographymultipoint'
+            },
+            {
+                'name': 'prop23',
+                'type': 'edm.geographymultilinestring'
+            },
+            {
+                'name': 'prop24',
+                'type': 'edm.geographymultipolygon'
+            },
+            {
+                'name': 'prop25',
+                'type': 'edm.geographycollection'
+            },
+            {
+                'name': 'prop26',
+                'type': 'edm.geometry'
+            },
+            {
+                'name': 'prop27',
+                'type': 'edm.geometrypoint'
+            },
+            {
+                'name': 'prop28',
+                'type': 'edm.geometrylinestring'
+            },
+            {
+                'name': 'prop29',
+                'type': 'edm.geometrypolygon'
+            },
+            {
+                'name': 'prop30',
+                'type': 'edm.geometrymultipoint'
+            },
+            {
+                'name': 'prop31',
+                'type': 'edm.geometrymultilinestring'
+            },
+            {
+                'name': 'prop32',
+                'type': 'edm.geometrymultipolygon'
+            },
+            {
+                'name': 'prop33',
+                'type': 'edm.geometrycollection'
+            }],
+            'name': 'myType'
+        }]
+    };
+    var swaggerModel = {
+        'myType': {
+            'properties': {
+                'prop1': { 'type': 'string', 'format': 'binary' },
+                'prop2': { 'type': 'boolean' },
+                'prop3': { 'type': 'string', 'format': 'byte' },
+                'prop4': { 'type': 'string', 'format': 'date' },
+                'prop5': { 'type': 'string', 'format': 'string' },
+                'prop6': { 'type': 'number', 'format': 'decimal' },
+                'prop7': { 'type': 'number', 'format': 'double' },
+                'prop8': { 'type': 'string', 'format': 'string' },
+                'prop9': { 'type': 'string', 'format': 'string' },
+                'prop10': { 'type': 'integer', 'format': 'int16' },
+                'prop11': { 'type': 'integer', 'format': 'int32' },
+                'prop12': { 'type': 'integer', 'format': 'int64' },
+                'prop13': { 'type': 'integer', 'format': 'sbyte' },
+                'prop14': { 'type': 'number', 'format': 'float' },
+                'prop15': { 'type': 'string', 'format': 'string' },
+                'prop16': { 'type': 'string' },
+                'prop17': { 'type': 'string', 'format': 'string' },
+                'prop18': { 'type': 'string', 'format': 'string' },
+                'prop19': { 'type': 'string', 'format': 'string' },
+                'prop20': { 'type': 'string', 'format': 'string' },
+                'prop21': { 'type': 'string', 'format': 'string' },
+                'prop22': { 'type': 'string', 'format': 'string' },
+                'prop23': { 'type': 'string', 'format': 'string' },
+                'prop24': { 'type': 'string', 'format': 'string' },
+                'prop25': { 'type': 'string', 'format': 'string' },
+                'prop26': { 'type': 'string', 'format': 'string' },
+                'prop27': { 'type': 'string', 'format': 'string' },
+                'prop28': { 'type': 'string', 'format': 'string' },
+                'prop29': { 'type': 'string', 'format': 'string' },
+                'prop30': { 'type': 'string', 'format': 'string' },
+                'prop31': { 'type': 'string', 'format': 'string' },
+                'prop32': { 'type': 'string', 'format': 'string' },
+                'prop33': { 'type': 'string', 'format': 'string' }
+            }
+        }
+    };
+
+    assertDefinition(jsonModel, swaggerModel);
+    });
+});
+
 describe('[Swagger] To Swagger test', function () {
     it('service should work.', function () {
         var jsonModel =
@@ -102,22 +287,22 @@ describe('[Swagger] To Swagger test', function () {
                         }
                     ],
                     'flags': false,
-                    'underlyingType': 'int32'
+                    'underlyingType': 'edm.int32'
                 },
                 {
                     'name': 'Book',
                     'properties': [
                         {
                             'name': 'id',
-                            'type': 'Int64'
+                            'type': 'edm.int64'
                         },
                         {
                             'name': 'title',
-                            //'type'    : 'String',
+                            'type': 'edm.string',
                         },
                         {
                             'name': 'keywords',
-                            'type': 'String',
+                            'type': 'edm.string',
                             'isCollection': true
                         },
                         {
@@ -172,7 +357,7 @@ describe('[Swagger] To Swagger test', function () {
         assertDefinition(jsonModel, expected);
     });
 
-    it('Definitions multiple properties with all inner types.', function () {
+    /*it('Definitions multiple properties with all inner types.', function () {
         var jsonModel =
         {
             'types': [
@@ -297,7 +482,7 @@ describe('[Swagger] To Swagger test', function () {
         };
 
         assertDefinition(jsonModel, expected);
-    });
+    });*/
 
     it('Definitions collection properties should work.', function () {
         var jsonModel =
@@ -308,20 +493,20 @@ describe('[Swagger] To Swagger test', function () {
                     'properties': [
                         {
                             'name': 'id',
-                            'type': 'Int64'
+                            'type': 'edm.int64'
                         },
                         {
                             'name': 'title',
-                            //'type'    : 'String',
+                            'type': 'edm.string',
                         },
                         {
                             'name': 'day',
-                            'type': 'Date',
+                            'type': 'edm.date',
                             'isCollection': false
                         },
                         {
                             'name': 'keywords',
-                            'type': 'String',
+                            'type': 'edm.string',
                             'isCollection': true
                         },
                         {
@@ -383,10 +568,12 @@ describe('[Swagger] To Swagger test', function () {
                     'properties': [
                         {
                             'name': 'uid',
+                            'type': 'edm.string',
                             'isKey': true
                         },
                         {
                             'name': 'title',
+                            'type': 'edm.string',
                             'isKey': true
                         }
                     ],
@@ -482,10 +669,12 @@ describe('[Swagger] To Swagger test', function () {
                     'properties': [
                         {
                             'name': 'uid',
+                            'type': 'edm.string',
                             'isKey': true
                         },
                         {
                             'name': 'title',
+                            'type': 'edm.string',
                             'isKey': true
                         }
                     ],
@@ -663,7 +852,7 @@ describe('[Swagger] Actions test', function () {
                         'params': [
                             {
                                 'name': 'p1',
-                                'type': 'Int32'
+                                'type': 'edm.int32'
                             }]
                     }]
             }
@@ -731,7 +920,7 @@ describe('[Swagger] Actions test', function () {
                     'properties': [
                         {
                             'name': 'userName',
-                            'type': 'String',
+                            'type': 'edm.string',
                             'isKey': true
                         },
                         {
@@ -843,10 +1032,10 @@ describe('[Swagger] Functions test', function () {
                         'params': [
                             {
                                 'name': 'p1',
-                                'type': 'Int32'
+                                'type': 'edm.int32'
                             }
                         ],
-                        'returns': 'Int32'
+                        'returns': 'edm.int32'
                     }]
             }
         };
@@ -912,7 +1101,7 @@ describe('[Swagger] Functions test', function () {
                     'properties': [
                         {
                             'name': 'userName',
-                            'type': 'String',
+                            'type': 'edm.string',
                             'isKey': true
                         },
                         {
