@@ -248,6 +248,7 @@ describe('[YAML] Type section test', function () {
                     {'name': 'p2'}],
                 'name': 'type1'
             }]));
+			
     it('Combined Property case should work, default type should be set.',
         fromYamlTypeTest(
             '\
@@ -266,6 +267,123 @@ describe('[YAML] Type section test', function () {
                     {'name': 'p2', 'type': 'String'}],
                 'name': 'type1'
             }], true));
+			
+	it('Type Inheritance should work',
+        fromYamlTypeTest(
+           '\
+            types:\n\
+              - name: planItem\n\
+                key: planItemId\n\
+                optionalProperties:\n\
+                  - confirmationCode\n\
+                  - name: startsAt\n\
+                    type: dateTimeOffset\n\
+                  - name: endsAt\n\
+                    type: dateTimeOffset\n\
+                  - name: duration\n\
+                    type: duration\n\
+              - name: publicTransportation\n\
+                baseType: planItem\n\
+                optionalProperties: seatNumber\n\
+              - name: flight\n\
+                baseType: publicTransportation\n\
+                requiredProperties: flightNumber\n\
+                optionalProperties:\n\
+                  - name: from\n\
+                    type: airport\n\
+                  - name: to\n\
+                    type: airport\n\
+                  - name: airline\n\
+                    type: airline\n\
+              - name: event\n\
+                baseType: planItem\n\
+                dynamic: true\n\
+                optionalProperties:\n\
+                  - description\n\
+                  - name: occursAt\n\
+                    type: eventLocation\n',
+            [{
+              'properties': [
+                {
+                  'name': 'planItemId',
+                  'isKey': true,
+                  'type': 'String'
+                },
+                {
+                  'name': 'confirmationCode',
+                  'isNullable': true,
+                  'type': 'String'
+                },
+                {
+                  'name': 'startsAt',
+                  'type': 'DateTimeOffset',
+                  'isNullable': true
+                },
+                {
+                  'name': 'endsAt',
+                  'type': 'DateTimeOffset',
+                  'isNullable': true
+                },
+                {
+                  'name': 'duration',
+                  'type': 'Duration',
+                  'isNullable': true
+                }
+              ],
+              'name': 'planItem'
+            },
+            { 
+              'properties': [
+                {
+                  'name': 'seatNumber',
+                  'isNullable': true,
+                  'type': 'String'
+                }
+              ],
+              'name': 'publicTransportation',
+              'baseType': 'planItem'
+            },
+              {
+                'properties': [
+                  {
+                    'name': 'flightNumber',
+                    'type': 'String'
+                  },
+                  {
+                    'name': 'from',
+                    'type': 'airport',
+                    'isNullable': true
+                  },
+                  {
+                    'name': 'to',
+                    'type': 'airport',
+                    'isNullable': true
+                  },
+                  {
+                    'name': 'airline',
+                    'type': 'airline',
+                    'isNullable': true
+                  }
+                ],
+                'name': 'flight',
+                'baseType': 'publicTransportation'
+              },
+              {
+                'properties': [
+                  {
+                    'name': 'description',
+                    'isNullable': true,
+                    'type': 'String'
+                  },
+                  {
+                    'name': 'occursAt',
+                    'type': 'eventLocation',
+                    'isNullable': true
+                  }
+                ],
+                'name': 'event',
+                'baseType': 'planItem'
+              }], true));
 });
 
 // Testing for operations
