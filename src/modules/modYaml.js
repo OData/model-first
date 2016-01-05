@@ -81,7 +81,7 @@ function fromYaml(str, errors, config, callback) {
         'geometrymultilinestring': 'edm.geometrymultilinestring',
         'geometrymultipolygon': 'edm.geometrymultipolygon',
         'geometrycollection': 'edm.geometrycollection'
-    }
+    };
 
     function matches(type) {
         for (var index in typeMap) {
@@ -129,9 +129,9 @@ function fromYaml(str, errors, config, callback) {
 
     function parseParams(arr) {
         var tempArr = [];
+        var tempObj = {};
         if (Array.isArray(arr)) {
-            for (var i in arr) {
-                var tempObj = {};
+            for (var i in arr) {                
                 if (arr[i].name && arr[i].type) {
                     tempObj = {
                         'name': arr[i].name,
@@ -151,7 +151,7 @@ function fromYaml(str, errors, config, callback) {
                 tempArr.push(tempObj);
             }
         } else {
-            var tempObj = {
+            tempObj = {
                 'name': arr,
                 'type': 'edm.string'
             };
