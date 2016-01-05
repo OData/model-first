@@ -89,8 +89,7 @@ $(function (){
           error.ln=errors[index].lineNumber;
         } else {
           error.errorType = 'Simple Yaml Error';
-          positionRangeForPath(input, errors[index].path,
-            function(range){
+          positionRangeForPath(input, errors[index].path,function(range){
             error.ln = range.start.line + 1;
           });
         }
