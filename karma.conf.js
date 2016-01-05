@@ -17,11 +17,10 @@ module.exports = function(config) {
     ],
 
     exclude: [],
-    reporters: ['spec'],
+    reporters: ['progress'],
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome'],
-    singleRun: false,
-    port: 9001
+    browsers: ['PhantomJS'],
+    singleRun: true,
   });
 };
