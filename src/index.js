@@ -3233,7 +3233,31 @@ function getTypeProperties(type)
         result.push(property.name);
       });
   });
+
+  if(!!type['baseType'])
+  {
+    _.forEach(api.resolved.types, function(t){
+      if(t.name==type['baseType'])
+      {
+        result.concat(getTypeProperties(t));
+      }
+    });
+  }
+
   return result;
+}
+
+function isEntityType(typeName)
+{
+  var returnValue=false;
+  _.forEach(api.resolved.types, function(type){
+    if(type.name==typeName)
+    {
+      returnValue = !!type.key || (!!type.baseType && isEntityType(type.baseType));
+    }
+  });
+
+  return returnValue;
 }
 
 function trimLeft(origin, string)
@@ -3261,7 +3285,7 @@ function validateSimpleYamlTypereferences(api)
 
   var types={};
   _.forEach(api.resolved.types, function(type){
-     types[type.name]=[];
+     types[type.name] = [];
      types[type.name] = types[type.name].concat(getTypeProperties(type));
   });
 
@@ -3350,11 +3374,21 @@ function validateSimpleYamlTypereferences(api)
       if(!_.includes(customTypes, typeName))
       {
         response.errors.push({
-          code: 'INVALID_TYPE',
+          code: 'UNRESOLVABLE_REFERENCE',
           message:  'Cannot find the definition for type: ' + typeName,
           path: ['root', index, 'type']
         });
       } else {
+
+        if(!isEntityType(typeName))
+        {
+          response.errors.push({
+            code: 'INVALID_TYPE',
+            message: 'The definition of  '+typeName+' does not have key.',
+            path: ['root', index, 'type']
+          });
+        }
+
         // validate the properties: 'concurrencyProperties', 'disallowNavigation', 'disallowInsert'
         var referenceProperties=['concurrencyProperties', 'disallowNavigation', 'disallowInsert'];
         _.forEach(referenceProperties,function(refprop){
