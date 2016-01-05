@@ -2287,6 +2287,16 @@ module.exports={
           "pattern": "^/",
           "description": "The base path to the API. Example: '/api'."
         },
+        "termsOfService": {
+          "type": "string",
+          "description": "The terms of service for the API."
+        },
+        "contact": {
+          "$ref": "#/definitions/contact"
+        },
+        "license": {
+          "$ref": "#/definitions/license"
+        },
         "auth": {
           "type": "string"
         },
@@ -2307,7 +2317,12 @@ module.exports={
           }
         }
       },
-      "additionalProperties": true,
+      "patternProperties": {
+        "^x-": {
+          "$ref": "#/definitions/vendorExtension"
+        }
+      },
+      "additionalProperties": false,
       "required": [
         "name"
       ]
@@ -2331,6 +2346,60 @@ module.exports={
     "api", "root", "types"
   ],
   "definitions": {
+    "contact": {
+      "type": "object",
+      "description": "Contact information for the owners of the API.",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The identifying name of the contact person/organization."
+        },
+        "url": {
+          "type": "string",
+          "description": "The URL pointing to the contact information.",
+          "format": "uri"
+        },
+        "email": {
+          "type": "string",
+          "description": "The email address of the contact person/organization.",
+          "format": "email"
+        }
+      },
+      "patternProperties": {
+        "^x-": {
+          "$ref": "#/definitions/vendorExtension"
+        }
+      }
+    },
+    "license": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the license type. It's encouraged to use an OSI compatible license."
+        },
+        "url": {
+          "type": "string",
+          "description": "The URL pointing to the license.",
+          "format": "uri"
+        }
+      },
+      "patternProperties": {
+        "^x-": {
+          "$ref": "#/definitions/vendorExtension"
+        }
+      }
+    },
+    "vendorExtension": {
+      "description": "Any property starting with x- is valid.",
+      "additionalProperties": true,
+      "additionalItems": true
+    },
     "service": {
       "description": "Must be one of operation or entitySet.",
       "anyOf": [
@@ -2482,21 +2551,21 @@ module.exports={
       },
       "additionalProperties": false
     },
-  "enumMembers":{
-    "type": "array",
-    "description":"For enum member:",
-    "items": {
-      "type": "object",
-      "properties":{
-        "name":{"type": "string"},
-        "value":{"type": "number"}
+    "enumMembers":{
+      "type": "array",
+      "description":"For enum member:",
+      "items": {
+        "type": "object",
+        "properties":{
+          "name":{"type": "string"},
+          "value":{"type": "number"}
+        },
+        "required":["name"],
+        "additionalProperties": false
       },
-      "required":["name"],
-      "additionalProperties": false
+      "uniqueItems": true,
+      "additionalItems": false
     },
-    "uniqueItems": true,
-    "additionalItems": false
-  },
     "entityType": {
       "type": "object",
       "description": "For entity type",
@@ -3218,7 +3287,7 @@ function validatePathsAndOperations (api) {
   return response;
 }
 
-function getTypeProperties(type)
+function getTypeProperties(api, type)
 {
   var result=[];
   _.forEach(['key', 'requiredProperties', 'optionalProperties'], function(member){
@@ -3239,7 +3308,7 @@ function getTypeProperties(type)
     _.forEach(api.resolved.types, function(t){
       if(t.name==type['baseType'])
       {
-        result.concat(getTypeProperties(t));
+        result.concat(getTypeProperties(api, t));
       }
     });
   }
@@ -3247,13 +3316,13 @@ function getTypeProperties(type)
   return result;
 }
 
-function isEntityType(typeName)
+function isEntityType(api, typeName)
 {
   var returnValue=false;
   _.forEach(api.resolved.types, function(type){
     if(type.name==typeName)
     {
-      returnValue = !!type.key || (!!type.baseType && isEntityType(type.baseType));
+      returnValue = !!type.key || (!!type.baseType && isEntityType(api, type.baseType));
     }
   });
 
@@ -3263,16 +3332,18 @@ function isEntityType(typeName)
 function trimLeft(origin, string)
 {
   if(_.startsWith(origin, string))
-  { return origin.slice(string.length);
-    }
+  { 
+    return origin.slice(string.length);
+  }
   return origin;
 }
 
 function trimRight(origin, string)
 {
   if(_.endsWith(origin, string))
-  { return origin.slice(0,-string.length);
-    }
+  { 
+    return origin.slice(0,-string.length);
+  }
   return origin;
 }
 
@@ -3286,7 +3357,7 @@ function validateSimpleYamlTypereferences(api)
   var types={};
   _.forEach(api.resolved.types, function(type){
      types[type.name] = [];
-     types[type.name] = types[type.name].concat(getTypeProperties(type));
+     types[type.name] = types[type.name].concat(getTypeProperties(api, type));
   });
 
   var customTypes=_.keys(types);
@@ -3297,7 +3368,7 @@ function validateSimpleYamlTypereferences(api)
     'boolean',
     'byte',
     'date',
-    'dateTimeOffset',
+    'datetimeoffset',
     'decimal',
     'double',
     'duration',
@@ -3312,59 +3383,24 @@ function validateSimpleYamlTypereferences(api)
     'single',
     'stream',
     'string',
-    'timeOfDay',
+    'timeofday',
     'geography',
-    'geographyPoint',
-    'geographyLineString',
-    'geographyPolygon',
-    'geographyMultiPoint',
-    'geographyMultiLineString',
-    'geographyMultiPolygon',
-    'geographyCollection',
+    'geographypoint',
+    'geographylinestring',
+    'geographypolygon',
+    'geographymultipoint',
+    'geographymultilinestring',
+    'geographymultipolygon',
+    'geographycollection',
     'geometry',
-    'geometryPoint',
-    'geometryLineString',
-    'geometryPolygon',
-    'geometryMultiPoint',
-    'geometryMultiLineString',
-    'geometryMultiPolygon',
-    'geometryCollection',
-
-    'Binary',
-    'Boolean',
-    'Byte',
-    'Date',
-    'DateTimeOffset',
-    'Decimal',
-    'Double',
-    'Duration',
-    'Guid',
-    'Int16',
-    'Int32',
-    'Int64',
-    'SByte',
-    'Single',
-    'Stream',
-    'String',
-    'TimeOfDay',
-    'Geography',
-    'GeographyPoint',
-    'GeographyLineString',
-    'GeographyPolygon',
-    'GeographyMultiPoint',
-    'GeographyMultiLineString',
-    'GeographyMultiPolygon',
-    'GeographyCollection',
-    'Geometry',
-    'GeometryPoint',
-    'GeometryLineString',
-    'GeometryPolygon',
-    'GeometryMultiPoint',
-    'GeometryMultiLineString',
-    'GeometryMultiPolygon',
-    'GeometryCollection'
+    'geometrypoint',
+    'geometrylinestring',
+    'geometrypolygon',
+    'geometrymultipoint',
+    'geometryMultiLinestring',
+    'geometrymultipolygon',
+    'geometrycollection'
   ];
-
 
   _.forEach(api.resolved.root, function(service, index){
     if(service.type){
@@ -3380,7 +3416,7 @@ function validateSimpleYamlTypereferences(api)
         });
       } else {
 
-        if(!isEntityType(typeName))
+        if(!isEntityType(api, typeName))
         {
           response.errors.push({
             code: 'INVALID_TYPE',
@@ -3424,7 +3460,7 @@ function validateSimpleYamlTypereferences(api)
         if(_.isObject(param) && param.type)
         {
           var typeName =trimRight(param.type, '[]');
-          if(!_.includes(customTypes, typeName) && !_.includes(primitiveTypes, trimLeft(typeName, 'edm.')))
+          if(!_.includes(customTypes, typeName) && !_.includes(primitiveTypes, trimLeft(typeName.toLowerCase(), 'edm.')))
           {
             response.errors.push({
               code: 'INVALID_TYPE',
@@ -3438,7 +3474,7 @@ function validateSimpleYamlTypereferences(api)
 
     if(service.returns){
       var typeName =trimRight(service.returns, '[]');
-      if(!_.includes(customTypes, typeName) && !_.includes(primitiveTypes, trimLeft(typeName, 'edm.')))
+      if(!_.includes(customTypes, typeName) && !_.includes(primitiveTypes, trimLeft(typeName.toLowerCase(), 'edm.')))
       {
         response.errors.push({
           code: 'INVALID_TYPE',
@@ -3468,7 +3504,7 @@ function validateSimpleYamlTypereferences(api)
         _.forEach(typeDef[propMem],function(prop, index2){
           if(_.isObject(prop) && !!prop.type
               && !_.includes(customTypes, trimRight(prop.type,'[]'))
-              && !_.includes(primitiveTypes, trimLeft(trimRight(prop.type,'[]'),'edm.'))
+              && !_.includes(primitiveTypes, trimLeft(trimRight(prop.type,'[]').toLowerCase(),'edm.'))
             )
           {
             response.errors.push({
@@ -3491,7 +3527,7 @@ function validateSimpleYamlTypereferences(api)
             {
                if(parameter.type 
                 && !_.includes(customTypes,trimRight(parameter.type, '[]'))
-                && !_.includes(primitiveTypes, trimLeft(trimRight(parameter.type, '[]'),'edm.')))
+                && !_.includes(primitiveTypes, trimLeft(trimRight(parameter.type, '[]').toLowerCase(),'edm.')))
                 {
                   response.errors.push({
                     code: 'INVALID_TYPE',
@@ -3504,7 +3540,7 @@ function validateSimpleYamlTypereferences(api)
 
       if(operation.returns
         && !_.includes(customTypes,trimRight(operation.returns, '[]'))
-        && !_.includes(primitiveTypes,trimLeft(trimRight(operation.returns, '[]'),'edm.')))
+        && !_.includes(primitiveTypes,trimLeft(trimRight(operation.returns, '[]').toLowerCase(),'edm.')))
       {
           response.errors.push({
             code: 'INVALID_TYPE',

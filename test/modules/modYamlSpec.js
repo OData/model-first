@@ -467,13 +467,16 @@ types:\n\
       -name: p1\n\
         type: long\n\
       - p2';
-        var output = Morpho.convert(input, 'yaml', 'json');
-        expect(output.errors.length).toEqual(1);
-        var error = output.errors[0];
-        expect(error.line).toEqual(4);
-        expect(error.message).toEqual('bad indentation of a mapping entry');
+        Morpho.convert(input, 'yaml', 'json', defaultConfig, function(errors){
+          expect(errors.length).toEqual(1);
+          var error = errors[0];
+          expect(error.lineNumber).toEqual(4);
+          expect(error.message).toEqual('bad indentation of a mapping entry');
+        });
     });
 });
+
+var defaultConfig = {addDefaults: true, format: true};
 
 function fromYamlRootTest(input, root) {
     return fromYamlTest(input, root, 'container');
