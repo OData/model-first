@@ -1,38 +1,37 @@
-function fromYaml(str, errors, config, callback){
-  function OnMessage(message){
-    callback(message.data.errors);
-  }
+function fromYaml(str, errors, config, callback) {
+    function OnMessage(message) {
+        callback(message.data.errors);
+    }
 
-  function OnError(message){
-    callback(message.data.errors);
-  }
+    function OnError(message) {
+        callback(message.data.errors);
+    }
 
-  var obj;
-  try {
-    obj       = jsyaml.load(str);
-  }
-  catch(err) {
-    callback([{
-      yamlError: true,
-      lineNumber: err.mark.line,
-      message: err.reason
-    }]);
-    return null;
-  }
+    var obj;
+    try {
+        obj = jsyaml.load(str);
+    } catch (err) {
+        callback([{
+                yamlError: true,
+                lineNumber: err.mark.line,
+                message: err.reason
+            }]);
+        return null;
+    }
 
-  var worker = worker || new Worker('../bower_components/morpho/src/index.js');
-  worker.onmessage = OnMessage;
-  worker.onerror = OnError;
-  worker.postMessage({
+    var worker = worker || new Worker('../bower_components/morpho/src/index.js');
+    worker.onmessage = OnMessage;
+    worker.onerror = OnError;
+    worker.postMessage({
         definition: obj,
         jsonRefs: {
-          location: window.location.href
+            location: window.location.href
 
-            // TODO: remove when this bug is fixed:
-            // https://github.com/apigee-127/sway/issues/24
-            .replace(/#.+/, '').replace(/\/$/, '')
+                    // TODO: remove when this bug is fixed:
+                    // https://github.com/apigee-127/sway/issues/24
+                    .replace(/#.+/, '').replace(/\/$/, '')
         }
-  });
+    });
 
     var typeMap = {
         'binary': 'edm.binary',
@@ -73,9 +72,9 @@ function fromYaml(str, errors, config, callback){
         'geometrycollection': 'edm.geometrycollection'
     }
 
-    function matches(type){
-        for(var index in typeMap){
-            if(typeMap[index] === type){
+    function matches(type) {
+        for (var index in typeMap) {
+            if (typeMap[index] === type) {
                 return true;
             }
         }
@@ -83,22 +82,19 @@ function fromYaml(str, errors, config, callback){
         return false;
     }
 
-    function maps(type){
+    function maps(type) {
         var t = type.toLowerCase();
-        if(typeMap[t]){
+        if (typeMap[t]) {
             return typeMap[t];
-        }
-        else if(t.length > 4 && t.slice(0, 4) === 'edm.'){
-            if(matches(t)){
+        } else if (t.length > 4 && t.slice(0, 4) === 'edm.') {
+            if (matches(t)) {
                 return t;
             }
 
             return type;
-        }
-        else if(matches('edm.' + t)){
+        } else if (matches('edm.' + t)) {
             return 'edm.' + t;
-        }
-        else{
+        } else {
             return type;
         }
     }
@@ -130,14 +126,12 @@ function fromYaml(str, errors, config, callback){
                         'name': arr[i].name,
                         'type': maps(arr[i].type)
                     };
-                }
-                else if (arr[i].name && !arr[i].type) {
+                } else if (arr[i].name && !arr[i].type) {
                     tempObj = {
                         'name': arr[i].name,
                         'type': 'edm.string'
                     };
-                }
-                else {
+                } else {
                     tempObj = {
                         'name': arr[i],
                         'type': 'edm.string'
@@ -145,8 +139,7 @@ function fromYaml(str, errors, config, callback){
                 }
                 tempArr.push(tempObj);
             }
-        }
-        else {
+        } else {
             var tempObj = {
                 'name': arr,
                 'type': 'edm.string'
@@ -166,8 +159,7 @@ function fromYaml(str, errors, config, callback){
                 var operation = {};
                 if (!item.returns) {
                     operation.type = 'Action';
-                }
-                else {
+                } else {
                     operation.type = 'Function';
                 }
                 operation.operationType = 'Unbound';
@@ -185,8 +177,7 @@ function fromYaml(str, errors, config, callback){
                     }
                 });
                 operations.push(operation);
-            }
-            else {
+            } else {
                 // entityset or singleton
                 var mt = detectCollectionType(item.type);
                 var et = {
@@ -197,17 +188,19 @@ function fromYaml(str, errors, config, callback){
 
                 if (mt.isCol) {
                     entitysets.push(et);
-                }
-                else {
+                } else {
                     singletons.push(et);
                 }
             }
         });
 
         state.container = {};
-        if (entitysets.length > 0)state.container.entitysets = entitysets;
-        if (singletons.length > 0)state.container.singletons = singletons;
-        if (operations.length > 0)state.container.operations = operations;
+        if (entitysets.length > 0)
+            state.container.entitysets = entitysets;
+        if (singletons.length > 0)
+            state.container.singletons = singletons;
+        if (operations.length > 0)
+            state.container.operations = operations;
     }
 
     var visitor = this.getVisitor();
@@ -234,7 +227,8 @@ function fromYaml(str, errors, config, callback){
                         }
                     }
 
-                    if (extend) extend(property);
+                    if (extend)
+                        extend(property);
 
                     return property;
                 }
@@ -262,8 +256,7 @@ function fromYaml(str, errors, config, callback){
                         // Parse type of an operation.
                         if (!obj.returns) {
                             operation.type = 'Action';
-                        }
-                        else {
+                        } else {
                             operation.type = 'Function';
                         }
 
@@ -302,7 +295,7 @@ function fromYaml(str, errors, config, callback){
                     'underlyingType': function (obj) {
                         type.underlyingType = obj;
                     },
-					'baseType': function (obj) {
+                    'baseType': function (obj) {
                         type.baseType = obj;
                     },
                     'key': function (obj) {

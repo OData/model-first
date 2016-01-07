@@ -1,7 +1,8 @@
 (function () {
     function SwaggerType(type, format) {
         this.type = type;
-        if (format) this.format = format;
+        if (format)
+            this.format = format;
     }
 
     var SwaggerTypes = {
@@ -18,7 +19,7 @@
         // Extention types are not defined in Swagger Spec.
         'edm.decimal': new SwaggerType('number', 'decimal'),
         'edm.int16': new SwaggerType('integer', 'int16'),
-        'edm.sbyte': new SwaggerType('integer', 'sbyte') 
+        'edm.sbyte': new SwaggerType('integer', 'sbyte')
     };
 
     var typeMap = {
@@ -47,17 +48,15 @@
 
     function getSwaggerType(type, isCollection) {
         var swgrType;
-        if(SwaggerTypes[type]){
+        if (SwaggerTypes[type]) {
             swgrType = SwaggerTypes[type];
-        }
-        else if(typeMap[type]){
+        } else if (typeMap[type]) {
             swgrType = new SwaggerType('string', 'string');
-        }
-        else{
-            swgrType = { '$ref': '#/definitions/' + type };
+        } else {
+            swgrType = {'$ref': '#/definitions/' + type};
         }
 
-        return isCollection ? { 'type': 'array', 'items': swgrType } : swgrType;
+        return isCollection ? {'type': 'array', 'items': swgrType} : swgrType;
     }
 
     var entitySetMappings = {};
@@ -85,8 +84,7 @@
         if (targetType[targetType.length - 1] === ']') {
             type = targetType.substr(0, targetType.length - 2);
             col = true;
-        }
-        else {
+        } else {
             type = targetType;
             col = false;
         }
@@ -127,7 +125,7 @@
                 'description': 'The parameter.',
                 'required': true
             };
-            if(swType.format){
+            if (swType.format) {
                 param['format'] = swType.format;
             }
             parameters.push(param);
@@ -137,12 +135,10 @@
             var temp = getEntitySet(parentType);
             if (temp.success) {
                 path = '/' + temp.entitySet + '/{' + swKey.name + '}/' + name;
-            }
-            else {
+            } else {
                 path = '/' + parentType + '/' + name;
             }
-        }
-        else if ('Unbound' === operationType) {
+        } else if ('Unbound' === operationType) {
             path = '/' + name;
         }
 
@@ -189,7 +185,7 @@
         }
         for (var i in params) {
             var isCollection = params[i].type[params[i].type.length - 1] === ']';
-            var swType =  getSwaggerType(params[i].type, isCollection);
+            var swType = getSwaggerType(params[i].type, isCollection);
             var param = {
                 'name': params[i].name,
                 'type': swType.type,
@@ -197,7 +193,7 @@
                 'description': 'The parameter.',
                 'required': true
             };
-            if(swType.format){
+            if (swType.format) {
                 param['format'] = swType.format;
             }
             parameters.push(param);
@@ -207,12 +203,10 @@
             var temp = getEntitySet(parentType);
             if (temp.success) {
                 path = '/' + temp.entitySet + '/{' + swKey.name + '}/' + name;
-            }
-            else {
+            } else {
                 path = '/' + parentType + '/' + name;
             }
-        }
-        else if ('Unbound' === operationType) {
+        } else if ('Unbound' === operationType) {
             path = '/' + name;
         }
 
@@ -249,8 +243,7 @@
     function routeOperation(name, type, operationType, params, parentType, swKey, returns) {
         if ('Action' === type) {
             return routeAction(name, operationType, params, parentType, swKey, returns);
-        }
-        else if ('Function' === type) {
+        } else if ('Function' === type) {
             return routeFunction(name, operationType, params, parentType, swKey, returns);
         }
     }
@@ -265,15 +258,15 @@
             var route = {
                 'tags': [type],
                 'description': isCollection ?
-                'Returns all items from ' + name + '.' :
-                    swKey ?
-                    'Returns a single item from ' + name + '.' :
-                    'Returns ' + name + '.',
+                        'Returns all items from ' + name + '.' :
+                        swKey ?
+                        'Returns a single item from ' + name + '.' :
+                        'Returns ' + name + '.',
                 'responses': {
                     '200': {
                         'description': isCollection ?
-                        'An array of ' + type + ' items.' :
-                        'A single ' + type + ' item.',
+                                'An array of ' + type + ' items.' :
+                                'A single ' + type + ' item.',
                         'schema': getSchema(type, isCollection)
                     }
                 }
@@ -281,14 +274,15 @@
 
             if (swKey) {
                 var parameter =
-                {
-                    'name': swKey.name,
-                    'in': 'path',
-                    'description': 'The key.',
-                    'required': true,
-                    'type': swKey.type,
-                };
-                if (swKey.format) parameter.format = swKey.format;
+                        {
+                            'name': swKey.name,
+                            'in': 'path',
+                            'description': 'The key.',
+                            'required': true,
+                            'type': swKey.type,
+                        };
+                if (swKey.format)
+                    parameter.format = swKey.format;
 
                 route.parameters = [parameter];
             }
@@ -323,8 +317,8 @@
             var route = {
                 'tags': [type],
                 'description': swKey ?
-                'Update an existing ' + type + ' item.' :
-                'Update ' + name + '.',
+                        'Update an existing ' + type + ' item.' :
+                        'Update ' + name + '.',
                 'parameters': [
                     {
                         'name': type,
@@ -356,7 +350,8 @@
                     'type': swKey.type,
                 };
 
-                if (swKey.format) parameter.format = swKey.format;
+                if (swKey.format)
+                    parameter.format = swKey.format;
                 route.parameters.unshift(parameter);
             }
 
@@ -371,7 +366,8 @@
                 'required': true,
                 'type': swKey.type,
             };
-            if (swKey.format) parameter.format = swKey.format;
+            if (swKey.format)
+                parameter.format = swKey.format;
 
             return {
                 'tags': [type],
@@ -394,7 +390,8 @@
         }
 
         function genAllows(allows) {
-            if (!allows) return {'read': true};
+            if (!allows)
+                return {'read': true};
 
             var ac = {};
             for (var i = 0; i < allows.length; i++) {
@@ -404,7 +401,8 @@
             return ac;
         }
 
-        if (!model.container) return;
+        if (!model.container)
+            return;
 
         var paths = {};
         var visitor = new Visitor();
@@ -414,16 +412,21 @@
                 visitor.visitArr(arr, function (item) {
                     var allows = genAllows(item.allows);
                     var routes = {};
-                    if (allows.read) routes.get = routeGet(item.name, item.type, true);
-                    if (allows.create) routes.post = routePost(item.name, item.type);
+                    if (allows.read)
+                        routes.get = routeGet(item.name, item.type, true);
+                    if (allows.create)
+                        routes.post = routePost(item.name, item.type);
                     paths['/' + item.name] = routes;
 
                     var swKey = resolveKey(item.type);
                     if (swKey) {
                         var sRoutes = {};
-                        if (allows.read) sRoutes.get = routeGet(item.name, item.type, false, swKey);
-                        if (allows.update) sRoutes.put = routePut(item.name, item.type, swKey);
-                        if (allows.delete) sRoutes.delete = routeDelete(item.name, item.type, swKey);
+                        if (allows.read)
+                            sRoutes.get = routeGet(item.name, item.type, false, swKey);
+                        if (allows.update)
+                            sRoutes.put = routePut(item.name, item.type, swKey);
+                        if (allows.delete)
+                            sRoutes.delete = routeDelete(item.name, item.type, swKey);
                         paths['/' + item.name + '/{' + swKey.name + '}'] = sRoutes;
                     }
                 });
@@ -432,8 +435,10 @@
                 visitor.visitArr(arr, function (item) {
                     var allows = genAllows(item.allows);
                     var routes = {};
-                    if (allows.read) routes.get = routeGet(item.name, item.type, false);
-                    if (allows.update) routes.put = routePut(item.name, item.type);
+                    if (allows.read)
+                        routes.get = routeGet(item.name, item.type, false);
+                    if (allows.update)
+                        routes.put = routePut(item.name, item.type);
                     paths['/' + item.name] = routes;
                 });
             },
@@ -445,8 +450,7 @@
                             'post': temp.route
                         };
                         paths[temp.path] = routes;
-                    }
-                    else if ('Function' === item.type) {
+                    } else if ('Function' === item.type) {
                         var temp = routeOperation(item.name, item.type, item.operationType, item.params, null, null, item.returns);
                         var routes = {
                             'get': temp.route
@@ -522,8 +526,8 @@
             },
             'types': function (arr) {
                 state.definitions = {};
-				var baseTypeNames = [];
-					
+                var baseTypeNames = [];
+
                 this.visitArr(arr, function (item) {
                     var type = {properties: {}};
 
@@ -537,20 +541,22 @@
                         }
 
                         return member;
-                    }					
-					
-					var keyProperty = null;
+                    }
+
+                    var keyProperty = null;
                     var parentTypeName = item.name;
-					
-					if (item.properties) {
+
+                    if (item.properties) {
                         visitor.visitArr(item.properties, function (item) {
                             if (!item.operationType) {
                                 var swType = getSwaggerType(item.type, item.isCollection);
                                 var propertyType;
                                 if (swType.type) {
                                     propertyType = {type: swType.type};
-                                    if (swType.format) propertyType.format = swType.format;
-                                    if (swType.items) propertyType.items = swType.items;
+                                    if (swType.format)
+                                        propertyType.format = swType.format;
+                                    if (swType.items)
+                                        propertyType.items = swType.items;
                                 } else {
                                     propertyType = swType;
                                 }
@@ -564,49 +570,48 @@
                                         // add paths would check whether format undefined.
                                         'format': swType.format
                                     };
-									
-									if (!item.isNullable)
-									{
-										if (!type.required)
-										{
-											type.required = [];
-										}
-										
-										type.required.push(item.name);
-									}
+
+                                    if (!item.isNullable)
+                                    {
+                                        if (!type.required)
+                                        {
+                                            type.required = [];
+                                        }
+
+                                        type.required.push(item.name);
+                                    }
                                 }
                             }
                         });
-                   
-                    if (keyProperty) {
-                        keys[item.name] = keyProperty;
-                    }
-					
-                    // Convert bound operations (actions and functions).
-                    visitor.visitArr(item.properties, function (item) {
-                        if (item.operationType) {
-                            var swKey = keys[parentTypeName];
-                            if (swKey) {
-                                if ('Action' === item.type) {
-                                    var temp = routeOperation(item.name, item.type, item.operationType, item.params, parentTypeName, swKey, item.returns);
-                                    var routes = {
-                                        'post': temp.route
-                                    };
-                                    boundOpPaths[temp.path] = routes;
-                                }
-                                else if ('Function' === item.type) {
-                                    var temp = routeOperation(item.name, item.type, item.operationType, item.params, parentTypeName, swKey, item.returns);
-                                    var routes = {
-                                        'get': temp.route
-                                    };
-                                    boundOpPaths[temp.path] = routes;
+
+                        if (keyProperty) {
+                            keys[item.name] = keyProperty;
+                        }
+
+                        // Convert bound operations (actions and functions).
+                        visitor.visitArr(item.properties, function (item) {
+                            if (item.operationType) {
+                                var swKey = keys[parentTypeName];
+                                if (swKey) {
+                                    if ('Action' === item.type) {
+                                        var temp = routeOperation(item.name, item.type, item.operationType, item.params, parentTypeName, swKey, item.returns);
+                                        var routes = {
+                                            'post': temp.route
+                                        };
+                                        boundOpPaths[temp.path] = routes;
+                                    } else if ('Function' === item.type) {
+                                        var temp = routeOperation(item.name, item.type, item.operationType, item.params, parentTypeName, swKey, item.returns);
+                                        var routes = {
+                                            'get': temp.route
+                                        };
+                                        boundOpPaths[temp.path] = routes;
+                                    }
                                 }
                             }
-                        }
-                    });
-					}
-					
-				    this.visitObj(item, {
+                        });
+                    }
+
+                    this.visitObj(item, {
                         'members': function (obj) {
                             type.type = 'string';
                             type['enum'] = [];
@@ -615,78 +620,78 @@
                                 type['enum'].push(handleMember(obj));
                             });
                         },
-						'baseType': function (obj) {
+                        'baseType': function (obj) {
                             var typeValue = type;
-							type = {allOf:[]};
-							var baseTypeRef = {'$ref': '#/definitions/' + obj};
-							type.allOf.push(baseTypeRef);
-							type.allOf.push(typeValue);
-							
-							var isBaseTypeRegistered = false;
-							for (var k = 0; k < baseTypeNames.length; k++) { 
-								if(baseTypeNames[k]==obj)
-								{
-									isBaseTypeRegistered = true;
-								}
-							}
-							
-							if( !isBaseTypeRegistered )
-							{
-							   baseTypeNames.push(obj);
-							}
+                            type = {allOf: []};
+                            var baseTypeRef = {'$ref': '#/definitions/' + obj};
+                            type.allOf.push(baseTypeRef);
+                            type.allOf.push(typeValue);
+
+                            var isBaseTypeRegistered = false;
+                            for (var k = 0; k < baseTypeNames.length; k++) {
+                                if (baseTypeNames[k] == obj)
+                                {
+                                    isBaseTypeRegistered = true;
+                                }
+                            }
+
+                            if (!isBaseTypeRegistered)
+                            {
+                                baseTypeNames.push(obj);
+                            }
                         },
                     });
-					
+
                     state.definitions[item.name] = type;
                 });
-				
-				function handleBaseType(baseTypeName) {
-					if( !state.definitions[baseTypeName] ) return;
-					
-					var propertyName = baseTypeName + 'Type';
-						
-					var propertyContent = {
-								'type' : 'string'
-							};
-					
-					if( !state.definitions[baseTypeName].allOf )
-					{
-						if(state.definitions[baseTypeName].discriminator)
-							return;
-							
-						state.definitions[baseTypeName].properties[propertyName] = propertyContent;
-						if ( !state.definitions[baseTypeName].required )
-									state.definitions[baseTypeName].required = [];
-						state.definitions[baseTypeName].required.push(propertyName);
-						state.definitions[baseTypeName].discriminator = propertyName;
-					}
-					else
-					{
-						for (var j = 0; j < state.definitions[baseTypeName].allOf.length; j++) { 
-							if(state.definitions[baseTypeName].allOf[j].properties)
-							{
-								if(state.definitions[baseTypeName].allOf[j].discriminator)
-									return;
-								
-								state.definitions[baseTypeName].allOf[j].properties[propertyName] = propertyContent;
-								if ( !state.definitions[baseTypeName].allOf[j].required )
-									state.definitions[baseTypeName].allOf[j].required = [];
-								state.definitions[baseTypeName].allOf[j].required.push(propertyName);
-								state.definitions[baseTypeName].allOf[j].discriminator = propertyName;
-								break;
-							}
-						}
-					}
-					
-					
-					return;
+
+                function handleBaseType(baseTypeName) {
+                    if (!state.definitions[baseTypeName])
+                        return;
+
+                    var propertyName = baseTypeName + 'Type';
+
+                    var propertyContent = {
+                        'type': 'string'
+                    };
+
+                    if (!state.definitions[baseTypeName].allOf)
+                    {
+                        if (state.definitions[baseTypeName].discriminator)
+                            return;
+
+                        state.definitions[baseTypeName].properties[propertyName] = propertyContent;
+                        if (!state.definitions[baseTypeName].required)
+                            state.definitions[baseTypeName].required = [];
+                        state.definitions[baseTypeName].required.push(propertyName);
+                        state.definitions[baseTypeName].discriminator = propertyName;
+                    } else
+                    {
+                        for (var j = 0; j < state.definitions[baseTypeName].allOf.length; j++) {
+                            if (state.definitions[baseTypeName].allOf[j].properties)
+                            {
+                                if (state.definitions[baseTypeName].allOf[j].discriminator)
+                                    return;
+
+                                state.definitions[baseTypeName].allOf[j].properties[propertyName] = propertyContent;
+                                if (!state.definitions[baseTypeName].allOf[j].required)
+                                    state.definitions[baseTypeName].allOf[j].required = [];
+                                state.definitions[baseTypeName].allOf[j].required.push(propertyName);
+                                state.definitions[baseTypeName].allOf[j].discriminator = propertyName;
+                                break;
+                            }
+                        }
+                    }
+
+
+                    return;
                 }
-				
-				for (var i = 0; i < baseTypeNames.length; i++) { 
-					handleBaseType( baseTypeNames[i] );
-				}
-				
-				baseTypeNames = [];
+
+                for (var i = 0; i < baseTypeNames.length; i++) {
+                    handleBaseType(baseTypeNames[i]);
+                }
+
+                baseTypeNames = [];
             }
         });
 
