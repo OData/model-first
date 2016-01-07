@@ -119,13 +119,17 @@
         }
         for (var i in params) {
             var isCollection = params[i].type[params[i].type.length - 1] === ']';
+            var swType = getSwaggerType(params[i].type, isCollection);
             var param = {
                 'name': params[i].name,
-                'type': getSwaggerType(params[i].type, isCollection),
+                'type': swType.type,
                 'in': 'formData',
                 'description': 'The parameter.',
                 'required': true
             };
+            if(swType.format){
+                param['format'] = swType.format;
+            }
             parameters.push(param);
         }
         var path;
@@ -185,13 +189,17 @@
         }
         for (var i in params) {
             var isCollection = params[i].type[params[i].type.length - 1] === ']';
+            var swType =  getSwaggerType(params[i].type, isCollection);
             var param = {
                 'name': params[i].name,
-                'type': getSwaggerType(params[i].type, isCollection),
+                'type': swType.type,
                 'in': 'formData',
                 'description': 'The parameter.',
                 'required': true
             };
+            if(swType.format){
+                param['format'] = swType.format;
+            }
             parameters.push(param);
         }
         var path;
