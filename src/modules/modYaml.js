@@ -34,29 +34,74 @@ function fromYaml(str, errors, config, callback){
         }
   });
 
-    var typeMap =
-    {
-        'binary': 'Binary',
-        'bool': 'Boolean',
-        'byte': 'Byte',
-        'date': 'Date',
-        'dateTimeOffset': 'DateTimeOffset',
-        'decimal': 'Decimal',
-        'double': 'Double',
-        'duration': 'Duration',
-        'guid': 'Guid',
-        'short': 'Int16',
-        'int16': 'Int16',
-        'int': 'Int32',
-        'int32': 'Int32',
-        'long': 'Int64',
-        'int64': 'Int64',
-        'sbyte': 'SByte',
-        'single': 'Single',
-        'stream': 'Stream',
-        'string': 'String',
-        'timeOfDay': 'TimeOfDay',
-    };
+    var typeMap = {
+        'binary': 'edm.binary',
+        'bool': 'edm.boolean',
+        'boolean': 'edm.boolean',
+        'byte': 'edm.byte',
+        'date': 'edm.date',
+        'datetimeoffset': 'edm.datetimeoffset',
+        'decimal': 'edm.decimal',
+        'double': 'edm.double',
+        'duration': 'edm.duration',
+        'guid': 'edm.guid',
+        'short': 'edm.int16',
+        'int': 'edm.int32',
+        'integer': 'edm.int32',
+        'long': 'edm.int64',
+        'sbyte': 'edm.sbyte',
+        'float': 'edm.single',
+        'single': 'edm.single',
+        'stream': 'edm.stream',
+        'string': 'edm.string',
+        'timeofday': 'edm.timeofday',
+        'geography': 'edm.geography',
+        'geographypoint': 'edm.geographypoint',
+        'geographylinestring': 'edm.geographylinestring',
+        'geographypolygon': 'edm.geographypolygon',
+        'geographymultipoint': 'edm.geographymultipoint',
+        'geographymultilinestring': 'edm.geographymultilinestring',
+        'geographymultipolygon': 'edm.geographymultipolygon',
+        'geographycollection': 'edm.geographycollection',
+        'geometry': 'edm.geometry',
+        'geometrypoint': 'edm.geometrypoint',
+        'geometrylinestring': 'edm.geometrylinestring',
+        'geometrypolygon': 'edm.geometrypolygon',
+        'geometrymultipoint': 'edm.geometrymultipoint',
+        'geometrymultilinestring': 'edm.geometrymultilinestring',
+        'geometrymultipolygon': 'edm.geometrymultipolygon',
+        'geometrycollection': 'edm.geometrycollection'
+    }
+
+    function matches(type){
+        for(var index in typeMap){
+            if(typeMap[index] === type){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    function maps(type){
+        var t = type.toLowerCase();
+        if(typeMap[t]){
+            return typeMap[t];
+        }
+        else if(t.length > 4 && t.slice(0, 4) === 'edm.'){
+            if(matches(t)){
+                return t;
+            }
+
+            return type;
+        }
+        else if(matches('edm.' + t)){
+            return 'edm.' + t;
+        }
+        else{
+            return type;
+        }
+    }
 
     function detectCollectionType(yamlType) {
         var type, col;
@@ -83,19 +128,19 @@ function fromYaml(str, errors, config, callback){
                 if (arr[i].name && arr[i].type) {
                     tempObj = {
                         'name': arr[i].name,
-                        'type': typeMap[arr[i].type] || arr[i].type
+                        'type': maps(arr[i].type)
                     };
                 }
                 else if (arr[i].name && !arr[i].type) {
                     tempObj = {
                         'name': arr[i].name,
-                        'type': 'String'
+                        'type': 'edm.string'
                     };
                 }
                 else {
                     tempObj = {
                         'name': arr[i],
-                        'type': 'String'
+                        'type': 'edm.string'
                     };
                 }
                 tempArr.push(tempObj);
@@ -104,7 +149,7 @@ function fromYaml(str, errors, config, callback){
         else {
             var tempObj = {
                 'name': arr,
-                'type': 'String'
+                'type': 'edm.string'
             };
             tempArr.push(tempObj);
         }
@@ -135,7 +180,7 @@ function fromYaml(str, errors, config, callback){
                     },
                     'returns': function (obj) {
                         if (obj) {
-                            operation.returns = typeMap[obj] || obj;
+                            operation.returns = maps(obj);
                         }
                     }
                 });
@@ -182,7 +227,7 @@ function fromYaml(str, errors, config, callback){
                         property = {'name': obj.name};
                         if (obj.type) {
                             var typeInfo = detectCollectionType(obj.type);
-                            property.type = typeMap[typeInfo.type] || typeInfo.type;
+                            property.type = maps(typeInfo.type);
                             if (typeInfo.isCol) {
                                 property.isCollection = typeInfo.isCol;
                             }
@@ -229,7 +274,7 @@ function fromYaml(str, errors, config, callback){
 
                         // Parse return type.
                         if (obj.returns) {
-                            operation.returns = typeMap[obj.returns] || obj.returns;
+                            operation.returns = maps(obj.returns);
                         }
 
                         // Parse operation-type (Bound/Unbound).

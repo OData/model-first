@@ -20,7 +20,7 @@ module.exports = function(config) {
     reporters: ['spec'],
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['PhantomJS'],
-    singleRun: true
+    browsers: ['Chrome'],
+    singleRun: false
   });
 };

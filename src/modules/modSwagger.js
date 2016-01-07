@@ -5,61 +5,62 @@
     }
 
     var SwaggerTypes = {
-        'integer': new SwaggerType('integer', 'int32'),
-        'long': new SwaggerType('integer', 'int64'),
-        'float': new SwaggerType('number', 'float'),
-        'double': new SwaggerType('number', 'double'),
-        'string': new SwaggerType('string', undefined),
-        'byte': new SwaggerType('string', 'byte'),
-        'boolean': new SwaggerType('boolean', undefined),
-        'date': new SwaggerType('string', 'date'),
-        'dateTime': new SwaggerType('string', 'date-time'),
-        'password': new SwaggerType('string', 'password'),
-        // The follwing types are not defined in Swagger schema
-        'decimal': new SwaggerType('number', 'decimal'),
-        'short': new SwaggerType('number', 'int16'),
-        'guid': new SwaggerType('string', 'guid'),
-        'dateTimeOffset': new SwaggerType('string', 'dateTimeOffset'),
-        'duration': new SwaggerType('string', 'duration'),
+        // Types are defined in Swagger Spec. 
+        'edm.int32': new SwaggerType('integer', 'int32'),
+        'edm.int64': new SwaggerType('integer', 'int64'),
+        'edm.single': new SwaggerType('number', 'float'),
+        'edm.double': new SwaggerType('number', 'double'),
+        'edm.string': new SwaggerType('string', undefined),
+        'edm.byte': new SwaggerType('string', 'byte'),
+        'edm.binary': new SwaggerType('string', 'binary'),
+        'edm.boolean': new SwaggerType('boolean', undefined),
+        'edm.date': new SwaggerType('string', 'date'),
+        // Extention types are not defined in Swagger Spec.
+        'edm.decimal': new SwaggerType('number', 'decimal'),
+        'edm.int16': new SwaggerType('integer', 'int16'),
+        'edm.sbyte': new SwaggerType('integer', 'sbyte') 
     };
 
     var typeMap = {
-        'Binary': undefined,
-        'Boolean': SwaggerTypes.boolean,
-        'Byte': SwaggerTypes.byte,
-        'Date': SwaggerTypes.date,
-        'DateTimeOffset': SwaggerTypes.dateTimeOffset,
-        'Decimal': SwaggerTypes.decimal,
-        'Double': SwaggerTypes.double,
-        'Duration': SwaggerTypes.duration,
-        'Guid': SwaggerTypes.guid,
-        'Int16': SwaggerTypes.short,
-        'Int32': SwaggerTypes.integer,
-        'Int64': SwaggerTypes.long,
-        // 'SByte'   : 'Edm.SByte',
-        'Single': SwaggerTypes.float,
-        // 'Stream': 'Edm.Stream',
-        'String': SwaggerTypes.string,
-        // 'TimeOfDay': 'Edm.TimeOfDay',
+        'edm.datetimeoffset': 'dateTimeOffset',
+        'edm.duration': 'duration',
+        'edm.guid': 'guid',
+        'edm.stream': 'stream',
+        'edm.timeofday': 'timeOfDay',
+        'edm.geography': 'geography',
+        'edm.geographypoint': 'geographyPoint',
+        'edm.geographylinestring': 'geographyLineString',
+        'edm.geographypolygon': 'geographyPolygon',
+        'edm.geographymultipoint': 'geographyMultiPoint',
+        'edm.geographymultilinestring': 'geographyMultiLineString',
+        'edm.geographymultipolygon': 'geographyMultiPolygon',
+        'edm.geographycollection': 'geographyCollection',
+        'edm.geometry': 'geometry',
+        'edm.geometrypoint': 'geometryPoint',
+        'edm.geometrylinestring': 'geometryLineString',
+        'edm.geometrypolygon': 'geometryPolygon',
+        'edm.geometrymultipoint': 'geometryMultiPoint',
+        'edm.geometrymultilinestring': 'geometryMultiLineString',
+        'edm.geometrymultipolygon': 'geometryMultiPolygon',
+        'edm.geometrycollection': 'geometryCollection'
     };
 
-    var entitySetMappings = {};
-
     function getSwaggerType(type, isCollection) {
-        var sType = type === undefined ?
-            SwaggerTypes.string :
-            typeMap[type];
-
-        if (!sType) {
-            if (type.length > 4 && type.slice(0, 4) === 'edm.') {
-                sType = new SwaggerType('string', type);
-            } else {
-                sType = {'$ref': '#/definitions/' + type};
-            }
+        var swgrType;
+        if(SwaggerTypes[type]){
+            swgrType = SwaggerTypes[type];
+        }
+        else if(typeMap[type]){
+            swgrType = new SwaggerType('string', 'string');
+        }
+        else{
+            swgrType = { '$ref': '#/definitions/' + type };
         }
 
-        return isCollection ? {'type': 'array', 'items': sType} : sType;
+        return isCollection ? { 'type': 'array', 'items': swgrType } : swgrType;
     }
+
+    var entitySetMappings = {};
 
     // Gets a singleton/entity-set's name.
     // params:
@@ -118,13 +119,17 @@
         }
         for (var i in params) {
             var isCollection = params[i].type[params[i].type.length - 1] === ']';
+            var swType = getSwaggerType(params[i].type, isCollection);
             var param = {
                 'name': params[i].name,
-                'type': getSwaggerType(params[i].type, isCollection),
+                'type': swType.type,
                 'in': 'formData',
                 'description': 'The parameter.',
                 'required': true
             };
+            if(swType.format){
+                param['format'] = swType.format;
+            }
             parameters.push(param);
         }
         var path;
@@ -184,13 +189,17 @@
         }
         for (var i in params) {
             var isCollection = params[i].type[params[i].type.length - 1] === ']';
+            var swType =  getSwaggerType(params[i].type, isCollection);
             var param = {
                 'name': params[i].name,
-                'type': getSwaggerType(params[i].type, isCollection),
+                'type': swType.type,
                 'in': 'formData',
                 'description': 'The parameter.',
                 'required': true
             };
+            if(swType.format){
+                param['format'] = swType.format;
+            }
             parameters.push(param);
         }
         var path;
