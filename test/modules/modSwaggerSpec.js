@@ -357,133 +357,6 @@ describe('[Swagger] To Swagger test', function () {
         assertDefinition(jsonModel, expected);
     });
 
-    /*it('Definitions multiple properties with all inner types.', function () {
-        var jsonModel =
-        {
-            'types': [
-                {
-                    'properties': [
-                        {
-                            'name': 'p1',
-                            'type': 'Boolean'
-                        },
-                        {
-                            'name': 'p2',
-                            'type': 'Byte'
-                        },
-                        {
-                            'name': 'p3',
-                            'type': 'Date'
-                        },
-                        {
-                            'name': 'p4',
-                            'type': 'DateTimeOffset'
-                        },
-                        {
-                            'name': 'p5',
-                            'type': 'Decimal'
-                        },
-                        {
-                            'name': 'p6',
-                            'type': 'Double'
-                        },
-                        {
-                            'name': 'p7',
-                            'type': 'Duration'
-                        },
-                        {
-                            'name': 'p8',
-                            'type': 'Guid'
-                        },
-                        {
-                            'name': 'p9',
-                            'type': 'Int16'
-                        },
-                        {
-                            'name': 'p10',
-                            'type': 'Int32'
-                        },
-                        {
-                            'name': 'p11',
-                            'type': 'Int64',
-                            'isNullable': true
-                        },
-                        {
-                            'name': 'p12',
-                            'type': 'Single',
-                            'isNullable': true
-                        },
-                        {
-                            'name': 'p13',
-                            'type': 'String',
-                            'isNullable': true
-                        }
-                    ],
-                    'name': 'type1'
-                }
-            ]
-        };
-
-        var expected = {
-            'type1': {
-                'properties': {
-                    'p1': {
-                        'type': 'boolean'
-                    },
-                    'p2': {
-                        'type': 'string',
-                        'format': 'byte'
-                    },
-                    'p3': {
-                        'type': 'string',
-                        'format': 'date'
-                    },
-                    'p4': {
-                        'type': 'string',
-                        'format': 'dateTimeOffset'
-                    },
-                    'p5': {
-                        'type': 'number',
-                        'format': 'decimal'
-                    },
-                    'p6': {
-                        'type': 'number',
-                        'format': 'double'
-                    },
-                    'p7': {
-                        'type': 'string',
-                        'format': 'duration'
-                    },
-                    'p8': {
-                        'type': 'string',
-                        'format': 'guid'
-                    },
-                    'p9': {
-                        'type': 'number',
-                        'format': 'int16'
-                    },
-                    'p10': {
-                        'type': 'integer',
-                        'format': 'int32'
-                    },
-                    'p11': {
-                        'type': 'integer',
-                        'format': 'int64'
-                    },
-                    'p12': {
-                        'type': 'number',
-                        'format': 'float'
-                    },
-                    'p13': {
-                        'type': 'string'
-                    }
-                }
-            }
-        };
-
-        assertDefinition(jsonModel, expected);
-    });*/
-
     it('Definitions collection properties should work.', function () {
         var jsonModel =
         {
@@ -877,13 +750,11 @@ describe('[Swagger] Actions test', function () {
                         },
                         {
                             'name': 'p1',
-                            'type': {
-                                'type': 'integer',
-                                'format': 'int32'
-                            },
+                            'type': 'integer',
                             'in': 'formData',
                             'description': 'The parameter.',
-                            'required': true
+                            'required': true,
+                            'format': 'int32'
                         }
                     ],
                     'responses': {
@@ -1051,13 +922,11 @@ describe('[Swagger] Functions test', function () {
                     'parameters': [
                         {
                             'name': 'p1',
-                            'type': {
-                                'type': 'integer',
-                                'format': 'int32'
-                            },
+                            'type': 'integer',
                             'in': 'formData',
                             'description': 'The parameter.',
-                            'required': true
+                            'required': true,
+                            'format': 'int32'
                         }
                     ],
                     'responses': {
