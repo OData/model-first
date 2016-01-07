@@ -51,6 +51,485 @@ api:\n\
     );
 });
 
+describe('[YAML] Primitive type definitions test', function(){
+    var typesWithYAML = '\
+    types:\n\
+      - name: myType\n\
+        requiredProperties:\n\
+          - name: myProp1_1\n\
+            type: binary\n\
+          - name: myProp1_2\n\
+            type: Binary\n\
+          - name: myProp1_3\n\
+            type: edm.binary\n\
+          - name: myProp1_4\n\
+            type: Edm.Binary\n\
+          - name: myProp2_1\n\
+            type: bool\n\
+          - name: myProp2_2\n\
+            type: Bool\n\
+          - name: myProp2_3\n\
+            type: boolean\n\
+          - name: myProp2_4\n\
+            type: Boolean\n\
+          - name: myProp2_5\n\
+            type: edm.boolean\n\
+          - name: myProp2_6\n\
+            type: Edm.Boolean\n\
+          - name: myProp3_1\n\
+            type: byte\n\
+          - name: myProp3_2\n\
+            type: Byte\n\
+          - name: myProp3_3\n\
+            type: edm.byte\n\
+          - name: myProp3_4\n\
+            type: Edm.Byte\n\
+          - name: myProp4_1\n\
+            type: date\n\
+          - name: myProp4_2\n\
+            type: Date\n\
+          - name: myProp4_3\n\
+            type: edm.date\n\
+          - name: myProp4_4\n\
+            type: Edm.Date\n\
+          - name: myProp5_1\n\
+            type: dateTimeOffset\n\
+          - name: myProp5_2\n\
+            type: DateTimeOffset\n\
+          - name: myProp5_3\n\
+            type: edm.datetimeoffset\n\
+          - name: myProp5_4\n\
+            type: Edm.DateTimeOffset\n\
+          - name: myProp6_1\n\
+            type: decimal\n\
+          - name: myProp6_2\n\
+            type: Decimal\n\
+          - name: myProp6_3\n\
+            type: edm.decimal\n\
+          - name: myProp6_4\n\
+            type: Edm.Decimal\n\
+          - name: myProp7_1\n\
+            type: double\n\
+          - name: myProp7_2\n\
+            type: Double\n\
+          - name: myProp7_3\n\
+            type: edm.double\n\
+          - name: myProp7_4\n\
+            type: Edm.Double\n\
+          - name: myProp8_1\n\
+            type: duration\n\
+          - name: myProp8_2\n\
+            type: Duration\n\
+          - name: myProp8_3\n\
+            type: edm.duration\n\
+          - name: myProp8_4\n\
+            type: Edm.Duration\n\
+          - name: myProp9_1\n\
+            type: guid\n\
+          - name: myProp9_2\n\
+            type: Guid\n\
+          - name: myProp9_3\n\
+            type: edm.guid\n\
+          - name: myProp9_4\n\
+            type: Edm.Guid\n\
+          - name: myProp10_1\n\
+            type: short\n\
+          - name: myProp10_2\n\
+            type: Short\n\
+          - name: myProp10_3\n\
+            type: edm.int16\n\
+          - name: myProp10_4\n\
+            type: Edm.Int16\n\
+          - name: myProp11_1\n\
+            type: int\n\
+          - name: myProp11_2\n\
+            type: Int\n\
+          - name: myProp11_3\n\
+            type: integer\n\
+          - name: myProp11_4\n\
+            type: Integer\n\
+          - name: myProp11_5\n\
+            type: edm.int32\n\
+          - name: myProp11_6\n\
+            type: Edm.Int32\n\
+          - name: myProp12_1\n\
+            type: long\n\
+          - name: myProp12_2\n\
+            type: Long\n\
+          - name: myProp12_3\n\
+            type: edm.int64\n\
+          - name: myProp12_4\n\
+            type: Edm.Int64\n\
+          - name: myProp13_1\n\
+            type: sbyte\n\
+          - name: myProp13_2\n\
+            type: Sbyte\n\
+          - name: myProp13_3\n\
+            type: edm.sbyte\n\
+          - name: myProp13_4\n\
+            type: Edm.Sbyte\n\
+          - name: myProp14_1\n\
+            type: single\n\
+          - name: myProp14_2\n\
+            type: Single\n\
+          - name: myProp14_3\n\
+            type: float\n\
+          - name: myProp14_4\n\
+            type: Float\n\
+          - name: myProp14_5\n\
+            type: edm.single\n\
+          - name: myProp14_6\n\
+            type: Edm.Single\n\
+          - name: myProp15_1\n\
+            type: stream\n\
+          - name: myProp15_2\n\
+            type: Stream\n\
+          - name: myProp15_3\n\
+            type: edm.stream\n\
+          - name: myProp15_4\n\
+            type: Edm.Stream\n\
+          - name: myProp16_1\n\
+            type: string\n\
+          - name: myProp16_2\n\
+            type: String\n\
+          - name: myProp16_3\n\
+            type: edm.string\n\
+          - name: myProp16_4\n\
+            type: Edm.String\n\
+          - name: myProp17_1\n\
+            type: timeOfDay\n\
+          - name: myProp17_2\n\
+            type: TimeOfDay\n\
+          - name: myProp17_3\n\
+            type: edm.timeofday\n\
+          - name: myProp17_4\n\
+            type: Edm.TimeOfDay\n\
+          - name: myProp18_1\n\
+            type: geography\n\
+          - name: myProp18_2\n\
+            type: Geography\n\
+          - name: myProp18_3\n\
+            type: edm.geography\n\
+          - name: myProp18_4\n\
+            type: Edm.Geography\n\
+          - name: myProp19_1\n\
+            type: geographyPoint\n\
+          - name: myProp19_2\n\
+            type: GeographyPoint\n\
+          - name: myProp19_3\n\
+            type: edm.geographypoint\n\
+          - name: myProp19_4\n\
+            type: Edm.GeographyPoint\n\
+          - name: myProp20_1\n\
+            type: geographyLineString\n\
+          - name: myProp20_2\n\
+            type: GeographyLineString\n\
+          - name: myProp20_3\n\
+            type: edm.geographylinestring\n\
+          - name: myProp20_4\n\
+            type: Edm.GeographyLineString\n\
+          - name: myProp21_1\n\
+            type: geographyPolygon\n\
+          - name: myProp21_2\n\
+            type: GeographyPolygon\n\
+          - name: myProp21_3\n\
+            type: edm.geographypolygon\n\
+          - name: myProp21_4\n\
+            type: Edm.GeographyPolygon\n\
+          - name: myProp22_1\n\
+            type: geographyMultiPoint\n\
+          - name: myProp22_2\n\
+            type: GeographyMultiPoint\n\
+          - name: myProp22_3\n\
+            type: edm.geographymultipoint\n\
+          - name: myProp22_4\n\
+            type: Edm.GeographyMultiPoint\n\
+          - name: myProp23_1\n\
+            type: geographyMultiLineString\n\
+          - name: myProp23_2\n\
+            type: GeographyMultiLineString\n\
+          - name: myProp23_3\n\
+            type: edm.geographymultilinestring\n\
+          - name: myProp23_4\n\
+            type: Edm.GeographyMultiLineString\n\
+          - name: myProp24_1\n\
+            type: geographyMultiPolygon\n\
+          - name: myProp24_2\n\
+            type: GeographyMultiPolygon\n\
+          - name: myProp24_3\n\
+            type: edm.geographymultipolygon\n\
+          - name: myProp24_4\n\
+            type: Edm.GeographyMultiPolygon\n\
+          - name: myProp25_1\n\
+            type: geographyCollection\n\
+          - name: myProp25_2\n\
+            type: GeographyCollection\n\
+          - name: myProp25_3\n\
+            type: edm.geographycollection\n\
+          - name: myProp25_4\n\
+            type: Edm.GeographyCollection\n\
+          - name: myProp26_1\n\
+            type: geometry\n\
+          - name: myProp26_2\n\
+            type: Geometry\n\
+          - name: myProp26_3\n\
+            type: edm.geometry\n\
+          - name: myProp26_4\n\
+            type: Edm.Geometry\n\
+          - name: myProp27_1\n\
+            type: geometryPoint\n\
+          - name: myProp27_2\n\
+            type: GeometryPoint\n\
+          - name: myProp27_3\n\
+            type: edm.geometrypoint\n\
+          - name: myProp27_4\n\
+            type: Edm.GeometryPoint\n\
+          - name: myProp28_1\n\
+            type: geometryLineString\n\
+          - name: myProp28_2\n\
+            type: GeometryLineString\n\
+          - name: myProp28_3\n\
+            type: edm.geometrylinestring\n\
+          - name: myProp28_4\n\
+            type: Edm.GeometryLineString\n\
+          - name: myProp29_1\n\
+            type: geometryPolygon\n\
+          - name: myProp29_2\n\
+            type: GeometryPolygon\n\
+          - name: myProp29_3\n\
+            type: edm.geometrypolygon\n\
+          - name: myProp29_4\n\
+            type: Edm.GeometryPolygon\n\
+          - name: myProp30_1\n\
+            type: geometryMultiPoint\n\
+          - name: myProp30_2\n\
+            type: GeometryMultiPoint\n\
+          - name: myProp30_3\n\
+            type: edm.geometrymultipoint\n\
+          - name: myProp30_4\n\
+            type: Edm.GeometryMultiPoint\n\
+          - name: myProp31_1\n\
+            type: geometryMultiLineString\n\
+          - name: myProp31_2\n\
+            type: GeometryMultiLineString\n\
+          - name: myProp31_3\n\
+            type: edm.geometrymultilinestring\n\
+          - name: myProp31_4\n\
+            type: Edm.GeometryMultiLineString\n\
+          - name: myProp32_1\n\
+            type: geometryMultiPolygon\n\
+          - name: myProp32_2\n\
+            type: GeometryMultiPolygon\n\
+          - name: myProp32_3\n\
+            type: edm.geometrymultipolygon\n\
+          - name: myProp32_4\n\
+            type: Edm.GeometryMultiPolygon\n\
+          - name: myProp33_1\n\
+            type: geometryCollection\n\
+          - name: myProp33_2\n\
+            type: GeometryCollection\n\
+          - name: myProp33_3\n\
+            type: edm.geometrycollection\n\
+          - name: myProp33_4\n\
+            type: Edm.GeometryCollection\n\
+    ';
+    var typesWithJSON = [
+    {
+        'properties': [
+        {'name': 'myProp1_1', 'type': 'edm.binary'},
+        {'name': 'myProp1_2', 'type': 'edm.binary'},
+        {'name': 'myProp1_3', 'type': 'edm.binary'},
+        {'name': 'myProp1_4', 'type': 'edm.binary'},
+        {'name': 'myProp2_1', 'type': 'edm.boolean'},
+        {'name': 'myProp2_2', 'type': 'edm.boolean'},
+        {'name': 'myProp2_3', 'type': 'edm.boolean'},
+        {'name': 'myProp2_4', 'type': 'edm.boolean'},
+        {'name': 'myProp2_5', 'type': 'edm.boolean'},
+        {'name': 'myProp2_6', 'type': 'edm.boolean'},
+        {'name': 'myProp3_1', 'type': 'edm.byte'},
+        {'name': 'myProp3_2', 'type': 'edm.byte'},
+        {'name': 'myProp3_3', 'type': 'edm.byte'},
+        {'name': 'myProp3_4', 'type': 'edm.byte'},
+        {'name': 'myProp4_1', 'type': 'edm.date'},
+        {'name': 'myProp4_2', 'type': 'edm.date'},
+        {'name': 'myProp4_3', 'type': 'edm.date'},
+        {'name': 'myProp4_4', 'type': 'edm.date'},
+        {'name': 'myProp5_1', 'type': 'edm.datetimeoffset'},
+        {'name': 'myProp5_2', 'type': 'edm.datetimeoffset'},
+        {'name': 'myProp5_3', 'type': 'edm.datetimeoffset'},
+        {'name': 'myProp5_4', 'type': 'edm.datetimeoffset'},
+        {'name': 'myProp6_1', 'type': 'edm.decimal'},
+        {'name': 'myProp6_2', 'type': 'edm.decimal'},
+        {'name': 'myProp6_3', 'type': 'edm.decimal'},
+        {'name': 'myProp6_4', 'type': 'edm.decimal'},
+        {'name': 'myProp7_1', 'type': 'edm.double'},
+        {'name': 'myProp7_2', 'type': 'edm.double'},
+        {'name': 'myProp7_3', 'type': 'edm.double'},
+        {'name': 'myProp7_4', 'type': 'edm.double'},
+        {'name': 'myProp8_1', 'type': 'edm.duration'},
+        {'name': 'myProp8_2', 'type': 'edm.duration'},
+        {'name': 'myProp8_3', 'type': 'edm.duration'},
+        {'name': 'myProp8_4', 'type': 'edm.duration'},
+        {'name': 'myProp9_1', 'type': 'edm.guid'},
+        {'name': 'myProp9_2', 'type': 'edm.guid'},
+        {'name': 'myProp9_3', 'type': 'edm.guid'},
+        {'name': 'myProp9_4', 'type': 'edm.guid'},
+        {'name': 'myProp10_1', 'type': 'edm.int16'},
+        {'name': 'myProp10_2', 'type': 'edm.int16'},
+        {'name': 'myProp10_3', 'type': 'edm.int16'},
+        {'name': 'myProp10_4', 'type': 'edm.int16'},
+        {'name': 'myProp11_1', 'type': 'edm.int32'},
+        {'name': 'myProp11_2', 'type': 'edm.int32'},
+        {'name': 'myProp11_3', 'type': 'edm.int32'},
+        {'name': 'myProp11_4', 'type': 'edm.int32'},
+        {'name': 'myProp11_5', 'type': 'edm.int32'},
+        {'name': 'myProp11_6', 'type': 'edm.int32'},
+        {'name': 'myProp12_1', 'type': 'edm.int64'},
+        {'name': 'myProp12_2', 'type': 'edm.int64'},
+        {'name': 'myProp12_3', 'type': 'edm.int64'},
+        {'name': 'myProp12_4', 'type': 'edm.int64'},
+        {'name': 'myProp13_1', 'type': 'edm.sbyte'},
+        {'name': 'myProp13_2', 'type': 'edm.sbyte'},
+        {'name': 'myProp13_3', 'type': 'edm.sbyte'},
+        {'name': 'myProp13_4', 'type': 'edm.sbyte'},
+        {'name': 'myProp14_1', 'type': 'edm.single'},
+        {'name': 'myProp14_2', 'type': 'edm.single'},
+        {'name': 'myProp14_3', 'type': 'edm.single'},
+        {'name': 'myProp14_4', 'type': 'edm.single'},
+        {'name': 'myProp14_5', 'type': 'edm.single'},
+        {'name': 'myProp14_6', 'type': 'edm.single'},
+        {'name': 'myProp15_1', 'type': 'edm.stream'},
+        {'name': 'myProp15_2', 'type': 'edm.stream'},
+        {'name': 'myProp15_3', 'type': 'edm.stream'},
+        {'name': 'myProp15_4', 'type': 'edm.stream'},
+        {'name': 'myProp16_1', 'type': 'edm.string'},
+        {'name': 'myProp16_2', 'type': 'edm.string'},
+        {'name': 'myProp16_3', 'type': 'edm.string'},
+        {'name': 'myProp16_4', 'type': 'edm.string'},
+        {'name': 'myProp17_1', 'type': 'edm.timeofday'},
+        {'name': 'myProp17_2', 'type': 'edm.timeofday'},
+        {'name': 'myProp17_3', 'type': 'edm.timeofday'},
+        {'name': 'myProp17_4', 'type': 'edm.timeofday'},
+        {'name': 'myProp18_1', 'type': 'edm.geography'},
+        {'name': 'myProp18_2', 'type': 'edm.geography'},
+        {'name': 'myProp18_3', 'type': 'edm.geography'},
+        {'name': 'myProp18_4', 'type': 'edm.geography'},
+        {'name': 'myProp19_1', 'type': 'edm.geographypoint'},
+        {'name': 'myProp19_2', 'type': 'edm.geographypoint'},
+        {'name': 'myProp19_3', 'type': 'edm.geographypoint'},
+        {'name': 'myProp19_4', 'type': 'edm.geographypoint'},
+        {'name': 'myProp20_1', 'type': 'edm.geographylinestring'},
+        {'name': 'myProp20_2', 'type': 'edm.geographylinestring'},
+        {'name': 'myProp20_3', 'type': 'edm.geographylinestring'},
+        {'name': 'myProp20_4', 'type': 'edm.geographylinestring'},
+        {'name': 'myProp21_1', 'type': 'edm.geographypolygon'},
+        {'name': 'myProp21_2', 'type': 'edm.geographypolygon'},
+        {'name': 'myProp21_3', 'type': 'edm.geographypolygon'},
+        {'name': 'myProp21_4', 'type': 'edm.geographypolygon'},
+        {'name': 'myProp22_1', 'type': 'edm.geographymultipoint'},
+        {'name': 'myProp22_2', 'type': 'edm.geographymultipoint'},
+        {'name': 'myProp22_3', 'type': 'edm.geographymultipoint'},
+        {'name': 'myProp22_4', 'type': 'edm.geographymultipoint'},
+        {'name': 'myProp23_1', 'type': 'edm.geographymultilinestring'},
+        {'name': 'myProp23_2', 'type': 'edm.geographymultilinestring'},
+        {'name': 'myProp23_3', 'type': 'edm.geographymultilinestring'},
+        {'name': 'myProp23_4', 'type': 'edm.geographymultilinestring'},
+        {'name': 'myProp24_1', 'type': 'edm.geographymultipolygon'},
+        {'name': 'myProp24_2', 'type': 'edm.geographymultipolygon'},
+        {'name': 'myProp24_3', 'type': 'edm.geographymultipolygon'},
+        {'name': 'myProp24_4', 'type': 'edm.geographymultipolygon'},
+        {'name': 'myProp25_1', 'type': 'edm.geographycollection'},
+        {'name': 'myProp25_2', 'type': 'edm.geographycollection'},
+        {'name': 'myProp25_3', 'type': 'edm.geographycollection'},
+        {'name': 'myProp25_4', 'type': 'edm.geographycollection'},
+        {'name': 'myProp26_1', 'type': 'edm.geometry'},
+        {'name': 'myProp26_2', 'type': 'edm.geometry'},
+        {'name': 'myProp26_3', 'type': 'edm.geometry'},
+        {'name': 'myProp26_4', 'type': 'edm.geometry'},
+        {'name': 'myProp27_1', 'type': 'edm.geometrypoint'},
+        {'name': 'myProp27_2', 'type': 'edm.geometrypoint'},
+        {'name': 'myProp27_3', 'type': 'edm.geometrypoint'},
+        {'name': 'myProp27_4', 'type': 'edm.geometrypoint'},
+        {'name': 'myProp28_1', 'type': 'edm.geometrylinestring'},
+        {'name': 'myProp28_2', 'type': 'edm.geometrylinestring'},
+        {'name': 'myProp28_3', 'type': 'edm.geometrylinestring'},
+        {'name': 'myProp28_4', 'type': 'edm.geometrylinestring'},
+        {'name': 'myProp29_1', 'type': 'edm.geometrypolygon'},
+        {'name': 'myProp29_2', 'type': 'edm.geometrypolygon'},
+        {'name': 'myProp29_3', 'type': 'edm.geometrypolygon'},
+        {'name': 'myProp29_4', 'type': 'edm.geometrypolygon'},
+        {'name': 'myProp30_1', 'type': 'edm.geometrymultipoint'},
+        {'name': 'myProp30_2', 'type': 'edm.geometrymultipoint'},
+        {'name': 'myProp30_3', 'type': 'edm.geometrymultipoint'},
+        {'name': 'myProp30_4', 'type': 'edm.geometrymultipoint'},
+        {'name': 'myProp31_1', 'type': 'edm.geometrymultilinestring'},
+        {'name': 'myProp31_2', 'type': 'edm.geometrymultilinestring'},
+        {'name': 'myProp31_3', 'type': 'edm.geometrymultilinestring'},
+        {'name': 'myProp31_4', 'type': 'edm.geometrymultilinestring'},
+        {'name': 'myProp32_1', 'type': 'edm.geometrymultipolygon'},
+        {'name': 'myProp32_2', 'type': 'edm.geometrymultipolygon'},
+        {'name': 'myProp32_3', 'type': 'edm.geometrymultipolygon'},
+        {'name': 'myProp32_4', 'type': 'edm.geometrymultipolygon'},
+        {'name': 'myProp33_1', 'type': 'edm.geometrycollection'},
+        {'name': 'myProp33_2', 'type': 'edm.geometrycollection'},
+        {'name': 'myProp33_3', 'type': 'edm.geometrycollection'},
+        {'name': 'myProp33_4', 'type': 'edm.geometrycollection'}],
+        'name': 'myType'
+    }];
+
+    it('Define properties with primitive type using normal format should work well.', fromYamlTypeTest(typesWithYAML, typesWithJSON));
+
+    typesWithYAML = '\
+    types:\n\
+      - name: myType\n\
+        requiredProperties:\n\
+          - name: myProp1\n\
+            type: Edm.TEST\n\
+          - name: myProp2\n\
+            type: edm.type\n\
+          - name: myProp3\n\
+            type: myType\n\
+    ';
+    typesWithJSON = [
+    {
+        'properties': [
+        {'name': 'myProp1', 'type': 'Edm.TEST'},
+        {'name': 'myProp2', 'type': 'edm.type'},
+        {'name': 'myProp3', 'type': 'myType'}],
+        'name': 'myType'
+    }];
+
+    it('Define properties with undefined (user-defined) type should work well.', fromYamlTypeTest(typesWithYAML, typesWithJSON));
+
+    typesWithYAML = '\
+    types:\n\
+      - name: myType\n\
+        requiredProperties:\n\
+          - name: myProp1\n\
+            type: EDm.sTRing\n\
+          - name: myProp2\n\
+            type: EDM.GEOMETRYPOLYGON\n\
+          - name: myProp3\n\
+            type: Int16\n\
+          - name: myProp4\n\
+            type: Int32\n\
+          - name: myProp5\n\
+            type: Int64\n\
+    ';
+    typesWithJSON = [
+    {
+        'properties': [
+        {'name': 'myProp1', 'type': 'edm.string'},
+        {'name': 'myProp2', 'type': 'edm.geometrypolygon'},
+        {'name': 'myProp3', 'type': 'edm.int16'},
+        {'name': 'myProp4', 'type': 'edm.int32'},
+        {'name': 'myProp5', 'type': 'edm.int64'}],
+        'name': 'myType'
+    }];
+
+    it('Define properties with primitive type using abnormal format should work well.', fromYamlTypeTest(typesWithYAML, typesWithJSON));
+});
+
 describe('[YAML] Type section test', function () {
 
     it('Enum with values should work',
@@ -111,7 +590,7 @@ describe('[YAML] Type section test', function () {
                 requiredProperties: [p1, p3]\n',
             [{'properties': [{'name': 'p1'}, {'name': 'p3'}], 'name': 'type1'}]));
 
-    it('Property with facets should work.',
+    /*it('Property with facets should work.',
         fromYamlTypeTest(
             '\
             types:\n\
@@ -174,7 +653,8 @@ describe('[YAML] Type section test', function () {
                     'type': 'TimeOfDay'
                 }],
                 'name': 'type1'
-            }]));
+            }]));*/
+    
 
     it('Property with facets should work.',
         fromYamlTypeTest(
@@ -184,7 +664,7 @@ describe('[YAML] Type section test', function () {
                 requiredProperties:\n\
                   - name: p1\n\
                     type: int\n',
-            [{'properties': [{'name': 'p1', 'type': 'Int32'}], 'name': 'type1'}]));
+            [{'properties': [{'name': 'p1', 'type': 'edm.int32'}], 'name': 'type1'}]));
 
     it('Combined Property case should work.',
         fromYamlTypeTest(
@@ -195,7 +675,7 @@ describe('[YAML] Type section test', function () {
                   - name: p1\n\
                     type: long\n\
                   - p2',
-            [{'properties': [{'name': 'p1', 'type': 'Int64'}, {'name': 'p2'}], 'name': 'type1'}]));
+            [{'properties': [{'name': 'p1', 'type': 'edm.int64'}, {'name': 'p2'}], 'name': 'type1'}]));
 
     it('Combined Property case should work, default type should be set.',
         fromYamlTypeTest(
@@ -208,8 +688,8 @@ describe('[YAML] Type section test', function () {
                   - p2',
             [{
                 'properties': [
-                    {'name': 'p1', 'type': 'Int64'},
-                    {'name': 'p2', 'type': 'String'}
+                    {'name': 'p1', 'type': 'edm.int64'},
+                    {'name': 'p2', 'type': 'edm.string'}
                 ], 'name': 'type1'
             }],
             true));
@@ -225,9 +705,9 @@ describe('[YAML] Type section test', function () {
                     type: long\n',
             [{
                 'properties': [
-                    {'name': 's1', 'isKey': true},
-                    {'name': 's2', 'isKey': true},
-                    {'name': 'p1', 'type': 'Int64', 'isNullable': true}
+                    {'name': 's1', 'isKey': true },
+                    {'name': 's2', 'isKey': true },
+                    {'name': 'p1', 'type': 'edm.int64', 'isNullable': true}
                 ],
                 'name': 'type1'
             }
@@ -244,7 +724,7 @@ describe('[YAML] Type section test', function () {
                   - p2\n',
             [{
                 'properties': [
-                    {'name': 'p1', 'type': 'Int64'},
+                    {'name': 'p1', 'type': 'edm.int64'},
                     {'name': 'p2'}],
                 'name': 'type1'
             }]));
@@ -261,10 +741,10 @@ describe('[YAML] Type section test', function () {
                   - p2\n',
             [{
                 'properties': [
-                    {'name': 'op1', 'isNullable': true, 'type': 'String'},
-                    {'name': 'op2', 'isNullable': true, 'type': 'String'},
-                    {'name': 'p1', 'type': 'Int64'},
-                    {'name': 'p2', 'type': 'String'}],
+                    {'name': 'op1', 'isNullable': true, 'type': 'edm.string'},
+                    {'name': 'op2', 'isNullable': true, 'type': 'edm.string'},
+                    {'name': 'p1', 'type': 'edm.int64'},
+                    {'name': 'p2', 'type': 'edm.string'}],
                 'name': 'type1'
             }], true));
 			
@@ -390,14 +870,14 @@ describe('[YAML] Type section test', function () {
 // 1. Testing for all kinds of actions.
 describe('[YAML] Actions test', function () {
     var unboundActionWithYAML = '\
-  root:\n\
-    # Unbound Action\n\
-    - name: actionTest\n\
-      params:\n\
-        - name: p1\n\
-          type: int\n\
-        - name: str1\n\
-        - str2';
+    root:\n\
+      # Unbound Action\n\
+      - name: actionTest\n\
+        params:\n\
+          - name: p1\n\
+            type: int\n\
+          - name: str1\n\
+          - str2';
     var unboundActionWithJSON =
     {
         'operations': [
@@ -408,15 +888,15 @@ describe('[YAML] Actions test', function () {
                 'params': [
                     {
                         'name': 'p1',
-                        'type': 'Int32'
+                        'type': 'edm.int32'
                     },
                     {
                         'name': 'str1',
-                        'type': 'String'
+                        'type': 'edm.string'
                     },
                     {
                         'name': 'str2',
-                        'type': 'String'
+                        'type': 'edm.string'
                     }]
             }
         ]
@@ -425,14 +905,14 @@ describe('[YAML] Actions test', function () {
     it('Unbound action without return types should work', fromYamlRootTest(unboundActionWithYAML, unboundActionWithJSON));
 
     var boundActionWithYAML = '\
-  types:\n\
-    - operations:\n\
-        - name: actionTest\n\
-          params:\n\
-            - name: p1\n\
-              type: int\n\
-            - name: str1\n\
-            - str2';
+    types:\n\
+      - operations:\n\
+          - name: actionTest\n\
+            params:\n\
+              - name: p1\n\
+                type: int\n\
+              - name: str1\n\
+              - str2';
     var boundActionWithJSON = [
         {
             'properties': [
@@ -442,15 +922,15 @@ describe('[YAML] Actions test', function () {
                     'params': [
                         {
                             'name': 'p1',
-                            'type': 'Int32'
+                            'type': 'edm.int32'
                         },
                         {
                             'name': 'str1',
-                            'type': 'String'
+                            'type': 'edm.string'
                         },
                         {
                             'name': 'str2',
-                            'type': 'String'
+                            'type': 'edm.string'
                         }],
                     'operationType': 'Bound'
                 }
@@ -464,12 +944,12 @@ describe('[YAML] Actions test', function () {
 describe('[YAML] Functions test', function () {
 
     var unboundFunctionWithYAML = '\
-  root:\n\
-    - name: functionTest\n\
-      params:\n\
-        - name: friend\n\
-          type: person\n\
-      returns: person[]';
+    root:\n\
+      - name: functionTest\n\
+        params:\n\
+          - name: friend\n\
+            type: person\n\
+        returns: person[]';
     var unboundFunctionWithJSON =
     {
         'operations': [
@@ -490,13 +970,13 @@ describe('[YAML] Functions test', function () {
     it('Unbound function with a return type should work', fromYamlRootTest(unboundFunctionWithYAML, unboundFunctionWithJSON));
 
     var boundFunctionWithYAML = '\
-  types:\n\
-    - operations:\n\
-        - name: functionTest\n\
-          params:\n\
-            - name: id\n\
-              type: int64\n\
-          returns: string';
+    types:\n\
+      - operations:\n\
+          - name: functionTest\n\
+            params:\n\
+              - name: id\n\
+                type: int64\n\
+            returns: string';
     var boundFunctionWithJSON = [
         {
             'properties': [
@@ -506,9 +986,9 @@ describe('[YAML] Functions test', function () {
                     'params': [
                         {
                             'name': 'id',
-                            'type': 'Int64'
+                            'type': 'edm.int64'
                         }],
-                    'returns': 'String',
+                    'returns': 'edm.string',
                     'operationType': 'Bound'
                 }
             ]
@@ -543,14 +1023,14 @@ describe('[YAML] Root section tests', function () {
             }],
             'singletons': [{'name': 'me', 'type': 'user'}],
             'operations': [{
-                "type": "Function",
-                "operationType": "Unbound",
-                "name": "getFavoriteThings",
-                "params": [{
-                    "name": "userId",
-                    "type": "integer"
+                'type': 'Function',
+                'operationType': 'Unbound',
+                'name': 'getFavoriteThings',
+                'params': [{
+                    'name': 'userId',
+                    'type': 'edm.int32'
                 }],
-                "returns": "thing[]"
+                'returns': 'thing[]'
             }]
         }));
 
