@@ -1,39 +1,103 @@
-function fromYaml(str, errors, config) {
+function fromYaml(str, errors, config, callback) {
+    function OnMessage(message) {
+        callback(message.data.errors);
+    }
+
+    function OnError(message) {
+        callback(message.data.errors);
+    }
+
     var obj;
     try {
         obj = jsyaml.load(str);
-    }
-    catch (err) {
-        errors.push({
-            line: err.mark.line,
-            message: err.reason
-        });
+    } catch (err) {
+        callback([{
+                yamlError: true,
+                lineNumber: err.mark.line,
+                message: err.reason
+            }]);
         return null;
     }
 
-    var typeMap =
-    {
-        'binary': 'Binary',
-        'bool': 'Boolean',
-        'byte': 'Byte',
-        'date': 'Date',
-        'dateTimeOffset': 'DateTimeOffset',
-        'decimal': 'Decimal',
-        'double': 'Double',
-        'duration': 'Duration',
-        'guid': 'Guid',
-        'short': 'Int16',
-        'int16': 'Int16',
-        'int': 'Int32',
-        'int32': 'Int32',
-        'long': 'Int64',
-        'int64': 'Int64',
-        'sbyte': 'SByte',
-        'single': 'Single',
-        'stream': 'Stream',
-        'string': 'String',
-        'timeOfDay': 'TimeOfDay',
-    };
+    var worker = worker || new Worker('../bower_components/morpho/src/index.js');
+    worker.onmessage = OnMessage;
+    worker.onerror = OnError;
+    worker.postMessage({
+        definition: obj,
+        jsonRefs: {
+            location: window.location.href
+
+                    // TODO: remove when this bug is fixed:
+                    // https://github.com/apigee-127/sway/issues/24
+                    .replace(/#.+/, '').replace(/\/$/, '')
+        }
+    });
+
+    var typeMap = {
+        'binary': 'edm.binary',
+        'bool': 'edm.boolean',
+        'boolean': 'edm.boolean',
+        'byte': 'edm.byte',
+        'date': 'edm.date',
+        'datetimeoffset': 'edm.datetimeoffset',
+        'decimal': 'edm.decimal',
+        'double': 'edm.double',
+        'duration': 'edm.duration',
+        'guid': 'edm.guid',
+        'short': 'edm.int16',
+        'int': 'edm.int32',
+        'integer': 'edm.int32',
+        'long': 'edm.int64',
+        'sbyte': 'edm.sbyte',
+        'float': 'edm.single',
+        'single': 'edm.single',
+        'stream': 'edm.stream',
+        'string': 'edm.string',
+        'timeofday': 'edm.timeofday',
+        'geography': 'edm.geography',
+        'geographypoint': 'edm.geographypoint',
+        'geographylinestring': 'edm.geographylinestring',
+        'geographypolygon': 'edm.geographypolygon',
+        'geographymultipoint': 'edm.geographymultipoint',
+        'geographymultilinestring': 'edm.geographymultilinestring',
+        'geographymultipolygon': 'edm.geographymultipolygon',
+        'geographycollection': 'edm.geographycollection',
+        'geometry': 'edm.geometry',
+        'geometrypoint': 'edm.geometrypoint',
+        'geometrylinestring': 'edm.geometrylinestring',
+        'geometrypolygon': 'edm.geometrypolygon',
+        'geometrymultipoint': 'edm.geometrymultipoint',
+        'geometrymultilinestring': 'edm.geometrymultilinestring',
+        'geometrymultipolygon': 'edm.geometrymultipolygon',
+        'geometrycollection': 'edm.geometrycollection'
+    }
+
+    function matches(type) {
+        for (var index in typeMap) {
+            if (typeMap[index] === type) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    function maps(type) {
+        var t = type.toLowerCase();
+        if (typeMap[t]) {
+            return typeMap[t];
+        } else if (t.length > 4 && t.slice(0, 4) === 'edm.') {
+            if (matches(t)) {
+                return t;
+            }
+
+            return type;
+        } else if (matches('edm.' + t)) {
+            return 'edm.' + t;
+        } else {
+            return type;
+        }
+    }
 
     function detectCollectionType(yamlType) {
         var type, col;
@@ -60,28 +124,25 @@ function fromYaml(str, errors, config) {
                 if (arr[i].name && arr[i].type) {
                     tempObj = {
                         'name': arr[i].name,
-                        'type': typeMap[arr[i].type] || arr[i].type
+                        'type': maps(arr[i].type)
                     };
-                }
-                else if (arr[i].name && !arr[i].type) {
+                } else if (arr[i].name && !arr[i].type) {
                     tempObj = {
                         'name': arr[i].name,
-                        'type': 'String'
+                        'type': 'edm.string'
                     };
-                }
-                else {
+                } else {
                     tempObj = {
                         'name': arr[i],
-                        'type': 'String'
+                        'type': 'edm.string'
                     };
                 }
                 tempArr.push(tempObj);
             }
-        }
-        else {
+        } else {
             var tempObj = {
                 'name': arr,
-                'type': 'String'
+                'type': 'edm.string'
             };
             tempArr.push(tempObj);
         }
@@ -98,8 +159,7 @@ function fromYaml(str, errors, config) {
                 var operation = {};
                 if (!item.returns) {
                     operation.type = 'Action';
-                }
-                else {
+                } else {
                     operation.type = 'Function';
                 }
                 operation.operationType = 'Unbound';
@@ -112,13 +172,12 @@ function fromYaml(str, errors, config) {
                     },
                     'returns': function (obj) {
                         if (obj) {
-                            operation.returns = typeMap[obj] || obj;
+                            operation.returns = maps(obj);
                         }
                     }
                 });
                 operations.push(operation);
-            }
-            else {
+            } else {
                 // entityset or singleton
                 var mt = detectCollectionType(item.type);
                 var et = {
@@ -129,24 +188,26 @@ function fromYaml(str, errors, config) {
 
                 if (mt.isCol) {
                     entitysets.push(et);
-                }
-                else {
+                } else {
                     singletons.push(et);
                 }
             }
         });
 
         state.container = {};
-        if (entitysets.length > 0)state.container.entitysets = entitysets;
-        if (singletons.length > 0)state.container.singletons = singletons;
-        if (operations.length > 0)state.container.operations = operations;
+        if (entitysets.length > 0)
+            state.container.entitysets = entitysets;
+        if (singletons.length > 0)
+            state.container.singletons = singletons;
+        if (operations.length > 0)
+            state.container.operations = operations;
     }
 
     var visitor = this.getVisitor();
     var state = {};
     visitor.visitObj(obj, {
-        'service': function (obj) {
-            state.service = obj;
+        'api': function (obj) {
+            state.api = obj;
         },
         'types': function (arr) {
             state.types = [];
@@ -159,14 +220,15 @@ function fromYaml(str, errors, config) {
                         property = {'name': obj.name};
                         if (obj.type) {
                             var typeInfo = detectCollectionType(obj.type);
-                            property.type = typeMap[typeInfo.type] || typeInfo.type;
+                            property.type = maps(typeInfo.type);
                             if (typeInfo.isCol) {
                                 property.isCollection = typeInfo.isCol;
                             }
                         }
                     }
 
-                    if (extend) extend(property);
+                    if (extend)
+                        extend(property);
 
                     return property;
                 }
@@ -194,8 +256,7 @@ function fromYaml(str, errors, config) {
                         // Parse type of an operation.
                         if (!obj.returns) {
                             operation.type = 'Action';
-                        }
-                        else {
+                        } else {
                             operation.type = 'Function';
                         }
 
@@ -206,7 +267,7 @@ function fromYaml(str, errors, config) {
 
                         // Parse return type.
                         if (obj.returns) {
-                            operation.returns = typeMap[obj.returns] || obj.returns;
+                            operation.returns = maps(obj.returns);
                         }
 
                         // Parse operation-type (Bound/Unbound).
@@ -233,6 +294,9 @@ function fromYaml(str, errors, config) {
                     },
                     'underlyingType': function (obj) {
                         type.underlyingType = obj;
+                    },
+                    'baseType': function (obj) {
+                        type.baseType = obj;
                     },
                     'key': function (obj) {
                         this.visitArr(obj, function (obj) {
