@@ -545,7 +545,7 @@ describe('[YAML] Type section test', function () {
                   - name: male\n\
                     value: 2\n\
                 flags: false\n\
-                underlyingType: int32',
+                underlyingType: int',
                     [{
                             'name': 'personGender',
                             'members': [{'name': 'unknown', 'value': 0}, {'name': 'female', 'value': -1}, {
@@ -553,7 +553,7 @@ describe('[YAML] Type section test', function () {
                                     'value': 2
                                 }],
                             'flags': false,
-                            'underlyingType': 'int32'
+                            'underlyingType': 'edm.int32'
                         }]));
 
     it('Enum without values should work',

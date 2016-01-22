@@ -25,7 +25,7 @@ Here is an enumeration type sample for the core JSON model:
          }
        ],
       "flags": false,
-      "underlyingType": "int32"
+      "underlyingType": "edm.int32"
     },
 	{
 	  "name": "originalColor"
@@ -91,7 +91,7 @@ types:
       - name: male
         value: 2
    flags: false
-   underlyingType: int32
+   underlyingType: int
 - name: originalColor
    members: [red, yellow, blue]
 ```

@@ -293,7 +293,8 @@ function fromYaml(str, errors, config, callback) {
                         type.flags = obj;
                     },
                     'underlyingType': function (obj) {
-                        type.underlyingType = obj;
+                        var typeInfo = detectCollectionType(obj);
+                        type.underlyingType = maps(typeInfo.type);
                     },
                     'baseType': function (obj) {
                         type.baseType = obj;
