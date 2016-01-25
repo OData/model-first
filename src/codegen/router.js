@@ -1,5 +1,4 @@
 var bodyParser = require('body-parser');
-var myController = require('./controllers/myController');
 var ClientCodegenController = require('./controllers/ClientCodegenController');
 
 function route(app){

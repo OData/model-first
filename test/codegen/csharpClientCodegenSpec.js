@@ -6,7 +6,7 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
 		genEnumType = codegen.genEnumType;
 	});
 
-	fit('generation for enum type.', function(){
+	it('generation for enum type.', function(){
 		var enumTypeObj = {
 		    name: 'personGender',
 		    members: [
