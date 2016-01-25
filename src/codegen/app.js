@@ -11,4 +11,5 @@ router.route(app);
 
 var server = app.listen(constants.Port, function(){
 	console.log('Started connect codegen web service on http://localhost:' + constants.Port);
+	console.log('HTTP GET or POST: Download OData client C# code on http://localhost:' + constants.Port + '/client/codegen/?name=csharp');
 });
