@@ -80,16 +80,21 @@ module.exports = function(grunt) {
       }
     },
 
-   uglify: {
-    options: {
-      mangle: false
-    },
-    simpleYamlWorker: {
-      files: {
-        'dist/bower_components/morpho/src/index.js': ['src/index.js']
+    uglify: {
+      options: {
+        mangle: false
+      },
+      simpleYamlWorker: {
+        files: {
+          'dist/bower_components/morpho/src/index.js': ['src/index.js']
+        }
       }
-    }
-  }
+    },
+    execute: {
+	  target: {
+	    src: ['src/codegen/app.js']
+	  }
+	}
 
   });
 
@@ -101,6 +106,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-usemin');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-execute');
 
   grunt.registerTask('default', ['karma:build', 'jshint']);
   grunt.registerTask('tdd', ['karma:dev']);

@@ -2,7 +2,7 @@
 
 module.exports = function(config) {
   config.set({
-    frameworks:  ['jasmine'],
+    frameworks:  ['jasmine', 'browserify'],
 
     files: [
       'bower_components/js-yaml/dist/js-yaml.min.js',
@@ -14,9 +14,17 @@ module.exports = function(config) {
       'src/modules/*.js',
       'src/conventions/*.js',
       'test/modules/*.js',
+	  'test/codegen/*.js'
     ],
 
     exclude: [],
+	preprocessors: {
+      'test/codegen/*.js': ['browserify']
+    },
+	browserify: {
+      debug: true,
+      transform: [ 'brfs' ]
+    },
     reporters: ['spec'],
     logLevel: config.LOG_INFO,
     autoWatch: true,
