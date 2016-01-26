@@ -1,10 +1,16 @@
 var express = require('express');
 var router = require('./router');
 var config = require('./config');
+var DirectoryManager = require('./utilities/directoryMgr');
 
 var app = express();
 var constants = config.Constants;
-
+var dmgr = new DirectoryManager();
+var paths = [
+constants.CSharpCode,
+constants.CSharpZipPackage
+];
+dmgr.create(paths);
 app.use(express.static(constants.Paths.Static));
 
 router.route(app);
