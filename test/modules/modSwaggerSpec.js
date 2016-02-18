@@ -1,17 +1,202 @@
 'use strict';
 
-describe('[Swagger] To Swagger test', function () {
-    it('service should work.', function () {
-        var jsonModel =
-        {
-            'service': {
-                'name': 'service1',
-                'version': '0.1',
-                'description': 'this is service1',
-                'host': 'var1.org',
-                'basePath': '/ab/(S(cnbm44wtbc1v5bgrlek5lpcc))/dat'
+describe('[Swagger] Primitive type definitions test', function () {
+    it('Predefined types in module should work well', function () {
+        var jsonModel = {
+            'types': [
+                {
+                    'properties': [
+                        {
+                            'name': 'prop1',
+                            'type': 'edm.binary'
+                        },
+                        {
+                            'name': 'prop2',
+                            'type': 'edm.boolean'
+                        },
+                        {
+                            'name': 'prop3',
+                            'type': 'edm.byte'
+                        },
+                        {
+                            'name': 'prop4',
+                            'type': 'edm.date'
+                        },
+                        {
+                            'name': 'prop5',
+                            'type': 'edm.datetimeoffset'
+                        },
+                        {
+                            'name': 'prop6',
+                            'type': 'edm.decimal'
+                        },
+                        {
+                            'name': 'prop7',
+                            'type': 'edm.double'
+                        },
+                        {
+                            'name': 'prop8',
+                            'type': 'edm.duration'
+                        },
+                        {
+                            'name': 'prop9',
+                            'type': 'edm.guid'
+                        },
+                        {
+                            'name': 'prop10',
+                            'type': 'edm.int16'
+                        },
+                        {
+                            'name': 'prop11',
+                            'type': 'edm.int32'
+                        },
+                        {
+                            'name': 'prop12',
+                            'type': 'edm.int64'
+                        },
+                        {
+                            'name': 'prop13',
+                            'type': 'edm.sbyte'
+                        },
+                        {
+                            'name': 'prop14',
+                            'type': 'edm.single'
+                        },
+                        {
+                            'name': 'prop15',
+                            'type': 'edm.stream'
+                        },
+                        {
+                            'name': 'prop16',
+                            'type': 'edm.string'
+                        },
+                        {
+                            'name': 'prop17',
+                            'type': 'edm.timeofday'
+                        },
+                        {
+                            'name': 'prop18',
+                            'type': 'edm.geography'
+                        },
+                        {
+                            'name': 'prop19',
+                            'type': 'edm.geographypoint'
+                        },
+                        {
+                            'name': 'prop20',
+                            'type': 'edm.geographylinestring'
+                        },
+                        {
+                            'name': 'prop21',
+                            'type': 'edm.geographypolygon'
+                        },
+                        {
+                            'name': 'prop22',
+                            'type': 'edm.geographymultipoint'
+                        },
+                        {
+                            'name': 'prop23',
+                            'type': 'edm.geographymultilinestring'
+                        },
+                        {
+                            'name': 'prop24',
+                            'type': 'edm.geographymultipolygon'
+                        },
+                        {
+                            'name': 'prop25',
+                            'type': 'edm.geographycollection'
+                        },
+                        {
+                            'name': 'prop26',
+                            'type': 'edm.geometry'
+                        },
+                        {
+                            'name': 'prop27',
+                            'type': 'edm.geometrypoint'
+                        },
+                        {
+                            'name': 'prop28',
+                            'type': 'edm.geometrylinestring'
+                        },
+                        {
+                            'name': 'prop29',
+                            'type': 'edm.geometrypolygon'
+                        },
+                        {
+                            'name': 'prop30',
+                            'type': 'edm.geometrymultipoint'
+                        },
+                        {
+                            'name': 'prop31',
+                            'type': 'edm.geometrymultilinestring'
+                        },
+                        {
+                            'name': 'prop32',
+                            'type': 'edm.geometrymultipolygon'
+                        },
+                        {
+                            'name': 'prop33',
+                            'type': 'edm.geometrycollection'
+                        }],
+                    'name': 'myType'
+                }]
+        };
+        var swaggerModel = {
+            'myType': {
+                'properties': {
+                    'prop1': {'type': 'string', 'format': 'binary'},
+                    'prop2': {'type': 'boolean'},
+                    'prop3': {'type': 'string', 'format': 'byte'},
+                    'prop4': {'type': 'string', 'format': 'date'},
+                    'prop5': {'type': 'string', 'format': 'string'},
+                    'prop6': {'type': 'number', 'format': 'decimal'},
+                    'prop7': {'type': 'number', 'format': 'double'},
+                    'prop8': {'type': 'string', 'format': 'string'},
+                    'prop9': {'type': 'string', 'format': 'string'},
+                    'prop10': {'type': 'integer', 'format': 'int16'},
+                    'prop11': {'type': 'integer', 'format': 'int32'},
+                    'prop12': {'type': 'integer', 'format': 'int64'},
+                    'prop13': {'type': 'integer', 'format': 'sbyte'},
+                    'prop14': {'type': 'number', 'format': 'float'},
+                    'prop15': {'type': 'string', 'format': 'string'},
+                    'prop16': {'type': 'string'},
+                    'prop17': {'type': 'string', 'format': 'string'},
+                    'prop18': {'type': 'string', 'format': 'string'},
+                    'prop19': {'type': 'string', 'format': 'string'},
+                    'prop20': {'type': 'string', 'format': 'string'},
+                    'prop21': {'type': 'string', 'format': 'string'},
+                    'prop22': {'type': 'string', 'format': 'string'},
+                    'prop23': {'type': 'string', 'format': 'string'},
+                    'prop24': {'type': 'string', 'format': 'string'},
+                    'prop25': {'type': 'string', 'format': 'string'},
+                    'prop26': {'type': 'string', 'format': 'string'},
+                    'prop27': {'type': 'string', 'format': 'string'},
+                    'prop28': {'type': 'string', 'format': 'string'},
+                    'prop29': {'type': 'string', 'format': 'string'},
+                    'prop30': {'type': 'string', 'format': 'string'},
+                    'prop31': {'type': 'string', 'format': 'string'},
+                    'prop32': {'type': 'string', 'format': 'string'},
+                    'prop33': {'type': 'string', 'format': 'string'}
+                }
             }
         };
+
+        assertDefinition(jsonModel, swaggerModel);
+    });
+});
+
+describe('[Swagger] To Swagger test', function () {
+    it('api should work.', function () {
+        var jsonModel =
+                {
+                    'api': {
+                        'name': 'service1',
+                        'version': '0.1',
+                        'description': 'this is service1',
+                        'host': 'var1.org',
+                        'basePath': '/ab/(S(cnbm44wtbc1v5bgrlek5lpcc))/dat'
+                    }
+                };
 
         var info = {
             'title': 'service1',
@@ -26,27 +211,28 @@ describe('[Swagger] To Swagger test', function () {
         expect('\n' + JSON.stringify(sw.host)).toEqual('\n' + '"var1.org"');
         expect('\n' + JSON.stringify(sw.basePath)).toEqual('\n' + '"/ab/(S(cnbm44wtbc1v5bgrlek5lpcc))/dat"');
     });
-    it('Info object related service fields should match', function () {
+
+    it('Info object related api fields should match', function () {
         var jsonModel =
-        {
-            'service': {
-                'name': 'TripPin OData Reference Service',
-                'version': {
-                    'current': '1.0.0'
-                },
-                'description': 'TripPin is a fictional reference service demonstrating the capabilities of OData v4.',
-                'termsOfService': 'http://swagger.io/terms/',
-                'contact': {
-                    'name': 'API Support',
-                    'url': 'http://www.swagger.io/support',
-                    'email': 'support@swagger.io'
-                },
-                'license': {
-                    'name': 'Apache 2.0',
-                    'url': 'http://www.apache.org/licenses/LICENSE-2.0.html'
-                },
-            }
-        };
+                {
+                    'api': {
+                        'name': 'TripPin OData Reference Service',
+                        'version': {
+                            'current': '1.0.0'
+                        },
+                        'description': 'TripPin is a fictional reference service demonstrating the capabilities of OData v4.',
+                        'termsOfService': 'http://swagger.io/terms/',
+                        'contact': {
+                            'name': 'API Support',
+                            'url': 'http://www.swagger.io/support',
+                            'email': 'support@swagger.io'
+                        },
+                        'license': {
+                            'name': 'Apache 2.0',
+                            'url': 'http://www.apache.org/licenses/LICENSE-2.0.html'
+                        },
+                    }
+                };
 
         var expected = {
             'title': 'TripPin OData Reference Service',
@@ -64,71 +250,71 @@ describe('[Swagger] To Swagger test', function () {
             }
         };
 
-        assertService(jsonModel, expected);
+        assertApi(jsonModel, expected);
     });
 
     it('Definitions of enum should work.', function () {
         var jsonModel =
-        {
-            'types': [
                 {
-                    'name': 'oringialColors',
-                    'members': [
+                    'types': [
                         {
-                            'name': 'red'
+                            'name': 'oringialColors',
+                            'members': [
+                                {
+                                    'name': 'red'
+                                },
+                                {
+                                    'name': 'yellow'
+                                },
+                                {
+                                    'name': 'blue'
+                                }
+                            ]
                         },
                         {
-                            'name': 'yellow'
+                            'name': 'personGender',
+                            'members': [
+                                {
+                                    'name': 'unknown',
+                                    'value': 0
+                                },
+                                {
+                                    'name': 'female',
+                                    'value': -1
+                                },
+                                {
+                                    'name': 'male',
+                                    'value': 2
+                                }
+                            ],
+                            'flags': false,
+                            'underlyingType': 'edm.int32'
                         },
                         {
-                            'name': 'blue'
+                            'name': 'Book',
+                            'properties': [
+                                {
+                                    'name': 'id',
+                                    'type': 'edm.int64'
+                                },
+                                {
+                                    'name': 'title',
+                                    'type': 'edm.string',
+                                },
+                                {
+                                    'name': 'keywords',
+                                    'type': 'edm.string',
+                                    'isCollection': true
+                                },
+                                {
+                                    'name': 'author',
+                                    'type': 'person',
+                                    'isCollection': false
+                                },
+                            ]
                         }
                     ]
-                },
-                {
-                    'name': 'personGender',
-                    'members': [
-                        {
-                            'name': 'unknown',
-                            'value': 0
-                        },
-                        {
-                            'name': 'female',
-                            'value': -1
-                        },
-                        {
-                            'name': 'male',
-                            'value': 2
-                        }
-                    ],
-                    'flags': false,
-                    'underlyingType': 'int32'
-                },
-                {
-                    'name': 'Book',
-                    'properties': [
-                        {
-                            'name': 'id',
-                            'type': 'Int64'
-                        },
-                        {
-                            'name': 'title',
-                            //'type'    : 'String',
-                        },
-                        {
-                            'name': 'keywords',
-                            'type': 'String',
-                            'isCollection': true
-                        },
-                        {
-                            'name': 'author',
-                            'type': 'person',
-                            'isCollection': false
-                        },
-                    ]
-                }
-            ]
-        };
+                };
 
         var expected = {
             'oringialColors': {
@@ -172,172 +358,45 @@ describe('[Swagger] To Swagger test', function () {
         assertDefinition(jsonModel, expected);
     });
 
-    it('Definitions multiple properties with all inner types.', function () {
-        var jsonModel =
-        {
-            'types': [
-                {
-                    'properties': [
-                        {
-                            'name': 'p1',
-                            'type': 'Boolean'
-                        },
-                        {
-                            'name': 'p2',
-                            'type': 'Byte'
-                        },
-                        {
-                            'name': 'p3',
-                            'type': 'Date'
-                        },
-                        {
-                            'name': 'p4',
-                            'type': 'DateTimeOffset'
-                        },
-                        {
-                            'name': 'p5',
-                            'type': 'Decimal'
-                        },
-                        {
-                            'name': 'p6',
-                            'type': 'Double'
-                        },
-                        {
-                            'name': 'p7',
-                            'type': 'Duration'
-                        },
-                        {
-                            'name': 'p8',
-                            'type': 'Guid'
-                        },
-                        {
-                            'name': 'p9',
-                            'type': 'Int16'
-                        },
-                        {
-                            'name': 'p10',
-                            'type': 'Int32'
-                        },
-                        {
-                            'name': 'p11',
-                            'type': 'Int64',
-                            'isNullable': true
-                        },
-                        {
-                            'name': 'p12',
-                            'type': 'Single',
-                            'isNullable': true
-                        },
-                        {
-                            'name': 'p13',
-                            'type': 'String',
-                            'isNullable': true
-                        }
-                    ],
-                    'name': 'type1'
-                }
-            ]
-        };
-
-        var expected = {
-            'type1': {
-                'properties': {
-                    'p1': {
-                        'type': 'boolean'
-                    },
-                    'p2': {
-                        'type': 'string',
-                        'format': 'byte'
-                    },
-                    'p3': {
-                        'type': 'string',
-                        'format': 'date'
-                    },
-                    'p4': {
-                        'type': 'string',
-                        'format': 'dateTimeOffset'
-                    },
-                    'p5': {
-                        'type': 'number',
-                        'format': 'decimal'
-                    },
-                    'p6': {
-                        'type': 'number',
-                        'format': 'double'
-                    },
-                    'p7': {
-                        'type': 'string',
-                        'format': 'duration'
-                    },
-                    'p8': {
-                        'type': 'string',
-                        'format': 'guid'
-                    },
-                    'p9': {
-                        'type': 'number',
-                        'format': 'int16'
-                    },
-                    'p10': {
-                        'type': 'integer',
-                        'format': 'int32'
-                    },
-                    'p11': {
-                        'type': 'integer',
-                        'format': 'int64'
-                    },
-                    'p12': {
-                        'type': 'number',
-                        'format': 'float'
-                    },
-                    'p13': {
-                        'type': 'string'
-                    }
-                }
-            }
-        };
-
-        assertDefinition(jsonModel, expected);
-    });
-
     it('Definitions collection properties should work.', function () {
         var jsonModel =
-        {
-            'types': [
                 {
-                    'name': 'Book',
-                    'properties': [
+                    'types': [
                         {
-                            'name': 'id',
-                            'type': 'Int64'
-                        },
-                        {
-                            'name': 'title',
-                            //'type'    : 'String',
-                        },
-                        {
-                            'name': 'day',
-                            'type': 'Date',
-                            'isCollection': false
-                        },
-                        {
-                            'name': 'keywords',
-                            'type': 'String',
-                            'isCollection': true
-                        },
-                        {
-                            'name': 'author',
-                            'type': 'person',
-                            'isCollection': false
-                        },
-                        {
-                            'name': 'reader',
-                            'type': 'person',
-                            'isCollection': true
+                            'name': 'Book',
+                            'properties': [
+                                {
+                                    'name': 'id',
+                                    'type': 'edm.int64'
+                                },
+                                {
+                                    'name': 'title',
+                                    'type': 'edm.string',
+                                },
+                                {
+                                    'name': 'day',
+                                    'type': 'edm.date',
+                                    'isCollection': false
+                                },
+                                {
+                                    'name': 'keywords',
+                                    'type': 'edm.string',
+                                    'isCollection': true
+                                },
+                                {
+                                    'name': 'author',
+                                    'type': 'person',
+                                    'isCollection': false
+                                },
+                                {
+                                    'name': 'reader',
+                                    'type': 'person',
+                                    'isCollection': true
+                                }
+                            ]
                         }
                     ]
-                }
-            ]
-        };
+                };
 
         var expected = {
             'Book': {
@@ -376,6 +435,192 @@ describe('[Swagger] To Swagger test', function () {
         assertDefinition(jsonModel, expected);
     });
 
+    it('Definitions of type inheritance should work.', function () {
+        var jsonModel =
+                {
+                    'types': [
+                        {
+                            'properties': [
+                                {
+                                    'name': 'planItemId',
+                                    'isKey': true,
+                                    'type': 'edm.string'
+                                },
+                                {
+                                    'name': 'confirmationCode',
+                                    'isNullable': true,
+                                    'type': 'edm.string'
+                                },
+                                {
+                                    'name': 'startsAt',
+                                    'type': 'edm.datetimeoffset',
+                                    'isNullable': true
+                                },
+                                {
+                                    'name': 'endsAt',
+                                    'type': 'edm.datetimeoffset',
+                                    'isNullable': true
+                                },
+                                {
+                                    'name': 'duration',
+                                    'type': 'edm.duration',
+                                    'isNullable': true
+                                }
+                            ],
+                            'name': 'planItem'
+                        },
+                        {
+                            'properties': [
+                                {
+                                    'name': 'seatNumber',
+                                    'isNullable': true,
+                                    'type': 'edm.string'
+                                }
+                            ],
+                            'name': 'publicTransportation',
+                            'baseType': 'planItem'
+                        },
+                        {
+                            'properties': [
+                                {
+                                    'name': 'flightNumber',
+                                    'type': 'edm.string'
+                                },
+                                {
+                                    'name': 'from',
+                                    'type': 'airport',
+                                    'isNullable': true
+                                },
+                                {
+                                    'name': 'to',
+                                    'type': 'airport',
+                                    'isNullable': true
+                                },
+                                {
+                                    'name': 'airline',
+                                    'type': 'airline',
+                                    'isNullable': true
+                                }
+                            ],
+                            'name': 'flight',
+                            'baseType': 'publicTransportation'
+                        },
+                        {
+                            'properties': [
+                                {
+                                    'name': 'description',
+                                    'isNullable': true,
+                                    'type': 'edm.string'
+                                },
+                                {
+                                    'name': 'occursAt',
+                                    'type': 'eventLocation',
+                                    'isNullable': true
+                                }
+                            ],
+                            'name': 'event',
+                            'baseType': 'planItem'
+                        }
+                    ]
+                };
+
+        var expected = {
+            'planItem': {
+                'properties': {
+                    'planItemId': {
+                        'type': 'string'
+                    },
+                    'confirmationCode': {
+                        'type': 'string'
+                    },
+                    'startsAt': {
+                        'type': 'string',
+                        'format': 'string'
+                    },
+                    'endsAt': {
+                        'type': 'string',
+                        'format': 'string'
+                    },
+                    'duration': {
+                        'type': 'string',
+                        'format': 'string'
+                    },
+                    'planItemType': {
+                        'type': 'string'
+                    }
+                },
+                'required': [
+                    'planItemId',
+                    'planItemType'
+                ],
+                'discriminator': 'planItemType'
+            },
+            'publicTransportation': {
+                'allOf': [
+                    {
+                        '$ref': '#/definitions/planItem'
+                    },
+                    {
+                        'properties': {
+                            'seatNumber': {
+                                'type': 'string'
+                            },
+                            'publicTransportationType': {
+                                'type': 'string'
+                            }
+                        },
+                        'required': [
+                            'publicTransportationType'
+                        ],
+                        'discriminator': 'publicTransportationType'
+                    }
+                ]
+            },
+            'flight': {
+                'allOf': [
+                    {
+                        '$ref': '#/definitions/publicTransportation'
+                    },
+                    {
+                        'properties': {
+                            'flightNumber': {
+                                'type': 'string'
+                            },
+                            'from': {
+                                '$ref': '#/definitions/airport'
+                            },
+                            'to': {
+                                '$ref': '#/definitions/airport'
+                            },
+                            'airline': {
+                                '$ref': '#/definitions/airline'
+                            }
+                        }
+                    }
+                ]
+            },
+            'event': {
+                'allOf': [
+                    {
+                        '$ref': '#/definitions/planItem'
+                    },
+                    {
+                        'properties': {
+                            'description': {
+                                'type': 'string'
+                            },
+                            'occursAt': {
+                                '$ref': '#/definitions/eventLocation'
+                            }
+                        }
+                    }
+                ]
+            }
+        };
+
+        assertDefinition(jsonModel, expected);
+    });
+
     it('Allows should work.', function () {
         var input = {
             'types': [
@@ -383,10 +628,12 @@ describe('[Swagger] To Swagger test', function () {
                     'properties': [
                         {
                             'name': 'uid',
+                            'type': 'edm.string',
                             'isKey': true
                         },
                         {
                             'name': 'title',
+                            'type': 'edm.string',
                             'isKey': true
                         }
                     ],
@@ -405,12 +652,12 @@ describe('[Swagger] To Swagger test', function () {
                     'tags': ['book'],
                     'description': 'Adds a new book to books.',
                     'parameters': [{
-                        'name': 'book',
-                        'in': 'body',
-                        'description': 'The new book item.',
-                        'required': true,
-                        'schema': {'$ref': '#/definitions/book'}
-                    }],
+                            'name': 'book',
+                            'in': 'body',
+                            'description': 'The new book item.',
+                            'required': true,
+                            'schema': {'$ref': '#/definitions/book'}
+                        }],
                     'responses': {
                         '201': {
                             'description': 'The newly added book item.',
@@ -424,12 +671,12 @@ describe('[Swagger] To Swagger test', function () {
                     'tags': ['book'],
                     'description': 'Delete an item from books.',
                     'parameters': [{
-                        'name': 'uid',
-                        'in': 'path',
-                        'description': 'The key.',
-                        'required': true,
-                        'type': 'string'
-                    },
+                            'name': 'uid',
+                            'in': 'path',
+                            'description': 'The key.',
+                            'required': true,
+                            'type': 'string'
+                        },
                         {
                             'name': 'If-Match',
                             'in': 'header',
@@ -482,10 +729,12 @@ describe('[Swagger] To Swagger test', function () {
                     'properties': [
                         {
                             'name': 'uid',
+                            'type': 'edm.string',
                             'isKey': true
                         },
                         {
                             'name': 'title',
+                            'type': 'edm.string',
                             'isKey': true
                         }
                     ],
@@ -520,12 +769,12 @@ describe('[Swagger] To Swagger test', function () {
                     'tags': ['book'],
                     'description': 'Adds a new book to books.',
                     'parameters': [{
-                        'name': 'book',
-                        'in': 'body',
-                        'description': 'The new book item.',
-                        'required': true,
-                        'schema': {'$ref': '#/definitions/book'}
-                    }],
+                            'name': 'book',
+                            'in': 'body',
+                            'description': 'The new book item.',
+                            'required': true,
+                            'schema': {'$ref': '#/definitions/book'}
+                        }],
                     'responses': {
                         '201': {
                             'description': 'The newly added book item.',
@@ -545,23 +794,23 @@ describe('[Swagger] To Swagger test', function () {
                         }
                     },
                     'parameters': [{
-                        'name': 'uid',
-                        'in': 'path',
-                        'description': 'The key.',
-                        'required': true,
-                        'type': 'string'
-                    }]
+                            'name': 'uid',
+                            'in': 'path',
+                            'description': 'The key.',
+                            'required': true,
+                            'type': 'string'
+                        }]
                 },
                 'put': {
                     'tags': ['book'],
                     'description': 'Update an existing book item.',
                     'parameters': [{
-                        'name': 'uid',
-                        'in': 'path',
-                        'description': 'The key.',
-                        'required': true,
-                        'type': 'string'
-                    },
+                            'name': 'uid',
+                            'in': 'path',
+                            'description': 'The key.',
+                            'required': true,
+                            'type': 'string'
+                        },
                         {
                             'name': 'book',
                             'in': 'body',
@@ -586,12 +835,12 @@ describe('[Swagger] To Swagger test', function () {
                     'tags': ['book'],
                     'description': 'Delete an item from books.',
                     'parameters': [{
-                        'name': 'uid',
-                        'in': 'path',
-                        'description': 'The key.',
-                        'required': true,
-                        'type': 'string'
-                    },
+                            'name': 'uid',
+                            'in': 'path',
+                            'description': 'The key.',
+                            'required': true,
+                            'type': 'string'
+                        },
                         {
                             'name': 'If-Match',
                             'in': 'header',
@@ -653,97 +902,95 @@ describe('[Swagger] To Swagger test', function () {
 describe('[Swagger] Actions test', function () {
     it('Unbound action should work.', function () {
         var input =
-        {
-            'container': {
-                'operations': [
-                    {
-                        'type': 'Action',
-                        'operationType': 'Unbound',
-                        'name': 'actionTest',
-                        'params': [
+                {
+                    'container': {
+                        'operations': [
                             {
-                                'name': 'p1',
-                                'type': 'Int32'
+                                'type': 'Action',
+                                'operationType': 'Unbound',
+                                'name': 'actionTest',
+                                'params': [
+                                    {
+                                        'name': 'p1',
+                                        'type': 'edm.int32'
+                                    }]
                             }]
-                    }]
-            }
-        };
+                    }
+                };
 
         var expected =
-        {
-            '/actionTest': {
-                'post': {
-                    'tags': [
-                        'Action',
-                        'Unbound'
-                    ],
-                    'description': 'Unbound action: actionTest.',
-                    'parameters': [
-                        {
-                            'name': 'If-Match',
-                            'type': 'string',
-                            'in': 'header',
-                            'description': 'The If-Match header.',
-                            'required': false
-                        },
-                        {
-                            'name': 'p1',
-                            'type': {
-                                'type': 'integer',
-                                'format': 'int32'
-                            },
-                            'in': 'formData',
-                            'description': 'The parameter.',
-                            'required': true
-                        }
-                    ],
-                    'responses': {
-                        '201': {
-                            'description': 'The action has been created new entities.'
-                        },
-                        '204': {
-                            'description': 'The action is without a return type.'
+                {
+                    '/actionTest': {
+                        'post': {
+                            'tags': [
+                                'Action',
+                                'Unbound'
+                            ],
+                            'description': 'Unbound action: actionTest.',
+                            'parameters': [
+                                {
+                                    'name': 'If-Match',
+                                    'type': 'string',
+                                    'in': 'header',
+                                    'description': 'The If-Match header.',
+                                    'required': false
+                                },
+                                {
+                                    'name': 'p1',
+                                    'type': 'integer',
+                                    'in': 'formData',
+                                    'description': 'The parameter.',
+                                    'required': true,
+                                    'format': 'int32'
+                                }
+                            ],
+                            'responses': {
+                                '201': {
+                                    'description': 'The action has been created new entities.'
+                                },
+                                '204': {
+                                    'description': 'The action is without a return type.'
+                                }
+                            }
                         }
                     }
-                }
-            }
-        };
+                };
 
         assertPaths(input, expected);
     });
 
     it('Bound action should work.', function () {
         var input =
-        {
-            'container': {
-                'entitysets': [
-                    {
-                        'name': 'people',
-                        'type': 'person',
-                        'allows': [
-                            'read'
-                        ]
-                    }
-                ]
-            },
-            'types': [
                 {
-                    'properties': [
+                    'container': {
+                        'entitysets': [
+                            {
+                                'name': 'people',
+                                'type': 'person',
+                                'allows': [
+                                    'read'
+                                ]
+                            }
+                        ]
+                    },
+                    'types': [
                         {
-                            'name': 'userName',
-                            'type': 'String',
-                            'isKey': true
-                        },
-                        {
-                            'name': 'actionTest',
-                            'type': 'Action',
-                            'operationType': 'Bound'
+                            'properties': [
+                                {
+                                    'name': 'userName',
+                                    'type': 'edm.string',
+                                    'isKey': true
+                                },
+                                {
+                                    'name': 'actionTest',
+                                    'type': 'Action',
+                                    'operationType': 'Bound'
+                                }
+                            ],
+                            'name': 'person'
                         }
-                    ],
-                    'name': 'person'
-                }
-            ]
-        };
+                    ]
+                };
 
         var expected = {
             '/people': {
@@ -833,23 +1080,23 @@ describe('[Swagger] Actions test', function () {
 describe('[Swagger] Functions test', function () {
     it('Unbound function should work.', function () {
         var input =
-        {
-            'container': {
-                'operations': [
-                    {
-                        'type': 'Function',
-                        'operationType': 'Unbound',
-                        'name': 'functionTest',
-                        'params': [
+                {
+                    'container': {
+                        'operations': [
                             {
-                                'name': 'p1',
-                                'type': 'Int32'
-                            }
-                        ],
-                        'returns': 'Int32'
-                    }]
-            }
-        };
+                                'type': 'Function',
+                                'operationType': 'Unbound',
+                                'name': 'functionTest',
+                                'params': [
+                                    {
+                                        'name': 'p1',
+                                        'type': 'edm.int32'
+                                    }
+                                ],
+                                'returns': 'edm.int32'
+                            }]
+                    }
+                };
 
         var expected = {
             '/functionTest': {
@@ -862,13 +1109,11 @@ describe('[Swagger] Functions test', function () {
                     'parameters': [
                         {
                             'name': 'p1',
-                            'type': {
-                                'type': 'integer',
-                                'format': 'int32'
-                            },
+                            'type': 'integer',
                             'in': 'formData',
                             'description': 'The parameter.',
-                            'required': true
+                            'required': true,
+                            'format': 'int32'
                         }
                     ],
                     'responses': {
@@ -895,36 +1140,36 @@ describe('[Swagger] Functions test', function () {
 
     it('Bound function should work.', function () {
         var input =
-        {
-            'container': {
-                'entitysets': [
-                    {
-                        'name': 'people',
-                        'type': 'person',
-                        'allows': [
-                            'read'
-                        ]
-                    }
-                ]
-            },
-            'types': [
                 {
-                    'properties': [
+                    'container': {
+                        'entitysets': [
+                            {
+                                'name': 'people',
+                                'type': 'person',
+                                'allows': [
+                                    'read'
+                                ]
+                            }
+                        ]
+                    },
+                    'types': [
                         {
-                            'name': 'userName',
-                            'type': 'String',
-                            'isKey': true
-                        },
-                        {
-                            'name': 'functionTest',
-                            'type': 'Function',
-                            'operationType': 'Bound'
+                            'properties': [
+                                {
+                                    'name': 'userName',
+                                    'type': 'edm.string',
+                                    'isKey': true
+                                },
+                                {
+                                    'name': 'functionTest',
+                                    'type': 'Function',
+                                    'operationType': 'Bound'
+                                }
+                            ],
+                            'name': 'person'
                         }
-                    ],
-                    'name': 'person'
-                }
-            ]
-        };
+                    ]
+                };
 
         var expected = {
             '/people': {
@@ -1010,7 +1255,7 @@ function assertPaths(input, output) {
     expect('\n' + toSwagger(input, 'paths')).toEqual('\n' + JSON.stringify(output));
 }
 
-function assertService(input, output) {
+function assertApi(input, output) {
     expect('\n' + toSwagger(input, 'info')).toEqual('\n' + JSON.stringify(output));
 }
 

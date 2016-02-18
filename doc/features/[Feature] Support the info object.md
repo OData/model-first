@@ -1,10 +1,10 @@
 #Info Object - Model-first Tooling
 
-##1.	Core JSON Model Info Object fields in Service Object
-The core JSON model uses word service instead of info as the root level container element:
+##1.	Core JSON Model Info Object fields in api Object
+The core JSON model uses word api instead of info as the root level container element:
 
 ```JSON
- "service":{
+ "api":{
     "name": "TripPin OData Reference Service"
     "version": {
       "current": 0
@@ -28,10 +28,10 @@ The following top level element is defined:
 ----------------------------
 Field Name|	Description
 -----------|----------------
-service	| Provides metadata about the API. The metadata can be used by the clients if needed
+api	| Provides metadata about the API. The metadata can be used by the clients if needed
 ------------------------------------------------------------
 
-Two required fields within service.
+Two required fields within api.
 
 ----------------------------
 Field Name|	Description
@@ -49,15 +49,15 @@ Two formats of version available:
 version: "1.0"
 ```
 
-For other fields within service see section 3.1.
+For other fields within api see section 3.1.
 
-##2.	YAML Format Info Object fields in Service Object
-Simple YAML also uses keyword service instead of info as top level element.
+##2.	YAML Format Info Object fields in api Object
+Simple YAML also uses keyword api instead of info as top level element.
 
 Here is a YAML sample:
 
 ```YAML
-service:
+api:
   name: TripPin OData Reference Service
   version:
     current: 0
@@ -77,10 +77,10 @@ The following top level element is defined:
 ----------------------------
 Field Name|	Description|
 -----------|----------------
-service	| Provides metadata about the API. The metadata can be used by the clients if needed
+api	| Provides metadata about the API. The metadata can be used by the clients if needed
 ------------------------------------------------------------
 
-Two required fields within service.
+Two required fields within api.
 
 ----------------------------
 Field Name|	Description
@@ -98,7 +98,7 @@ Two formats of version available:
 version: 1.0
 ```
 
-For other fields within service see section 3.1.
+For other fields within api see section 3.1.
 
 ##3.	Swagger Format Info Object support
 Swagger is supported as one of the output formats, here converting core model to a Swagger schema uses the one-to-one mapping.
@@ -128,7 +128,7 @@ Here is how JSON model is mapped to a Swagger schema:
 ----------------------------
 Field Name|	Description|
 -----------|----------------
-info	| The info object for metadata about the API, would be converted from info element from core model. See details below. Corresponds to the service element in simple YAML and JSON model.
+info	| The info object for metadata about the API, would be converted from info element from core model. See details below. Corresponds to the api element in simple YAML and JSON model.
 ------------------------------------------------------------
 
 ###3.1	info Fields

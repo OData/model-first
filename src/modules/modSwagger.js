@@ -1,65 +1,65 @@
 (function () {
     function SwaggerType(type, format) {
         this.type = type;
-        if (format) this.format = format;
+        if (format)
+            this.format = format;
     }
 
     var SwaggerTypes = {
-        'integer': new SwaggerType('integer', 'int32'),
-        'long': new SwaggerType('integer', 'int64'),
-        'float': new SwaggerType('number', 'float'),
-        'double': new SwaggerType('number', 'double'),
-        'string': new SwaggerType('string', undefined),
-        'byte': new SwaggerType('string', 'byte'),
-        'boolean': new SwaggerType('boolean', undefined),
-        'date': new SwaggerType('string', 'date'),
-        'dateTime': new SwaggerType('string', 'date-time'),
-        'password': new SwaggerType('string', 'password'),
-        // The follwing types are not defined in Swagger schema
-        'decimal': new SwaggerType('number', 'decimal'),
-        'short': new SwaggerType('number', 'int16'),
-        'guid': new SwaggerType('string', 'guid'),
-        'dateTimeOffset': new SwaggerType('string', 'dateTimeOffset'),
-        'duration': new SwaggerType('string', 'duration'),
+        // Types are defined in Swagger Spec. 
+        'edm.int32': new SwaggerType('integer', 'int32'),
+        'edm.int64': new SwaggerType('integer', 'int64'),
+        'edm.single': new SwaggerType('number', 'float'),
+        'edm.double': new SwaggerType('number', 'double'),
+        'edm.string': new SwaggerType('string', undefined),
+        'edm.byte': new SwaggerType('string', 'byte'),
+        'edm.binary': new SwaggerType('string', 'binary'),
+        'edm.boolean': new SwaggerType('boolean', undefined),
+        'edm.date': new SwaggerType('string', 'date'),
+        // Extention types are not defined in Swagger Spec.
+        'edm.decimal': new SwaggerType('number', 'decimal'),
+        'edm.int16': new SwaggerType('integer', 'int16'),
+        'edm.sbyte': new SwaggerType('integer', 'sbyte')
     };
 
     var typeMap = {
-        'Binary': undefined,
-        'Boolean': SwaggerTypes.boolean,
-        'Byte': SwaggerTypes.byte,
-        'Date': SwaggerTypes.date,
-        'DateTimeOffset': SwaggerTypes.dateTimeOffset,
-        'Decimal': SwaggerTypes.decimal,
-        'Double': SwaggerTypes.double,
-        'Duration': SwaggerTypes.duration,
-        'Guid': SwaggerTypes.guid,
-        'Int16': SwaggerTypes.short,
-        'Int32': SwaggerTypes.integer,
-        'Int64': SwaggerTypes.long,
-        // 'SByte'   : 'Edm.SByte',
-        'Single': SwaggerTypes.float,
-        // 'Stream': 'Edm.Stream',
-        'String': SwaggerTypes.string,
-        // 'TimeOfDay': 'Edm.TimeOfDay',
+        'edm.datetimeoffset': 'dateTimeOffset',
+        'edm.duration': 'duration',
+        'edm.guid': 'guid',
+        'edm.stream': 'stream',
+        'edm.timeofday': 'timeOfDay',
+        'edm.geography': 'geography',
+        'edm.geographypoint': 'geographyPoint',
+        'edm.geographylinestring': 'geographyLineString',
+        'edm.geographypolygon': 'geographyPolygon',
+        'edm.geographymultipoint': 'geographyMultiPoint',
+        'edm.geographymultilinestring': 'geographyMultiLineString',
+        'edm.geographymultipolygon': 'geographyMultiPolygon',
+        'edm.geographycollection': 'geographyCollection',
+        'edm.geometry': 'geometry',
+        'edm.geometrypoint': 'geometryPoint',
+        'edm.geometrylinestring': 'geometryLineString',
+        'edm.geometrypolygon': 'geometryPolygon',
+        'edm.geometrymultipoint': 'geometryMultiPoint',
+        'edm.geometrymultilinestring': 'geometryMultiLineString',
+        'edm.geometrymultipolygon': 'geometryMultiPolygon',
+        'edm.geometrycollection': 'geometryCollection'
     };
 
-    var entitySetMappings = {};
-
     function getSwaggerType(type, isCollection) {
-        var sType = type === undefined ?
-            SwaggerTypes.string :
-            typeMap[type];
-
-        if (!sType) {
-            if (type.length > 4 && type.slice(0, 4) === 'edm.') {
-                sType = new SwaggerType('string', type);
-            } else {
-                sType = {'$ref': '#/definitions/' + type};
-            }
+        var swgrType;
+        if (SwaggerTypes[type]) {
+            swgrType = SwaggerTypes[type];
+        } else if (typeMap[type]) {
+            swgrType = new SwaggerType('string', 'string');
+        } else {
+            swgrType = {'$ref': '#/definitions/' + type};
         }
 
-        return isCollection ? {'type': 'array', 'items': sType} : sType;
+        return isCollection ? {'type': 'array', 'items': swgrType} : swgrType;
     }
+
+    var entitySetMappings = {};
 
     // Gets a singleton/entity-set's name.
     // params:
@@ -84,8 +84,7 @@
         if (targetType[targetType.length - 1] === ']') {
             type = targetType.substr(0, targetType.length - 2);
             col = true;
-        }
-        else {
+        } else {
             type = targetType;
             col = false;
         }
@@ -118,13 +117,17 @@
         }
         for (var i in params) {
             var isCollection = params[i].type[params[i].type.length - 1] === ']';
+            var swType = getSwaggerType(params[i].type, isCollection);
             var param = {
                 'name': params[i].name,
-                'type': getSwaggerType(params[i].type, isCollection),
+                'type': swType.type,
                 'in': 'formData',
                 'description': 'The parameter.',
                 'required': true
             };
+            if (swType.format) {
+                param.format = swType.format;
+            }
             parameters.push(param);
         }
         var path;
@@ -132,12 +135,10 @@
             var temp = getEntitySet(parentType);
             if (temp.success) {
                 path = '/' + temp.entitySet + '/{' + swKey.name + '}/' + name;
-            }
-            else {
+            } else {
                 path = '/' + parentType + '/' + name;
             }
-        }
-        else if ('Unbound' === operationType) {
+        } else if ('Unbound' === operationType) {
             path = '/' + name;
         }
 
@@ -184,13 +185,17 @@
         }
         for (var i in params) {
             var isCollection = params[i].type[params[i].type.length - 1] === ']';
+            var swType = getSwaggerType(params[i].type, isCollection);
             var param = {
                 'name': params[i].name,
-                'type': getSwaggerType(params[i].type, isCollection),
+                'type': swType.type,
                 'in': 'formData',
                 'description': 'The parameter.',
                 'required': true
             };
+            if (swType.format) {
+                param.format = swType.format;
+            }
             parameters.push(param);
         }
         var path;
@@ -198,12 +203,10 @@
             var temp = getEntitySet(parentType);
             if (temp.success) {
                 path = '/' + temp.entitySet + '/{' + swKey.name + '}/' + name;
-            }
-            else {
+            } else {
                 path = '/' + parentType + '/' + name;
             }
-        }
-        else if ('Unbound' === operationType) {
+        } else if ('Unbound' === operationType) {
             path = '/' + name;
         }
 
@@ -218,7 +221,7 @@
         var schema;
         if (returns) {
             var returnType = detectCollectionType(returns);
-            var schema = getSwaggerType(returnType.type, returnType.isCol);
+            schema = getSwaggerType(returnType.type, returnType.isCol);
 
             responses['200'] = {
                 'description': 'The function has been returned results.',
@@ -240,8 +243,7 @@
     function routeOperation(name, type, operationType, params, parentType, swKey, returns) {
         if ('Action' === type) {
             return routeAction(name, operationType, params, parentType, swKey, returns);
-        }
-        else if ('Function' === type) {
+        } else if ('Function' === type) {
             return routeFunction(name, operationType, params, parentType, swKey, returns);
         }
     }
@@ -256,15 +258,15 @@
             var route = {
                 'tags': [type],
                 'description': isCollection ?
-                'Returns all items from ' + name + '.' :
-                    swKey ?
-                    'Returns a single item from ' + name + '.' :
-                    'Returns ' + name + '.',
+                        'Returns all items from ' + name + '.' :
+                        swKey ?
+                        'Returns a single item from ' + name + '.' :
+                        'Returns ' + name + '.',
                 'responses': {
                     '200': {
                         'description': isCollection ?
-                        'An array of ' + type + ' items.' :
-                        'A single ' + type + ' item.',
+                                'An array of ' + type + ' items.' :
+                                'A single ' + type + ' item.',
                         'schema': getSchema(type, isCollection)
                     }
                 }
@@ -272,14 +274,15 @@
 
             if (swKey) {
                 var parameter =
-                {
-                    'name': swKey.name,
-                    'in': 'path',
-                    'description': 'The key.',
-                    'required': true,
-                    'type': swKey.type,
-                };
-                if (swKey.format) parameter.format = swKey.format;
+                        {
+                            'name': swKey.name,
+                            'in': 'path',
+                            'description': 'The key.',
+                            'required': true,
+                            'type': swKey.type,
+                        };
+                if (swKey.format)
+                    parameter.format = swKey.format;
 
                 route.parameters = [parameter];
             }
@@ -314,8 +317,8 @@
             var route = {
                 'tags': [type],
                 'description': swKey ?
-                'Update an existing ' + type + ' item.' :
-                'Update ' + name + '.',
+                        'Update an existing ' + type + ' item.' :
+                        'Update ' + name + '.',
                 'parameters': [
                     {
                         'name': type,
@@ -347,7 +350,8 @@
                     'type': swKey.type,
                 };
 
-                if (swKey.format) parameter.format = swKey.format;
+                if (swKey.format)
+                    parameter.format = swKey.format;
                 route.parameters.unshift(parameter);
             }
 
@@ -362,7 +366,8 @@
                 'required': true,
                 'type': swKey.type,
             };
-            if (swKey.format) parameter.format = swKey.format;
+            if (swKey.format)
+                parameter.format = swKey.format;
 
             return {
                 'tags': [type],
@@ -385,7 +390,8 @@
         }
 
         function genAllows(allows) {
-            if (!allows) return {'read': true};
+            if (!allows)
+                return {'read': true};
 
             var ac = {};
             for (var i = 0; i < allows.length; i++) {
@@ -395,7 +401,8 @@
             return ac;
         }
 
-        if (!model.container) return;
+        if (!model.container)
+            return;
 
         var paths = {};
         var visitor = new Visitor();
@@ -405,16 +412,21 @@
                 visitor.visitArr(arr, function (item) {
                     var allows = genAllows(item.allows);
                     var routes = {};
-                    if (allows.read) routes.get = routeGet(item.name, item.type, true);
-                    if (allows.create) routes.post = routePost(item.name, item.type);
+                    if (allows.read)
+                        routes.get = routeGet(item.name, item.type, true);
+                    if (allows.create)
+                        routes.post = routePost(item.name, item.type);
                     paths['/' + item.name] = routes;
 
                     var swKey = resolveKey(item.type);
                     if (swKey) {
                         var sRoutes = {};
-                        if (allows.read) sRoutes.get = routeGet(item.name, item.type, false, swKey);
-                        if (allows.update) sRoutes.put = routePut(item.name, item.type, swKey);
-                        if (allows.delete) sRoutes.delete = routeDelete(item.name, item.type, swKey);
+                        if (allows.read)
+                            sRoutes.get = routeGet(item.name, item.type, false, swKey);
+                        if (allows.update)
+                            sRoutes.put = routePut(item.name, item.type, swKey);
+                        if (allows.delete)
+                            sRoutes.delete = routeDelete(item.name, item.type, swKey);
                         paths['/' + item.name + '/{' + swKey.name + '}'] = sRoutes;
                     }
                 });
@@ -423,23 +435,26 @@
                 visitor.visitArr(arr, function (item) {
                     var allows = genAllows(item.allows);
                     var routes = {};
-                    if (allows.read) routes.get = routeGet(item.name, item.type, false);
-                    if (allows.update) routes.put = routePut(item.name, item.type);
+                    if (allows.read)
+                        routes.get = routeGet(item.name, item.type, false);
+                    if (allows.update)
+                        routes.put = routePut(item.name, item.type);
                     paths['/' + item.name] = routes;
                 });
             },
             'operations': function (arr) {
                 visitor.visitArr(arr, function (item) {
+					var temp;
+					var routes;
                     if ('Action' === item.type) {
-                        var temp = routeOperation(item.name, item.type, item.operationType, item.params, null, null, item.returns);
-                        var routes = {
+                        temp = routeOperation(item.name, item.type, item.operationType, item.params, null, null, item.returns);
+                        routes = {
                             'post': temp.route
                         };
                         paths[temp.path] = routes;
-                    }
-                    else if ('Function' === item.type) {
-                        var temp = routeOperation(item.name, item.type, item.operationType, item.params, null, null, item.returns);
-                        var routes = {
+                    } else if ('Function' === item.type) {
+                        temp = routeOperation(item.name, item.type, item.operationType, item.params, null, null, item.returns);
+                        routes = {
                             'get': temp.route
                         };
                         paths[temp.path] = routes;
@@ -466,8 +481,8 @@
         var boundOpPaths = {};
 
         visitor.visitObj(model, {
-            'service': function (service) {
-                this.visitObj(service, {
+            'api': function (api) {
+                this.visitObj(api, {
                     'name': function (name) {
                         state.info.title = name;
                     },
@@ -513,6 +528,8 @@
             },
             'types': function (arr) {
                 state.definitions = {};
+                var baseTypeNames = [];
+
                 this.visitArr(arr, function (item) {
                     var type = {properties: {}};
 
@@ -528,19 +545,9 @@
                         return member;
                     }
 
-                    this.visitObj(item, {
-                        'members': function (obj) {
-                            type.type = 'string';
-                            type['enum'] = [];
-                            delete type.properties;
-                            this.visitArr(obj, function (obj) {
-                                type['enum'].push(handleMember(obj));
-                            });
-                        }
-                    });
-
                     var keyProperty = null;
                     var parentTypeName = item.name;
+
                     if (item.properties) {
                         visitor.visitArr(item.properties, function (item) {
                             if (!item.operationType) {
@@ -548,8 +555,10 @@
                                 var propertyType;
                                 if (swType.type) {
                                     propertyType = {type: swType.type};
-                                    if (swType.format) propertyType.format = swType.format;
-                                    if (swType.items) propertyType.items = swType.items;
+                                    if (swType.format)
+                                        propertyType.format = swType.format;
+                                    if (swType.items)
+                                        propertyType.items = swType.items;
                                 } else {
                                     propertyType = swType;
                                 }
@@ -563,29 +572,39 @@
                                         // add paths would check whether format undefined.
                                         'format': swType.format
                                     };
+
+                                    if (!item.isNullable)
+                                    {
+                                        if (!type.required)
+                                        {
+                                            type.required = [];
+                                        }
+
+                                        type.required.push(item.name);
+                                    }
                                 }
                             }
                         });
 
-
                         if (keyProperty) {
                             keys[item.name] = keyProperty;
                         }
+
                         // Convert bound operations (actions and functions).
                         visitor.visitArr(item.properties, function (item) {
                             if (item.operationType) {
                                 var swKey = keys[parentTypeName];
                                 if (swKey) {
+									var temp, routes;
                                     if ('Action' === item.type) {
-                                        var temp = routeOperation(item.name, item.type, item.operationType, item.params, parentTypeName, swKey, item.returns);
-                                        var routes = {
+                                        temp = routeOperation(item.name, item.type, item.operationType, item.params, parentTypeName, swKey, item.returns);
+                                        routes = {
                                             'post': temp.route
                                         };
                                         boundOpPaths[temp.path] = routes;
-                                    }
-                                    else if ('Function' === item.type) {
-                                        var temp = routeOperation(item.name, item.type, item.operationType, item.params, parentTypeName, swKey, item.returns);
-                                        var routes = {
+                                    } else if ('Function' === item.type) {
+                                        temp = routeOperation(item.name, item.type, item.operationType, item.params, parentTypeName, swKey, item.returns);
+                                        routes = {
                                             'get': temp.route
                                         };
                                         boundOpPaths[temp.path] = routes;
@@ -594,8 +613,88 @@
                             }
                         });
                     }
+
+                    this.visitObj(item, {
+                        'members': function (obj) {
+                            type.type = 'string';
+                            type['enum'] = [];
+                            delete type.properties;
+                            this.visitArr(obj, function (obj) {
+                                type['enum'].push(handleMember(obj));
+                            });
+                        },
+                        'baseType': function (obj) {
+                            var typeValue = type;
+                            type = {allOf: []};
+                            var baseTypeRef = {'$ref': '#/definitions/' + obj};
+                            type.allOf.push(baseTypeRef);
+                            type.allOf.push(typeValue);
+
+                            var isBaseTypeRegistered = false;
+                            for (var k = 0; k < baseTypeNames.length; k++) {
+                                if (baseTypeNames[k] == obj)
+                                {
+                                    isBaseTypeRegistered = true;
+                                }
+                            }
+
+                            if (!isBaseTypeRegistered)
+                            {
+                                baseTypeNames.push(obj);
+                            }
+                        },
+                    });
+
                     state.definitions[item.name] = type;
                 });
+
+                function handleBaseType(baseTypeName) {
+                    if (!state.definitions[baseTypeName])
+                        return;
+
+                    var propertyName = baseTypeName + 'Type';
+
+                    var propertyContent = {
+                        'type': 'string'
+                    };
+
+                    if (!state.definitions[baseTypeName].allOf)
+                    {
+                        if (state.definitions[baseTypeName].discriminator)
+                            return;
+
+                        state.definitions[baseTypeName].properties[propertyName] = propertyContent;
+                        if (!state.definitions[baseTypeName].required)
+                            state.definitions[baseTypeName].required = [];
+                        state.definitions[baseTypeName].required.push(propertyName);
+                        state.definitions[baseTypeName].discriminator = propertyName;
+                    } else
+                    {
+                        for (var j = 0; j < state.definitions[baseTypeName].allOf.length; j++) {
+                            if (state.definitions[baseTypeName].allOf[j].properties)
+                            {
+                                if (state.definitions[baseTypeName].allOf[j].discriminator)
+                                    return;
+
+                                state.definitions[baseTypeName].allOf[j].properties[propertyName] = propertyContent;
+                                if (!state.definitions[baseTypeName].allOf[j].required)
+                                    state.definitions[baseTypeName].allOf[j].required = [];
+                                state.definitions[baseTypeName].allOf[j].required.push(propertyName);
+                                state.definitions[baseTypeName].allOf[j].discriminator = propertyName;
+                                break;
+                            }
+                        }
+                    }
+
+
+                    return;
+                }
+
+                for (var i = 0; i < baseTypeNames.length; i++) {
+                    handleBaseType(baseTypeNames[i]);
+                }
+
+                baseTypeNames = [];
             }
         });
 
