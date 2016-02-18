@@ -126,7 +126,7 @@
                 'required': true
             };
             if (swType.format) {
-                param['format'] = swType.format;
+                param.format = swType.format;
             }
             parameters.push(param);
         }
@@ -194,7 +194,7 @@
                 'required': true
             };
             if (swType.format) {
-                param['format'] = swType.format;
+                param.format = swType.format;
             }
             parameters.push(param);
         }
@@ -221,7 +221,7 @@
         var schema;
         if (returns) {
             var returnType = detectCollectionType(returns);
-            var schema = getSwaggerType(returnType.type, returnType.isCol);
+            schema = getSwaggerType(returnType.type, returnType.isCol);
 
             responses['200'] = {
                 'description': 'The function has been returned results.',
@@ -444,15 +444,17 @@
             },
             'operations': function (arr) {
                 visitor.visitArr(arr, function (item) {
+					var temp;
+					var routes;
                     if ('Action' === item.type) {
-                        var temp = routeOperation(item.name, item.type, item.operationType, item.params, null, null, item.returns);
-                        var routes = {
+                        temp = routeOperation(item.name, item.type, item.operationType, item.params, null, null, item.returns);
+                        routes = {
                             'post': temp.route
                         };
                         paths[temp.path] = routes;
                     } else if ('Function' === item.type) {
-                        var temp = routeOperation(item.name, item.type, item.operationType, item.params, null, null, item.returns);
-                        var routes = {
+                        temp = routeOperation(item.name, item.type, item.operationType, item.params, null, null, item.returns);
+                        routes = {
                             'get': temp.route
                         };
                         paths[temp.path] = routes;
@@ -593,15 +595,16 @@
                             if (item.operationType) {
                                 var swKey = keys[parentTypeName];
                                 if (swKey) {
+									var temp, routes;
                                     if ('Action' === item.type) {
-                                        var temp = routeOperation(item.name, item.type, item.operationType, item.params, parentTypeName, swKey, item.returns);
-                                        var routes = {
+                                        temp = routeOperation(item.name, item.type, item.operationType, item.params, parentTypeName, swKey, item.returns);
+                                        routes = {
                                             'post': temp.route
                                         };
                                         boundOpPaths[temp.path] = routes;
                                     } else if ('Function' === item.type) {
-                                        var temp = routeOperation(item.name, item.type, item.operationType, item.params, parentTypeName, swKey, item.returns);
-                                        var routes = {
+                                        temp = routeOperation(item.name, item.type, item.operationType, item.params, parentTypeName, swKey, item.returns);
+                                        routes = {
                                             'get': temp.route
                                         };
                                         boundOpPaths[temp.path] = routes;

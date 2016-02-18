@@ -7,7 +7,8 @@
   "browser": true,
   "globals": {
     "Morpho": false,
-    "CodeMirror" : false    
+    "CodeMirror" : false,
+    "yaml": false
   }
 }
 

@@ -17,7 +17,7 @@ module.exports = function(config) {
     ],
 
     exclude: [],
-    reporters: ['spec'],
+    reporters: ['progress'],
     logLevel: config.LOG_INFO,
     autoWatch: true,
     browsers: ['PhantomJS'],

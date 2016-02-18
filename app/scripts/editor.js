@@ -1,7 +1,7 @@
 'use strict';
 
 $(function (){
-  function positionRangeForPath(yamlSpec, path, cb) {
+  function positionRangeForPath(yamlSpec, path) {
   var MAP_TAG = 'tag:yaml.org,2002:map';
   var SEQ_TAG = 'tag:yaml.org,2002:seq';
     // Type check
@@ -10,9 +10,6 @@ $(function (){
     }
     if (!Array.isArray(path)) {
       throw new TypeError('path should be an array of strings');
-    }
-    if (typeof cb !== 'function') {
-      throw new TypeError('cb should be a function.');
     }
 
     var invalidRange = {
@@ -25,7 +22,7 @@ $(function (){
 
       // simply walks the tree using current path recursively to the point that
       // path is empty.
-      find(ast);
+      return find(ast);
 
       function find(current) {
         if (current.tag === MAP_TAG) {
@@ -52,10 +49,10 @@ $(function (){
 
         // if path is still not empty we were not able to find the node
         if (path.length) {
-          return cb(invalidRange);
+          return invalidRange;
         }
 
-        return cb({
+        return {
           /* jshint camelcase: false */
           start: {
             line: current.start_mark.line,
@@ -65,11 +62,11 @@ $(function (){
             line: current.end_mark.line,
             column: current.end_mark.column
           }
-        });
+        };
       }
     }
 
-    compose(null, yaml.compose(yamlSpec));
+    return compose(null, yaml.compose(yamlSpec));
   }
 
   function convert(){
@@ -89,10 +86,8 @@ $(function (){
           error.ln=errors[index].lineNumber;
         } else {
           error.errorType = 'Simple Yaml Error';
-          positionRangeForPath(input, errors[index].path,
-            function(range){
-            error.ln = range.start.line + 1;
-          });
+          var range = positionRangeForPath(input, errors[index].path);
+          error.ln = range.start.line + 1;
         }
         console.log(error.errDes);
         var t = $('#errorTemp').tmpl(error);
