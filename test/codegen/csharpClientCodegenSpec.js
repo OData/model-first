@@ -1,34 +1,34 @@
-describe('[OData Service Client Codegen: CSharp] Test', function(){
-	var codegen = require('../../src/codegen/modules/csharpClientCodegen');
-	var genEnumType;
+describe('[Client CodeGen] CSharp test', function () {
+    var codegen = require('../../src/codegen/modules/csharpClientCodegen');
+    var genEnumType;
 
-	beforeEach(function(){
-		genEnumType = codegen.genEnumType;
-	});
+    beforeEach(function () {
+        genEnumType = codegen.genEnumType;
+    });
 
-	it('generation for enum type.', function(){
-		var enumTypeObj = {
-		    name: 'personGender',
-		    members: [
-		        {
-		            name: 'unknown',
-		            value: 0
-		        },
-		        {
-		            name: 'female',
-		            value: 1
-		        },
-		        {
-		            name: 'male',
-		            value: 2
-		        }
-		    ],
-		    flags: false,
-		    underlyingType: 'edm.int32'
-		};
+    it('generation for enum type.', function () {
+        var enumTypeObj = {
+            name: 'personGender',
+            members: [
+                {
+                    name: 'unknown',
+                    value: 0
+                },
+                {
+                    name: 'female',
+                    value: 1
+                },
+                {
+                    name: 'male',
+                    value: 2
+                }
+            ],
+            flags: false,
+            underlyingType: 'edm.int32'
+        };
 
-		var expected = 
-'[global::Microsoft.OData.Client.OriginalNameAttribute("PersonGender")]\n\
+        var expected =
+                '[global::Microsoft.OData.Client.OriginalNameAttribute("PersonGender")]\n\
 public enum PersonGender: global::System.Int32\n\
 {\n\
 [global::Microsoft.OData.Client.OriginalNameAttribute("Unknown")]\n\
@@ -38,8 +38,8 @@ Female = 1,\n\
 [global::Microsoft.OData.Client.OriginalNameAttribute("Male")]\n\
 Male = 2\n\
 }\n\n';
-		var actual = genEnumType(enumTypeObj);
+        var actual = genEnumType(enumTypeObj);
 
-		expect(actual).toEqual(expected);
-	});
+        expect(actual).toEqual(expected);
+    });
 });

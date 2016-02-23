@@ -7,15 +7,16 @@ var app = express();
 var constants = config.Constants;
 var dmgr = new DirectoryManager();
 var paths = [
-constants.CSharpCode,
-constants.CSharpZipPackage
+    constants.Paths.CSharpCode,
+    constants.Paths.CSharpZipPackage
 ];
+
 dmgr.create(paths);
 app.use(express.static(constants.Paths.Static));
 
 router.route(app);
 
-var server = app.listen(constants.Port, function(){
-	console.log('Started connect codegen web service on http://localhost:' + constants.Port);
-	console.log('HTTP GET or POST: Download OData client C# code on http://localhost:' + constants.Port + '/client/codegen/?name=csharp');
+var server = app.listen(constants.Port, function () {
+    console.log('Started connect codegen web service on http://localhost:' + constants.Port);
+    console.log('HTTP GET or POST: Download OData client C# code on http://localhost:' + constants.Port + '/client/codegen/?name=csharp');
 });
