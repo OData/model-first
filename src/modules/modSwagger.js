@@ -79,22 +79,6 @@
         };
     }
 
-    function detectCollectionType(targetType) {
-        var type, col;
-        if (targetType[targetType.length - 1] === ']') {
-            type = targetType.substr(0, targetType.length - 2);
-            col = true;
-        } else {
-            type = targetType;
-            col = false;
-        }
-
-        return {
-            'type': type,
-            'isCol': col
-        };
-    }
-
     function routeAction(name, operationType, params, parentType, swKey, returns) {
         var parameters = [];
         var ifMatchHeader = {
@@ -116,7 +100,7 @@
             parameters.push(bindingParam);
         }
         for (var i in params) {
-            var isCollection = params[i].type[params[i].type.length - 1] === ']';
+            var isCollection = params[i].isCollection && params[i].isCollection === true;
             var swType = getSwaggerType(params[i].type, isCollection);
             var param = {
                 'name': params[i].name,
@@ -127,6 +111,9 @@
             };
             if (swType.format) {
                 param.format = swType.format;
+            }
+            if (swType.items) {
+                param.items = swType.items;
             }
             parameters.push(param);
         }
@@ -151,8 +138,8 @@
             }
         };
         if (returns) {
-            var returnType = detectCollectionType(returns);
-            var schema = getSwaggerType(returnType.type, returnType.isCol);
+            isCollection = returns.isCollection && returns.isCollection === true;
+            var schema = getSwaggerType(returns.type, isCollection);
 
             responses['200'] = {
                 'description': 'The function has been returned results.',
@@ -184,7 +171,7 @@
             parameters.push(bindingParam);
         }
         for (var i in params) {
-            var isCollection = params[i].type[params[i].type.length - 1] === ']';
+            var isCollection = params[i].isCollection && params[i].isCollection === true;
             var swType = getSwaggerType(params[i].type, isCollection);
             var param = {
                 'name': params[i].name,
@@ -195,6 +182,9 @@
             };
             if (swType.format) {
                  param.format = swType.format;
+            }
+            if (swType.items) {
+                param.items = swType.items;
             }
             parameters.push(param);
         }
@@ -220,8 +210,8 @@
         };
         var schema;
         if (returns) {
-            var returnType = detectCollectionType(returns);
-            schema = getSwaggerType(returnType.type, returnType.isCol);
+            isCollection = returns.isCollection && returns.isCollection === true;
+            schema = getSwaggerType(returns.type, isCollection);
 
             responses['200'] = {
                 'description': 'The function has been returned results.',

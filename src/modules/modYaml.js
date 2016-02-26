@@ -127,16 +127,43 @@ function fromYaml(str, errors, config, callback) {
         };
     }
 
+    function detectNullableType(yamlType) {
+        var type, nul;
+
+        if(yamlType[yamlType.length - 1] === '?') {
+            type = yamlType.substr(0, yamlType.length - 1);
+            nul = true;
+        }
+        else{
+            type = yamlType;
+            nul = false;
+        }
+
+        return {
+            'type': type,
+            'isNul': nul
+        };
+    }
+
     function parseParams(arr) {
         var tempArr = [];
         var tempObj = {};
         if (Array.isArray(arr)) {
             for (var i in arr) {                
                 if (arr[i].name && arr[i].type) {
+                    var paramType = detectCollectionType(arr[i].type);
+                    var pt = detectNullableType(paramType.type);
                     tempObj = {
                         'name': arr[i].name,
-                        'type': maps(arr[i].type)
+                        'type': maps(pt.type)
                     };
+                    if(paramType.isCol){
+                        tempObj.isCollection = true;
+                    }
+                    if(pt.isNul){
+                        tempObj.isNullable = true;
+                    }
+                    
                 } else if (arr[i].name && !arr[i].type) {
                     tempObj = {
                         'name': arr[i].name,
@@ -148,6 +175,7 @@ function fromYaml(str, errors, config, callback) {
                         'type': 'edm.string'
                     };
                 }
+
                 tempArr.push(tempObj);
             }
         } else {
@@ -183,7 +211,17 @@ function fromYaml(str, errors, config, callback) {
                     },
                     'returns': function (obj) {
                         if (obj) {
-                            operation.returns = maps(obj);
+                            var returnType = detectCollectionType(obj);
+                            var rt = detectNullableType(returnType.type);
+                            operation.returns = {
+                                type: maps(rt.type)
+                            };
+                            if(returnType.isCol){
+                                operation.returns.isCollection = true;
+                            }
+                            if(rt.isNul){
+                                operation.returns.isNullable = true;
+                            }
                         }
                     }
                 });
@@ -278,7 +316,17 @@ function fromYaml(str, errors, config, callback) {
 
                         // Parse return type.
                         if (obj.returns) {
-                            operation.returns = maps(obj.returns);
+                            var returnType = detectCollectionType(obj.returns);
+                            var rt = detectNullableType(returnType.type);
+                            operation.returns = {
+                                type: maps(returnType.type)
+                            };
+                            if(returnType.isCol){
+                                operation.returns.isCollection = true;
+                            }
+                            if(rt.isNul){
+                                operation.returns.isNullable = true;
+                            }
                         }
 
                         // Parse operation-type (Bound/Unbound).
