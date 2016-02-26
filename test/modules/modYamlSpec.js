@@ -896,7 +896,10 @@ describe('[YAML] Functions test', function () {
                                 'name': 'friend',
                                 'type': 'person'
                             }],
-                        'returns': 'person[]'
+                        'returns': {
+                          'type': 'person',
+                          'isCollection': true
+                        }
                     }
                 ]
             };
@@ -922,7 +925,9 @@ describe('[YAML] Functions test', function () {
                             'name': 'id',
                             'type': 'edm.int64'
                         }],
-                    'returns': 'edm.string',
+                    'returns': {
+                      'type': 'edm.string'
+                    },
                     'operationType': 'Bound'
                 }
             ]
@@ -964,7 +969,10 @@ describe('[YAML] Root section tests', function () {
                                 'name': 'userId',
                                 'type': 'edm.int32'
                             }],
-                        'returns': 'thing[]'
+                        'returns': {
+                          'type': 'thing',
+                          'isCollection': true
+                        }
                     }]
             }));
 

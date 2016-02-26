@@ -1093,7 +1093,9 @@ describe('[Swagger] Functions test', function () {
                                         'type': 'edm.int32'
                                     }
                                 ],
-                                'returns': 'edm.int32'
+                                'returns': {
+                                    'type': 'edm.int32'
+                                }
                             }]
                     }
                 };
