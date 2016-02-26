@@ -238,3 +238,6 @@ dist/*
 # WebStorm
 .idea/*
 nbproject/*
+
+# Ignore the codegen folder.
+public/client

@@ -1,10 +1,16 @@
 function fromYaml(str, errors, config, callback) {
     function OnMessage(message) {
-        callback(message.data.errors);
+        if (!!callback && typeof callback == 'function')
+        {
+            callback(message.data.errors);
+        }
     }
 
     function OnError(message) {
-        callback(message.data.errors);
+        if (!!callback && typeof callback == 'function')
+        {
+            callback(message.data.errors);
+        }
     }
 
     var obj;
@@ -18,8 +24,13 @@ function fromYaml(str, errors, config, callback) {
             }]);
         return null;
     }
+    var workerPath = 'bower_components/morpho/src/index.js';
+    if (/^\?id=/.test(window.location.search) || /^\/debug.html/.test(window.location.pathname))
+    {
+        workerPath = 'base/src/index.js';
+    }
 
-    var worker = worker || new Worker('../bower_components/morpho/src/index.js');
+    var worker = worker || new Worker(workerPath);
     worker.onmessage = OnMessage;
     worker.onerror = OnError;
     worker.postMessage({
@@ -70,7 +81,7 @@ function fromYaml(str, errors, config, callback) {
         'geometrymultilinestring': 'edm.geometrymultilinestring',
         'geometrymultipolygon': 'edm.geometrymultipolygon',
         'geometrycollection': 'edm.geometrycollection'
-    }
+    };
 
     function matches(type) {
         for (var index in typeMap) {
@@ -118,9 +129,9 @@ function fromYaml(str, errors, config, callback) {
 
     function parseParams(arr) {
         var tempArr = [];
+        var tempObj = {};
         if (Array.isArray(arr)) {
-            for (var i in arr) {
-                var tempObj = {};
+            for (var i in arr) {                
                 if (arr[i].name && arr[i].type) {
                     tempObj = {
                         'name': arr[i].name,
@@ -140,7 +151,7 @@ function fromYaml(str, errors, config, callback) {
                 tempArr.push(tempObj);
             }
         } else {
-            var tempObj = {
+            tempObj = {
                 'name': arr,
                 'type': 'edm.string'
             };
