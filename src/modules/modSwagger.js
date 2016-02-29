@@ -99,8 +99,10 @@
             };
             parameters.push(bindingParam);
         }
+
+        var isCollection;
         for (var i in params) {
-            var isCollection = params[i].isCollection && params[i].isCollection === true;
+            isCollection = params[i].isCollection && params[i].isCollection === true;
             var swType = getSwaggerType(params[i].type, isCollection);
             var param = {
                 'name': params[i].name,
@@ -170,8 +172,10 @@
             };
             parameters.push(bindingParam);
         }
+
+        var isCollection;
         for (var i in params) {
-            var isCollection = params[i].isCollection && params[i].isCollection === true;
+            isCollection = params[i].isCollection && params[i].isCollection === true;
             var swType = getSwaggerType(params[i].type, isCollection);
             var param = {
                 'name': params[i].name,
@@ -181,7 +185,7 @@
                 'required': true
             };
             if (swType.format) {
-                 param.format = swType.format;
+                param.format = swType.format;
             }
             if (swType.items) {
                 param.items = swType.items;
@@ -208,10 +212,9 @@
                 'description': 'A single entity function with a non-nullable return type has no result.'
             }
         };
-        var schema;
         if (returns) {
             isCollection = returns.isCollection && returns.isCollection === true;
-            schema = getSwaggerType(returns.type, isCollection);
+            var schema = getSwaggerType(returns.type, isCollection);
 
             responses['200'] = {
                 'description': 'The function has been returned results.',

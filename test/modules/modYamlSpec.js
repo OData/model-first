@@ -897,8 +897,8 @@ describe('[YAML] Functions test', function () {
                                 'type': 'person'
                             }],
                         'returns': {
-                          'type': 'person',
-                          'isCollection': true
+                            'type': 'person',
+                            'isCollection': true
                         }
                     }
                 ]
@@ -926,7 +926,7 @@ describe('[YAML] Functions test', function () {
                             'type': 'edm.int64'
                         }],
                     'returns': {
-                      'type': 'edm.string'
+                        'type': 'edm.string'
                     },
                     'operationType': 'Bound'
                 }
@@ -970,8 +970,8 @@ describe('[YAML] Root section tests', function () {
                                 'type': 'edm.int32'
                             }],
                         'returns': {
-                          'type': 'thing',
-                          'isCollection': true
+                            'type': 'thing',
+                            'isCollection': true
                         }
                     }]
             }));
@@ -1007,11 +1007,11 @@ types:\n\
       -name: p1\n\
         type: long\n\
       - p2';
-        Morpho.convert(input, 'yaml', 'json', defaultConfig, function(errors){
-          expect(errors.length).toEqual(1);
-          var error = errors[0];
-          expect(error.lineNumber).toEqual(4);
-          expect(error.message).toEqual('bad indentation of a mapping entry');
+        Morpho.convert(input, 'yaml', 'json', defaultConfig, function (errors) {
+            expect(errors.length).toEqual(1);
+            var error = errors[0];
+            expect(error.lineNumber).toEqual(4);
+            expect(error.message).toEqual('bad indentation of a mapping entry');
         });
     });
 });

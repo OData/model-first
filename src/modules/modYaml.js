@@ -1,13 +1,13 @@
 function fromYaml(str, errors, config, callback) {
     function OnMessage(message) {
-        if (!!callback && typeof callback == 'function')
+        if (!!callback && typeof callback === 'function')
         {
             callback(message.data.errors);
         }
     }
 
     function OnError(message) {
-        if (!!callback && typeof callback == 'function')
+        if (!!callback && typeof callback === 'function')
         {
             callback(message.data.errors);
         }
@@ -130,11 +130,10 @@ function fromYaml(str, errors, config, callback) {
     function detectNullableType(yamlType) {
         var type, nul;
 
-        if(yamlType[yamlType.length - 1] === '?') {
+        if (yamlType[yamlType.length - 1] === '?') {
             type = yamlType.substr(0, yamlType.length - 1);
             nul = true;
-        }
-        else{
+        } else {
             type = yamlType;
             nul = false;
         }
@@ -149,7 +148,7 @@ function fromYaml(str, errors, config, callback) {
         var tempArr = [];
         var tempObj = {};
         if (Array.isArray(arr)) {
-            for (var i in arr) {                
+            for (var i in arr) {
                 if (arr[i].name && arr[i].type) {
                     var paramType = detectCollectionType(arr[i].type);
                     var pt = detectNullableType(paramType.type);
@@ -157,13 +156,13 @@ function fromYaml(str, errors, config, callback) {
                         'name': arr[i].name,
                         'type': maps(pt.type)
                     };
-                    if(paramType.isCol){
+                    if (paramType.isCol) {
                         tempObj.isCollection = true;
                     }
-                    if(pt.isNul){
+                    if (pt.isNul) {
                         tempObj.isNullable = true;
                     }
-                    
+
                 } else if (arr[i].name && !arr[i].type) {
                     tempObj = {
                         'name': arr[i].name,
@@ -216,10 +215,10 @@ function fromYaml(str, errors, config, callback) {
                             operation.returns = {
                                 type: maps(rt.type)
                             };
-                            if(returnType.isCol){
+                            if (returnType.isCol) {
                                 operation.returns.isCollection = true;
                             }
-                            if(rt.isNul){
+                            if (rt.isNul) {
                                 operation.returns.isNullable = true;
                             }
                         }
@@ -321,10 +320,10 @@ function fromYaml(str, errors, config, callback) {
                             operation.returns = {
                                 type: maps(returnType.type)
                             };
-                            if(returnType.isCol){
+                            if (returnType.isCol) {
                                 operation.returns.isCollection = true;
                             }
-                            if(rt.isNul){
+                            if (rt.isNul) {
                                 operation.returns.isNullable = true;
                             }
                         }
