@@ -486,7 +486,6 @@ describe('[Client CodeGen] Entity Container', function () {
 {3}\
     }\n'.format(EntityContainer, fullNamespace, languageDependentNamespace, expected);
 
-        console.log(entityContainerGenerator.generate);
         var actual = entityContainerGenerator.generate(model);
         expect(actual).toEqual(output);
     }
