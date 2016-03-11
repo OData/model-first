@@ -89,17 +89,19 @@
         "params": [
           {
             "name": "lat",
-            "type": "edm.double"
+            "type": "trip",
+            "isNullable": true
           },
           {
             "name": "lon",
-            "type": "edm.double"
+            "type": "edm.double",
+            "isCollection": true
           }
         ],
-        "returns": 
-          {
-            "type": "airport"
-          }
+        "returns": {
+            "type": "edm.double",
+            "isNullable": true
+        }
       },
       {
         "type": "Action",
@@ -450,11 +452,10 @@
         {
           "name": "getInvolvedPeople",
           "type": "Function",
-          "returns": 
-            {
-                "type": "person",
-                "isCollection": true
-            },    
+          "returns": {
+              "type": "person",
+              "isCollection": true
+          },
           "operationType": "Bound"
         }
       ],

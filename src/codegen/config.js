@@ -9,5 +9,9 @@ exports.Constants = {
     FileNames: {
         CSharpCode: 'ODataClient.cs',
         CSharpZipPackage: 'ODataClientProject.zip'
+    },
+    Code: {
+        DefaultNamespace: 'OData.Service.V4.Client',
+        EntityContainer: 'DefaultContainer',
     }
 };
