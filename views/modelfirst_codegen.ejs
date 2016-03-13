@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./public/stylesheets/bootstrap.min.css" />
+    <link rel="stylesheet" href="./public/stylesheets/bootstrap-theme.min.css" />
+    <link rel="stylesheet" href="./public/stylesheets/codemirror.css" />
+  </head>
+  <body>
+    <!-- Navigation bar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">Model-first CodeGen (Only For Testing)</a>
+      </div>
+      <div>
+        <ul class="nav navbar-nav">
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              Load
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="/sample?name=todo">ToDo Metadata</a></li>
+              <li><a href="/sample?name=trippin">TripPin Metadata</a></li>
+              <li><a href="#">ODataDemo Metadata</a></li>
+              <li><a href="#">Northwind Metadata</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div style="margin-top: 50px;"></div>
+    <div id="code" class="row">
+      <div class="col-md-6" id="src">
+        <textarea id="inputarea">
+<%= metadata %>
+        </textarea>
+      </div>
+      <div class="col-md-6" id="res">
+        <ul id="genCodeTabs" class="nav nav-tabs">
+          <li class="active"><a href="" data-target="#csharp" data-toggle="tab">C#</a></li>
+          <li><a href="" data-target="#others" data-toggle="tab">Other Languages</a></li>
+        </ul>
+        <div id="genCodeTabContent" class="tab-content">
+          <div class="tab-pane active" id="csharp">
+            <textarea id="outputarea_csharp">
+<%= csharpCode %>
+            </textarea>
+          </div>
+          <div class="tab-pane" id="others">
+            <textarea id="outputarea_others">
+To be continued....
+            </textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="./public/javascripts/jquery-2.2.0.min.js"></script>
+  <script src="./public/javascripts/bootstrap.min.js"></script>
+  <script src="./public/javascripts/codemirror.js"></script>
+  <script src="./public/javascripts/mode/javascript.js"></script>
+  <script src="./public/javascripts/mode/clike.js"></script>
+  <script src="./public/javascripts/codeeditor.js"></script>
+</html>
