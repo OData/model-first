@@ -36,10 +36,11 @@ var PrimitiveTypeMappings = {
     'edm.geometrycollection': 'global::Microsoft.Spatial.GeometryCollection'
 };
 
-exports.MapType = function (type) {
-    if (PrimitiveTypeMappings[type]) {
-        return PrimitiveTypeMappings[type];
-    } else {
-        return StringHelper.capitalizeInitial(type);
-    }
+exports.MapType = function(type){
+	if(PrimitiveTypeMappings[type]){
+		return { type: PrimitiveTypeMappings[type], isPrimitive: true };
+	}
+	else{
+		return { type: StringHelper.capitalizeInitial(type), isPrimitive: false };
+	}
 };
