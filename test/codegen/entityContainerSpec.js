@@ -17,7 +17,7 @@ describe('[Client CodeGen] Entity Container', function () {
         };
     }
 
-    fit('Entitysets should match.', function () {
+    it('Entitysets should match.', function () {
         var entityContainer = {
             'entitysets': [
                 {
@@ -61,7 +61,7 @@ describe('[Client CodeGen] Entity Container', function () {
         TestEntityContainer(entityContainer, expected);
     });
 
-    fit('Singletons should match.', function () {
+    it('Singletons should match.', function () {
         var entityContainer = {
             'entitysets': [],
             'singletons': [
@@ -97,7 +97,7 @@ describe('[Client CodeGen] Entity Container', function () {
         TestEntityContainer(entityContainer, expected);
     });
 
-    fit('Functions return values should match.', function () {
+    it('Functions return values should match.', function () {
         var entityContainer = {
             'entitysets': [],
             'singletons': [],
@@ -230,7 +230,7 @@ describe('[Client CodeGen] Entity Container', function () {
         TestEntityContainer(entityContainer, expected);
     });
 
-    fit('Functions parameters should match.', function () {
+    it('Functions parameters should match.', function () {
         var entityContainer = {
             'entitysets': [],
             'singletons': [],
@@ -312,7 +312,7 @@ describe('[Client CodeGen] Entity Container', function () {
         TestEntityContainer(entityContainer, expected);
     });
 
-    fit('Actions should match.', function () {
+    it('Actions should match.', function () {
         var entityContainer = {
             'entitysets': [],
             'singletons': [],
