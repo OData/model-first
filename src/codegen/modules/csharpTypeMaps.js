@@ -1,23 +1,23 @@
 var StringHelper = require('../helpers/stringhelper');
 
 var PrimitiveTypeMappings = {
-    'edm.binary': 'global::System.Byte[]',
-    'edm.boolean': 'global::System.Boolean',
-    'edm.byte': 'global::System.Byte',
-    'edm.date': '',
-    'edm.datetimeoffset': 'global::System.Nullable<global::System.DateTimeOffset>',
-    'edm.decimal': 'global::System.Decimal',
-    'edm.double': 'global::System.Double',
-    'edm.duration': 'global::System.Nullable<global::System.TimeSpan>',
-    'edm.guid': 'global::System.Guid',
-    'edm.int16': 'global::System.Int16',
-    'edm.int32': 'global::System.Int32',
-    'edm.int64': 'global::System.Int64',
-    'edm.sbyte': 'global::System.Sbyte',
-    'edm.single': 'global::System.Single',
-    'edm.stream': 'global::Microsoft.OData.Client.DataServiceStreamLink',
-    'edm.string': 'global::System.String',
-    'edm.timeofday': '',
+	'edm.binary': 'byte[]', //global::System.Byte[]
+	'edm.boolean': 'bool', //global::System.Boolean
+	'edm.byte': 'byte', //global::System.Byte
+	'edm.date': 'global::System.DateTime.Date',
+	'edm.datetimeoffset': 'global::System.DateTimeOffset',
+	'edm.decimal': 'decimal', //global::System.Decimal
+	'edm.double': 'double', //global::System.Double
+	'edm.duration': 'global::System.TimeSpan', 
+	'edm.guid': 'global::System.Guid',
+	'edm.int16': 'short', //global::System.Int16
+	'edm.int32': 'int', //global::System.Int32
+	'edm.int64': 'long', //global::System.Int64
+	'edm.sbyte': 'sbyte', //global::System.Sbyte
+	'edm.single': 'float', //global::System.Single
+	'edm.stream': 'global::Microsoft.OData.Client.DataServiceStreamLink',
+	'edm.string': 'string', //global::System.String
+    'edm.timeofday': 'global::System.DateTime.TimeOfDay',
     'edm.geography': 'global::Microsoft.Spatial.Geography',
     'edm.geographypoint': 'global::Microsoft.Spatial.GeographyPoint',
     'edm.geographylinestring': 'global::Microsoft.Spatial.GeographyLineString',
@@ -37,9 +37,10 @@ var PrimitiveTypeMappings = {
 };
 
 exports.MapType = function (type) {
-    if (PrimitiveTypeMappings[type]) {
-        return PrimitiveTypeMappings[type];
-    } else {
-        return StringHelper.capitalizeInitial(type);
-    }
+	if(PrimitiveTypeMappings[type]){
+		return { type: PrimitiveTypeMappings[type], isPrimitive: true };
+	}
+	else{
+		return { type: StringHelper.capitalizeInitial(type), isPrimitive: false };
+	}
 };
