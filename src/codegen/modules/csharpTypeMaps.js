@@ -36,7 +36,7 @@ var PrimitiveTypeMappings = {
     'edm.geometrycollection': 'global::Microsoft.Spatial.GeometryCollection'
 };
 
-exports.MapType = function (type) {
+exports.MapType = function(type){
 	if(PrimitiveTypeMappings[type]){
 		return { type: PrimitiveTypeMappings[type], isPrimitive: true };
 	}
