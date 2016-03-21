@@ -1,0 +1,32 @@
+{
+  "api": {
+    "name": "todo"
+  },
+  "container": {
+    "entitysets": [
+      {
+        "name": "todos",
+        "type": "todo",
+        "allows": [
+          "read"
+        ]
+      }
+    ]
+  },
+  "types": [
+    {
+      "properties": [
+        {
+          "name": "id",
+          "isKey": true,
+          "type": "edm.string"
+        },
+        {
+          "name": "name",
+          "type": "edm.string"
+        }
+      ],
+      "name": "todo"
+    }
+  ]
+}
