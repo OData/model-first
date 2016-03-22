@@ -186,7 +186,7 @@ describe('[Swagger] Primitive type definitions test', function () {
 });
 
 describe('[Swagger] To Swagger test', function () {
-    it('api should work.', function () {
+    it('Api should work.', function () {
         var jsonModel =
                 {
                     'api': {
@@ -210,6 +210,27 @@ describe('[Swagger] To Swagger test', function () {
         expect('\n' + JSON.stringify(sw.info.version)).toEqual('\n' + '"0.1"');
         expect('\n' + JSON.stringify(sw.host)).toEqual('\n' + '"var1.org"');
         expect('\n' + JSON.stringify(sw.basePath)).toEqual('\n' + '"/ab/(S(cnbm44wtbc1v5bgrlek5lpcc))/dat"');
+    });
+
+    it('Api rootUrl related fields work', function () {
+        var jsonModel =
+                {
+                    'api': {
+                        'name': 'host',
+                        'rootUrl': 'http://odata.org/odata'
+                    }
+                };
+
+        var info = {
+            'title': 'host',
+            'version': '0.1',
+            'schemes': ['http'],
+            'host': 'odata.org',
+            'basePath': '/odata'
+        };
+
+        var sw = toSwagger(jsonModel, undefined, true);
+        expect('\n' + JSON.stringify(sw.info)).toEqual('\n' + JSON.stringify(info));
     });
 
     it('Info object related api fields should match', function () {

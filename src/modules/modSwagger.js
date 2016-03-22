@@ -497,6 +497,18 @@
                     'description': function (description) {
                         state.info.description = description;
                     },
+                    'rootUrl': function (rootUrl) {
+                        var res = rootUrl.split('://');
+                        if (res.length == 2) {
+                            state.info.schemes = [res[0]];
+                            var index = res[1].indexOf('/');
+                            if (index === -1) {
+                                index = res[1].length;
+                            }
+                            state.info.host = res[1].substring(0, index);
+                            state.info.basePath = res[1].substring(index);
+                        }
+                    },
                     'host': function (obj) {
                         state.host = obj;
                     },
