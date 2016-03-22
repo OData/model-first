@@ -1,54 +1,69 @@
 'use strict';
 
-describe('[YAML] api section test', function () {
+describe('[YAML] Api section test', function () {
     var input = '\
 api:\n\
-  name: Service0\n\
-  version: 3';
+  name: TripPin OData Reference Service\n\
+  version: 3\n\
+  description: TripPin is a fictional reference service demonstrating the capabilities of OData v4.\n\
+  termsOfService: http://swagger.io/terms/\n\
+  contact:\n\
+    name: API Support\n\
+    url: http://www.swagger.io/support\n\
+    email: support@swagger.io\n\
+  license:\n\
+    name: Apache 2.0\n\
+    url: http://www.apache.org/licenses/LICENSE-2.0.html\n\
+  rootUrl: http://localhost:9001';
 
-    it('api name should match', function () {
+    it('Api name should match', function () {
         var model = Morpho.convertFrom.yaml.call(Morpho, input, {}, {});
-        expect(model.api.name).toEqual('Service0');
+        expect(model.api.name).toEqual('TripPin OData Reference Service');
     });
 
-    it('api version without current format should match', function () {
+    it('Api version without current format should match', function () {
         var model = Morpho.convertFrom.yaml.call(Morpho, input, {}, {});
         expect(model.api.version).toEqual(3);
     });
 
-    it('api info object fields should match',
-            fromYamlApiTest(
-                    'api:\n\
-          name: TripPin OData Reference Service\n\
-          version:\n\
-            current: 1.2.3\n\
-          description: TripPin is a fictional reference service demonstrating the capabilities of OData v4.\n\
-          termsOfService: http://swagger.io/terms/\n\
-          contact:\n\
-            name: API Support\n\
-            url: http://www.swagger.io/support\n\
-            email: support@swagger.io\n\
-          license:\n\
-            name: Apache 2.0\n\
-            url: http://www.apache.org/licenses/LICENSE-2.0.html',
-                    {
-                        'name': 'TripPin OData Reference Service',
-                        'version': {
-                            'current': '1.2.3'
-                        },
-                        'description': 'TripPin is a fictional reference service demonstrating the capabilities of OData v4.',
-                        'termsOfService': 'http://swagger.io/terms/',
-                        'contact': {
-                            'name': 'API Support',
-                            'url': 'http://www.swagger.io/support',
-                            'email': 'support@swagger.io'
-                        },
-                        'license': {
-                            'name': 'Apache 2.0',
-                            'url': 'http://www.apache.org/licenses/LICENSE-2.0.html'
-                        }
-                    })
-            );
+    it('Api description should match', function () {
+        var model = Morpho.convertFrom.yaml.call(Morpho, input, {}, {});
+        expect(model.api.description).toEqual('TripPin is a fictional reference service demonstrating the capabilities of OData v4.');
+    });
+
+    it('Api termsOfService should match', function () {
+        var model = Morpho.convertFrom.yaml.call(Morpho, input, {}, {});
+        expect(model.api.termsOfService).toEqual('http://swagger.io/terms/');
+    });
+
+    it('Api contact should match', function () {
+        var model = Morpho.convertFrom.yaml.call(Morpho, input, {}, {});
+        expect(model.api.contact.name).toEqual('API Support');
+        expect(model.api.contact.url).toEqual('http://www.swagger.io/support');
+        expect(model.api.contact.email).toEqual('support@swagger.io');
+    });
+
+    it('Api license should match', function () {
+        var model = Morpho.convertFrom.yaml.call(Morpho, input, {}, {});
+        expect(model.api.license.name).toEqual('Apache 2.0');
+        expect(model.api.license.url).toEqual('http://www.apache.org/licenses/LICENSE-2.0.html');
+    });
+    
+    it('Api rootUrl should match', function () {
+        var model = Morpho.convertFrom.yaml.call(Morpho, input, {}, {});
+        expect(model.api.rootUrl).toEqual('http://localhost:9001');
+    });
+    
+    var inputForVersion = '\
+api:\n\
+  name: version\n\
+  version: \n\
+    current: 1.2.3';
+    
+    it ('Api with object version should match', function() {
+       var model = Morpho.convertFrom.yaml.call(Morpho, inputForVersion, {}, {});
+       expect(model.api.version.current).toEqual('1.2.3');
+    });
 });
 
 describe('[YAML] Primitive type definitions test', function () {
