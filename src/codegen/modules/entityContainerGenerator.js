@@ -203,14 +203,12 @@ var ClassEndForEntityContainer='\
 
 var TypeofFormatter='typeof({0})';
 
-
 exports.generate = generateEntityContainer;
-
 function generateEntityContainer(model){
-//    if(!!model.api.namespace)
-//    {
+    if(!!model.api.namespace)
+    {
         fullNamespace = model.api.namespace;
-//    }
+    }
 
     var result = '';
 
@@ -234,7 +232,7 @@ function generateEntityContainer(model){
     var singletons=[];
     var functions=[];
     var actions=[];
-    model.container.operations.forEach(function(element){
+    !!model.container.operations && model.container.operations.forEach(function(element){
         if(element.returns){
             functions = functions.concat(element);
         } else {
@@ -242,18 +240,18 @@ function generateEntityContainer(model){
         }
     });
 
-    model.container.entitysets.forEach(function(element){
+    !!model.container.entitysets && model.container.entitysets.forEach(function(element){
         result += EntitySetProperty.format(element.name, element.type.substring(0, element.type.length-2));
     });
 
     // Write AddTo methods
-    model.container.entitysets.forEach(function(element){
+    !!model.container.entitysets && model.container.entitysets.forEach(function(element){
         var type =element.type.substring(0, element.type.length-2);
         result += AddToEntitySetMethod.format(element.name, type, GetUniqueParameterName(type));
     });
 
     // Write Singletons
-    model.container.singletons.forEach(function(element){
+    !!model.container.singletons && model.container.singletons.forEach(function(element){
         var type =element.type.substring(0, element.type.length-2);
         result += SingletonProperty.format(element.name, GetFixedName(element.name), element.type + 'Single');
     });
@@ -328,10 +326,6 @@ function GetParameterStrings(isBound, isAction, parameters, paramResult, model)
     for (var i = isBound ? 1 : 0; i < n; ++i)
     {
         var param = parameters[i];
-        //if (i == (isBound ? 1 : 0))
-        //{
-            //paramResult.parameterExpressionString += "\r\n                        ";
-        //}
         
         var isReference = false;
         if(_.includes(clrReferenceTypes, param.type) || isComplexOrEntityType(model, param.type))
@@ -348,8 +342,6 @@ function GetParameterStrings(isBound, isAction, parameters, paramResult, model)
         
         paramResult.parameterString += i == n - 1 ? '' : ', ';
         paramResult.parameterTypes += TypeofFormatter.format(typeName) + ', ';
-
-       // paramResult.parameterExpressionString += this.GetParameterExpressionString(param, typeName) + ", ";
         
         if (i != (isBound ? 1 : 0))
         {
@@ -372,7 +364,6 @@ function GetParameterStrings(isBound, isAction, parameters, paramResult, model)
     }
 }
 
-
 function isComplexOrEntityType(model, typeName)
 {
     var returnValue=false;
@@ -390,19 +381,26 @@ function isComplexOrEntityType(model, typeName)
 function isEntityType(model, typeName)
 {
     var returnValue=false;
-    for (i=0; i<model.types.length; i++)
+    for (var i=0; i<model.types.length; i++)
     {
         if(model.types[i].name != typeName)
         {
             continue;
         }
 
-        for(j=0;j< model.types[i].properties.length;j++)
+        for(var j=0;j< model.types[i].properties.length;j++)
         {
             if(!!(model.types[i].properties[j].isKey))
             { returnValue = true; break; }
         }
-        if(returnValue) break;
+        if(returnValue) {
+            break;
+        } else {
+            if(model.types[i].baseType)
+            {
+                return isEntityType(model, model.types[i].baseType);
+            }
+        }
     }
 
     return returnValue;
@@ -435,34 +433,6 @@ function GetClrTypeName(edmType, isReference, isOperationParameter)
     {
         clrTypeName = 'global::System.Collections.Generic.ICollection<{0}>'.format(clrTypeName);
     }
-    /*if(!!edmType.isCollection)
-    //{
-
-
-
-        //var collectionTypeName = isOperationParameter
-        //    ? 'global::System.Collections.Generic.ICollection<{0}>'
-         //   : (useDataServiceCollection =true
-         //       ? (!!edmType.isEntity
-         //           ? 'global::Microsoft.OData.Client.DataServiceCollection<{0}>'
-         //           : 'global::System.Collections.ObjectModel.ObservableCollection<{0}>')
-         //       : 'global::System.Collections.ObjectModel.Collection<{0}>');
-
-        //return collectionTypeName.format(clrTypeName);
-
-        return clrTypeName;
-    }
-
-    clrTypeName = GetPrimitiveTypeName(edmType.type);
-    if(clrTypeName == 'UNKNOWN')
-    {
-        clrTypeName = GetPrefixedFullName(languageDependentNamespace, GetFixedName(edmType.type));
-
-    }
-    if(!isReference && edmType.isNullable && addNullableTemplate)
-    {
-        clrTypeName = 'global::System.Nullable<{0}>'.format(clrTypeName);
-    }*/
 
     return clrTypeName;
 }
