@@ -129,6 +129,9 @@ Here is the corresponding C# client code Photo class and PhotoSingle class sampl
 
 Use a Person entity type as example that has Functions and an Action, and Navigation Properties which is property referencing to other entity type.
 
+Exception: 
+1) The IsComposable attribute in CSDL is not coped with, now all operations are hard coded to be true for IsComposable.
+
 Here is an Person Entity type sample in core JSON model:
 
 ```JSON
@@ -188,21 +191,61 @@ Here is an Person Entity type sample in core JSON model:
           'isNullable': true
         },
         {
-          'name': 'getFavoriteAirline',
+          'name': 'GetFriendFavoriteAirline',
           'type': 'Function',
-          'returns': 'airline',
+          'params': [
+            {
+              'name': 'friend',
+              'type': 'person',
+              'isNullable': false
+            },
+            {
+              'name': 'friendPhotos',
+              'type': 'photo',
+              'isCollection': true
+            }
+          ],
+          'returns': 
+          {
+              'type': 'airline',
+          },
           'operationType': 'Bound'
         },
         {
-          'name': 'getFriendsTrips',
+          'name': 'GetFriendPhotosCount',
+          'type': 'Function',
+          'params': [
+            {
+              'name': 'userName',
+              'type': 'edm.string',
+              'isNullable': false
+            }
+          ],
+          'returns': 
+           {
+              'type': 'edm.int32',
+           },
+          'operationType': 'Bound'
+        },
+        {
+          'name': 'GetFriendsTripsCount',
           'type': 'Function',
           'params': [
             {
               'name': 'userName',
               'type': 'edm.string'
+            },
+            {
+              'name': 'howFar',
+              'type': 'edm.double',
+              'isNullable': true
             }
           ],
-          'returns': 'trip[]',
+          'returns':
+            {
+              'type': 'edm.int32',
+              'isCollection': true
+            },
           'operationType': 'Bound'
         },
         {
@@ -247,6 +290,20 @@ Here is an Person Entity type sample in core JSON model:
         },
       ],
       'name': 'trip'
+    },
+    {
+      'properties': [
+        {
+          'name': 'airlineCode',
+          'type': 'edm.string',
+          'isKey': true
+        },
+        {
+          'name': 'name',
+          'type': 'edm.string'
+        }
+      ],
+      'name': 'airline'
     }
 	]
 };
@@ -258,16 +315,17 @@ Here is the corresponding C# client code Person class and PersonSingle class sam
     [global::Microsoft.OData.Client.OriginalNameAttribute("Person")]
     public partial class Person : global::Microsoft.OData.Client.BaseEntityType, global::System.ComponentModel.INotifyPropertyChanged
     {
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
-        public static Person CreatePerson(string userName, string firstName, string lastName)
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        public static Person CreatePerson(string userName, string firstName, string lastName, long concurrency)
         {
             Person person = new Person();
             person.UserName = userName;
             person.FirstName = firstName;
             person.LastName = lastName;
+            person.Concurrency = concurrency;
             return person;
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("UserName")]
         public string UserName
         {
@@ -283,20 +341,20 @@ Here is the corresponding C# client code Person class and PersonSingle class sam
                 this.OnPropertyChanged("UserName");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
         private string _UserName;
         partial void OnUserNameChanging(string value);
         partial void OnUserNameChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
         public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// The value of the property is changed
         /// </summary>
         /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
         protected virtual void OnPropertyChanged(string property)
         {
             if ((this.PropertyChanged != null))
@@ -304,7 +362,7 @@ Here is the corresponding C# client code Person class and PersonSingle class sam
                 this.PropertyChanged(this, new global::System.ComponentModel.PropertyChangedEventArgs(property));
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("FirstName")]
         public string FirstName
         {
@@ -320,11 +378,11 @@ Here is the corresponding C# client code Person class and PersonSingle class sam
                 this.OnPropertyChanged("FirstName");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
         private string _FirstName;
         partial void OnFirstNameChanging(string value);
         partial void OnFirstNameChanged();
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("LastName")]
         public string LastName
         {
@@ -340,11 +398,11 @@ Here is the corresponding C# client code Person class and PersonSingle class sam
                 this.OnPropertyChanged("LastName");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
         private string _LastName;
         partial void OnLastNameChanging(string value);
         partial void OnLastNameChanged();
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Emails")]
         public global::System.Collections.ObjectModel.ObservableCollection<string> Emails
         {
@@ -360,13 +418,13 @@ Here is the corresponding C# client code Person class and PersonSingle class sam
                 this.OnPropertyChanged("Emails");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
         private global::System.Collections.ObjectModel.ObservableCollection<string> _Emails = new global::System.Collections.ObjectModel.ObservableCollection<string>();
         partial void OnEmailsChanging(global::System.Collections.ObjectModel.ObservableCollection<string> value);
         partial void OnEmailsChanged();
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("AddressInfo")]
-        public global::System.Collections.ObjectModel.ObservableCollection<global::OData.Service.V4.Client.Location> AddressInfo
+        public global::System.Collections.ObjectModel.ObservableCollection<global::ODataV4Client.Proxies.TripPin.Location> AddressInfo
         {
             get
             {
@@ -380,13 +438,13 @@ Here is the corresponding C# client code Person class and PersonSingle class sam
                 this.OnPropertyChanged("AddressInfo");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
-        private global::System.Collections.ObjectModel.ObservableCollection<global::OData.Service.V4.Client.Location> _AddressInfo = new global::System.Collections.ObjectModel.ObservableCollection<global::OData.Service.V4.Client.Location>();
-        partial void OnAddressInfoChanging(global::System.Collections.ObjectModel.ObservableCollection<global::OData.Service.V4.Client.Location> value);
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        private global::System.Collections.ObjectModel.ObservableCollection<global::ODataV4Client.Proxies.TripPin.Location> _AddressInfo = new global::System.Collections.ObjectModel.ObservableCollection<global::ODataV4Client.Proxies.TripPin.Location>();
+        partial void OnAddressInfoChanging(global::System.Collections.ObjectModel.ObservableCollection<global::ODataV4Client.Proxies.TripPin.Location> value);
         partial void OnAddressInfoChanged();
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Gender")]
-        public global::System.Nullable<global::OData.Service.V4.Client.PersonGender> Gender
+        public global::System.Nullable<global::ODataV4Client.Proxies.TripPin.PersonGender> Gender
         {
             get
             {
@@ -400,13 +458,13 @@ Here is the corresponding C# client code Person class and PersonSingle class sam
                 this.OnPropertyChanged("Gender");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
-        private global::System.Nullable<global::OData.Service.V4.Client.PersonGender> _Gender;
-        partial void OnGenderChanging(global::System.Nullable<global::OData.Service.V4.Client.PersonGender> value);
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        private global::System.Nullable<global::ODataV4Client.Proxies.TripPin.PersonGender> _Gender;
+        partial void OnGenderChanging(global::System.Nullable<global::ODataV4Client.Proxies.TripPin.PersonGender> value);
         partial void OnGenderChanged();
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Concurrency")]
-        public global::System.Nullable<long> Concurrency
+        public long Concurrency
         {
             get
             {
@@ -420,13 +478,13 @@ Here is the corresponding C# client code Person class and PersonSingle class sam
                 this.OnPropertyChanged("Concurrency");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
-        private global::System.Nullable<long> _Concurrency;
-        partial void OnConcurrencyChanging(global::System.Nullable<long> value);
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        private long _Concurrency;
+        partial void OnConcurrencyChanging(long value);
         partial void OnConcurrencyChanged();
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Friends")]
-        public global::Microsoft.OData.Client.DataServiceCollection<global::OData.Service.V4.Client.Person> Friends
+        public global::Microsoft.OData.Client.DataServiceCollection<global::ODataV4Client.Proxies.TripPin.Person> Friends
         {
             get
             {
@@ -440,13 +498,13 @@ Here is the corresponding C# client code Person class and PersonSingle class sam
                 this.OnPropertyChanged("Friends");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
-        private global::Microsoft.OData.Client.DataServiceCollection<global::OData.Service.V4.Client.Person> _Friends = new global::Microsoft.OData.Client.DataServiceCollection<global::OData.Service.V4.Client.Person>(null, global::Microsoft.OData.Client.TrackingMode.None);
-        partial void OnFriendsChanging(global::Microsoft.OData.Client.DataServiceCollection<global::OData.Service.V4.Client.Person> value);
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        private global::Microsoft.OData.Client.DataServiceCollection<global::ODataV4Client.Proxies.TripPin.Person> _Friends = new global::Microsoft.OData.Client.DataServiceCollection<global::ODataV4Client.Proxies.TripPin.Person>(null, global::Microsoft.OData.Client.TrackingMode.None);
+        partial void OnFriendsChanging(global::Microsoft.OData.Client.DataServiceCollection<global::ODataV4Client.Proxies.TripPin.Person> value);
         partial void OnFriendsChanged();
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Trips")]
-        public global::Microsoft.OData.Client.DataServiceCollection<global::OData.Service.V4.Client.Trip> Trips
+        public global::Microsoft.OData.Client.DataServiceCollection<global::ODataV4Client.Proxies.TripPin.Trip> Trips
         {
             get
             {
@@ -460,13 +518,13 @@ Here is the corresponding C# client code Person class and PersonSingle class sam
                 this.OnPropertyChanged("Trips");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
-        private global::Microsoft.OData.Client.DataServiceCollection<global::OData.Service.V4.Client.Trip> _Trips = new global::Microsoft.OData.Client.DataServiceCollection<global::OData.Service.V4.Client.Trip>(null, global::Microsoft.OData.Client.TrackingMode.None);
-        partial void OnTripsChanging(global::Microsoft.OData.Client.DataServiceCollection<global::OData.Service.V4.Client.Trip> value);
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        private global::Microsoft.OData.Client.DataServiceCollection<global::ODataV4Client.Proxies.TripPin.Trip> _Trips = new global::Microsoft.OData.Client.DataServiceCollection<global::ODataV4Client.Proxies.TripPin.Trip>(null, global::Microsoft.OData.Client.TrackingMode.None);
+        partial void OnTripsChanging(global::Microsoft.OData.Client.DataServiceCollection<global::ODataV4Client.Proxies.TripPin.Trip> value);
         partial void OnTripsChanged();
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Photo")]
-        public global::System.Nullable<global::OData.Service.V4.Client.Photo> Photo
+        public global::ODataV4Client.Proxies.TripPin.Photo Photo
         {
             get
             {
@@ -480,25 +538,35 @@ Here is the corresponding C# client code Person class and PersonSingle class sam
                 this.OnPropertyChanged("Photo");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
-        private global::System.Nullable<global::OData.Service.V4.Client.Photo> _Photo;
-        partial void OnPhotoChanging(global::System.Nullable<global::OData.Service.V4.Client.Photo> value);
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        private global::ODataV4Client.Proxies.TripPin.Photo _Photo;
+        partial void OnPhotoChanging(global::ODataV4Client.Proxies.TripPin.Photo value);
         partial void OnPhotoChanged();
-        [global::Microsoft.OData.Client.OriginalNameAttribute("GetFavoriteAirline")]
-        public global::OData.Service.V4.Client.AirlineSingle GetFavoriteAirline()
+        [global::Microsoft.OData.Client.OriginalNameAttribute("GetFriendFavoriteAirline")]
+        public global::ODataV4Client.Proxies.TripPin.AirlineSingle GetFriendFavoriteAirline(global::ODataV4Client.Proxies.TripPin.Person friend, global::System.Collections.Generic.ICollection<global::ODataV4Client.Proxies.TripPin.Photo> friendPhotos, bool useEntityReference = false)
         {
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(this.Context);
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);
-            return new global::OData.Service.V4.Client.AirlineSingle(this.Context, string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))) + "/Microsoft.OData.SampleService.Models.TripPin.GetFavoriteAirline" + parameterString, true);
+            
+            return new global::ODataV4Client.Proxies.TripPin.AirlineSingle(this.Context.CreateFunctionQuerySingle<global::ODataV4Client.Proxies.TripPin.Airline>(string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim(\'/\'))), "Microsoft.OData.SampleService.Models.TripPin.GetFriendFavoriteAirline", true, new global::Microsoft.OData.Client.UriEntityOperationParameter("friend", friend, useEntityReference),
+                    new global::Microsoft.OData.Client.UriEntityOperationParameter("friendPhotos", friendPhotos, useEntityReference)));
         }
-        [global::Microsoft.OData.Client.OriginalNameAttribute("GetFriendsTrips")]
-        public global::Microsoft.OData.Client.DataServiceQuery<global::OData.Service.V4.Client.Trip> GetFriendsTrips(string userName)
+        [global::Microsoft.OData.Client.OriginalNameAttribute("GetFriendPhotosCount")]
+        public global::Microsoft.OData.Client.DataServiceQuerySingle<global::System.Nullable<int>> GetFriendPhotosCount(string userName)
         {
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(this.Context, new global::Microsoft.OData.Client.UriOperationParameter("userName", userName));
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);
-            return this.Context.CreateQuery<global::OData.Service.V4.Client.Trip>(string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))) + "/Microsoft.OData.SampleService.Models.TripPin.GetFriendsTrips" + parameterString, true);
+            
+            return this.Context.CreateFunctionQuerySingle<global::System.Nullable<int>>(string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim(\'/\'))), "Microsoft.OData.SampleService.Models.TripPin.GetFriendPhotosCount", true, new global::Microsoft.OData.Client.UriOperationParameter("userName", userName));
+        }
+        [global::Microsoft.OData.Client.OriginalNameAttribute("GetFriendsTripsCount")]
+        public global::Microsoft.OData.Client.DataServiceQuery<int> GetFriendsTripsCount(string userName, global::System.Nullable<double> howFar)
+        {
+            global::System.Uri requestUri;
+            Context.TryGetUri(this, out requestUri);
+            
+            return this.Context.CreateFunctionQuery<int>(string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim(\'/\'))), "Microsoft.OData.SampleService.Models.TripPin.GetFriendsTripsCount", true, new global::Microsoft.OData.Client.UriOperationParameter("userName", userName),
+                    new global::Microsoft.OData.Client.UriOperationParameter("howFar", howFar));
         }
         public global::Microsoft.OData.Client.DataServiceActionQuery ShareTrip(string sharedTo, int tripId)
         {
@@ -507,8 +575,8 @@ Here is the corresponding C# client code Person class and PersonSingle class sam
             {
                 throw new global::System.Exception("cannot find entity");
             }
-
-            return new global::Microsoft.OData.Client.DataServiceActionQuery(this.Context, resource.EditLink.OriginalString.Trim('/') + "/Microsoft.OData.SampleService.Models.TripPin.ShareTrip", new global::Microsoft.OData.Client.BodyOperationParameter("sharedTo", sharedTo), new global::Microsoft.OData.Client.BodyOperationParameter("tripId", tripId));
+            return new global::Microsoft.OData.Client.DataServiceActionQuery(this.Context, resource.EditLink.OriginalString.Trim(\'/\') + "/Microsoft.OData.SampleService.Models.TripPin.ShareTrip", new global::Microsoft.OData.Client.BodyOperationParameter("sharedTo", sharedTo),
+                    new global::Microsoft.OData.Client.BodyOperationParameter("tripId", tripId));
         }
     }
     [global::Microsoft.OData.Client.OriginalNameAttribute("PersonSingle")]
@@ -519,14 +587,21 @@ Here is the corresponding C# client code Person class and PersonSingle class sam
         /// </summary>
         public PersonSingle(global::Microsoft.OData.Client.DataServiceContext context, string path)
             : base(context, path) {}
-
+            
         /// <summary>
         /// Initialize a new PersonSingle object.
         /// </summary>
         public PersonSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
             : base(context, path, isComposable) {}
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
-        public global::Microsoft.OData.Client.DataServiceQuery<global::OData.Service.V4.Client.Person> Friends
+            
+        /// <summary>
+        /// Initialize a new PersonSingle object.
+        /// </summary>
+        public PersonSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<Person> query)
+            : base(query) {}
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Friends")]
+        public global::Microsoft.OData.Client.DataServiceQuery<global::ODataV4Client.Proxies.TripPin.Person> Friends
         {
             get
             {
@@ -536,15 +611,16 @@ Here is the corresponding C# client code Person class and PersonSingle class sam
                 }
                 if ((this._Friends == null))
                 {
-                    this._Friends = Context.CreateQuery<global::OData.Service.V4.Client.Person>(GetPath("Friends"));
+                    this._Friends = Context.CreateQuery<global::ODataV4Client.Proxies.TripPin.Person>(GetPath("Friends"));
                 }
                 return this._Friends;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::OData.Service.V4.Client.Person> _Friends;
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
-        public global::Microsoft.OData.Client.DataServiceQuery<global::OData.Service.V4.Client.Trip> Trips
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        private global::Microsoft.OData.Client.DataServiceQuery<global::ODataV4Client.Proxies.TripPin.Person> _Friends;
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Trips")]
+        public global::Microsoft.OData.Client.DataServiceQuery<global::ODataV4Client.Proxies.TripPin.Trip> Trips
         {
             get
             {
@@ -554,15 +630,16 @@ Here is the corresponding C# client code Person class and PersonSingle class sam
                 }
                 if ((this._Trips == null))
                 {
-                    this._Trips = Context.CreateQuery<global::OData.Service.V4.Client.Trip>(GetPath("Trips"));
+                    this._Trips = Context.CreateQuery<global::ODataV4Client.Proxies.TripPin.Trip>(GetPath("Trips"));
                 }
                 return this._Trips;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::OData.Service.V4.Client.Trip> _Trips;
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
-        public global::OData.Service.V4.Client.PhotoSingle Photo
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        private global::Microsoft.OData.Client.DataServiceQuery<global::ODataV4Client.Proxies.TripPin.Trip> _Trips;
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Photo")]
+        public global::ODataV4Client.Proxies.TripPin.PhotoSingle Photo
         {
             get
             {
@@ -572,13 +649,13 @@ Here is the corresponding C# client code Person class and PersonSingle class sam
                 }
                 if ((this._Photo == null))
                 {
-                    this._Photo = new global::OData.Service.V4.Client.PhotoSingle(this.Context, GetPath("Photo"));
+                    this._Photo = new global::ODataV4Client.Proxies.TripPin.PhotoSingle(this.Context, GetPath("Photo"));
                 }
                 return this._Photo;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
-        private global::OData.Service.V4.Client.PhotoSingle _Photo;
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        private global::ODataV4Client.Proxies.TripPin.PhotoSingle _Photo;
     }
 ```
 ###3.	 Entity Type Enheritances with Base Type Property

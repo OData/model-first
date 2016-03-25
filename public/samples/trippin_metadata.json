@@ -96,7 +96,10 @@
             "type": "edm.double"
           }
         ],
-        "returns": "airport"
+        "returns": 
+          {
+            "type": "airport"
+          }
       },
       {
         "type": "Action",
@@ -248,7 +251,10 @@
         {
           "name": "getFavoriteAirline",
           "type": "Function",
-          "returns": "airline",
+          "returns": 
+          {
+            "type": "airport"
+          },
           "operationType": "Bound"
         },
         {
@@ -260,7 +266,11 @@
               "type": "edm.string"
             }
           ],
-          "returns": "trip[]",
+          "returns": 
+            {
+                "type": "trip",
+                "isCollection": true
+            },
           "operationType": "Bound"
         },
         {
@@ -440,7 +450,11 @@
         {
           "name": "getInvolvedPeople",
           "type": "Function",
-          "returns": "person[]",
+          "returns": 
+            {
+                "type": "person",
+                "isCollection": true
+            },    
           "operationType": "Bound"
         }
       ],

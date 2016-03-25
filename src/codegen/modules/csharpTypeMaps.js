@@ -37,9 +37,10 @@ var PrimitiveTypeMappings = {
 };
 
 exports.MapType = function (type) {
-    if (PrimitiveTypeMappings[type]) {
-        return PrimitiveTypeMappings[type];
-    } else {
-        return StringHelper.capitalizeInitial(type);
-    }
+	if(PrimitiveTypeMappings[type]){
+		return { type: PrimitiveTypeMappings[type], isPrimitive: true };
+	}
+	else{
+		return { type: StringHelper.capitalizeInitial(type), isPrimitive: false };
+	}
 };

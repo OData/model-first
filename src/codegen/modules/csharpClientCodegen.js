@@ -1,6 +1,7 @@
 var util = require('util');
 var typeMaps = require('./csharpTypeMaps');
 var StringHelper = require('../helpers/stringhelper');
+var TypesHelper = require('../helpers/typeshelper');
 
 MetadataNamespace = 'Microsoft.OData.SampleService.Models.TripPin';
 
@@ -12,7 +13,7 @@ function genEnumType(enumType) {
         result += util.format('[global::Microsoft.OData.Client.OriginalNameAttribute("%s")]', typeName) + '\n';
         result += util.format('public enum %s', typeName);
         if (enumType.underlyingType) {
-            result += util.format(': %s\n{\n', typeMaps.MapType(enumType.underlyingType));
+            result += util.format(': %s\n{\n', typeMaps.MapType(enumType.underlyingType).type);
         } else {
             result += '\n{\n';
         }
@@ -50,13 +51,13 @@ function genEntityType(entityType, types, namespaceName){
 	var entityTypeName = StringHelper.excapeKeyword(entityType.name);
 	
 	var entityTypeNames = [];
-	entityTypeNames = getEntityTypeNames(types);
+	entityTypeNames = TypesHelper.GetEntityTypeNames(types);
 	
 	var keyProperties = [];
-	getKeyProperties(entityType, types, keyProperties);
+	TypesHelper.GetKeyProperties(entityType, types, keyProperties);
 	
 	var nonNullableProperties = [];
-	getNonNullableProperties(entityType, types, nonNullableProperties);
+	TypesHelper.GetNonNullableProperties(entityType, types, nonNullableProperties);
 	
 	var keyNames = [];
 	
@@ -102,13 +103,13 @@ function genEntityType(entityType, types, namespaceName){
 	result += util.format('    public partial class %s : %s', typeNameCap, baseTypeString);
 	result += '\n    {\n';
 	
-	result += util.format('        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]\n');
+	result += util.format('        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n');
 	
 	var paramList = '';
 	
 	for(var j = 0; j < keyProperties.length; j++ )
 	{
-		paramList += getTypeDefString(keyProperties[j], namespaceName, entityTypeNames) + ' ' +  StringHelper.excapeKeyword(keyProperties[j].name);
+		paramList += TypesHelper.GetTypeDefString(keyProperties[j], namespaceName, types) + ' ' +  StringHelper.excapeKeyword(keyProperties[j].name);
 		
 		if( j < nonNullableProperties.length -1 )
 		{
@@ -122,7 +123,7 @@ function genEntityType(entityType, types, namespaceName){
 	
 	for(var k = 0; k < nonNullableProperties.length; k++ )
 	{
-		var typeDefString = getTypeDefString(nonNullableProperties[k], namespaceName, entityTypeNames);
+		var typeDefString = TypesHelper.GetTypeDefString(nonNullableProperties[k], namespaceName, types);
 		
 		if( k < nonNullableProperties.length -1 )
 		{
@@ -140,7 +141,7 @@ function genEntityType(entityType, types, namespaceName){
 	
 	for(var l = 0; l < keyProperties.length; l++ )
 	{
-		var keyParamTypeDef = getTypeDefString(keyProperties[l], namespaceName, entityTypeNames);
+		var keyParamTypeDef = TypesHelper.GetTypeDefString(keyProperties[l], namespaceName, types);
 		var keyPropName = StringHelper.excapeKeyword(keyProperties[l].name);
 		if(keyParamTypeDef.substring(0, 8) == 'global::')
 		{
@@ -155,7 +156,7 @@ function genEntityType(entityType, types, namespaceName){
 	
 	for(var m = 0; m < nonNullableProperties.length; m++ )
 	{
-		var nonNullableParamTypeDef = getTypeDefString(nonNullableProperties[m], namespaceName, entityTypeNames);
+		var nonNullableParamTypeDef = TypesHelper.GetTypeDefString(nonNullableProperties[m], namespaceName, types);
 		var nonNullablePropName = StringHelper.excapeKeyword(nonNullableProperties[m].name);
 		if(nonNullableParamTypeDef.substring(0, 8) == 'global::')
 		{
@@ -179,11 +180,11 @@ function genEntityType(entityType, types, namespaceName){
 	{
 		if((properties[a].type != 'Function' && properties[a].type != 'Action'))
 		{
-			var typeDef = getTypeDefString(properties[a], namespaceName, entityTypeNames);
+			var typeDef = TypesHelper.GetTypeDefString(properties[a], namespaceName, types);
 			
 			var propName = StringHelper.capitalizeInitial(properties[a].name);
 			
-			result += '        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]\n';
+			result += '        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n';
 			result += util.format('        [global::Microsoft.OData.Client.OriginalNameAttribute("%s")]\n', propName);
 			result += '        public ' + typeDef + ' ' + propName + '\n';
 			result += '        {\n';
@@ -199,11 +200,11 @@ function genEntityType(entityType, types, namespaceName){
 			result += util.format('                this.OnPropertyChanged("%s");\n', propName);
 			result += '            }\n';
 			result += '        }\n';
-			result += '        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]\n';
+			result += '        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n';
 			if(properties[a].isCollection && properties[a].isCollection === true)
 			{
 				result += util.format('        private %s _%s = new %s', typeDef, propName, typeDef);
-				if(isEntityType(properties[a].type, entityTypeNames))
+				if(TypesHelper.IsEntityType(properties[a].type, entityTypeNames))
 				{
 					result += '(null, global::Microsoft.OData.Client.TrackingMode.None);\n';
 				}
@@ -224,13 +225,13 @@ function genEntityType(entityType, types, namespaceName){
 				result += '        /// <summary>\n';
 				result += '        /// This event is raised when the value of the property is changed\n';
 				result += '        /// </summary>\n';
-				result += '        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]\n';
+				result += '        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n';
 				result += '        public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;\n';
 				result += '        /// <summary>\n';
 				result += '        /// The value of the property is changed\n';
 				result += '        /// </summary>\n';
 				result += '        /// <param name="property">property name</param>\n';
-				result += '        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]\n';
+				result += '        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n';
 				result += '        protected virtual void OnPropertyChanged(string property)\n';
 				result += '        {\n';
 				result += '            if ((this.PropertyChanged != null))\n';
@@ -240,7 +241,7 @@ function genEntityType(entityType, types, namespaceName){
 				result += '        }\n';
 			}
 		}
-		else if (properties[a].type == 'Function')
+		else if (properties[a].type == 'Function' && properties[a].operationType == 'Bound')
 		{
 			functionName = StringHelper.capitalizeInitial(properties[a].name);
 			
@@ -249,26 +250,7 @@ function genEntityType(entityType, types, namespaceName){
 			var functionFullName = namespaceName + '.'+ functionName;
 			var functionMetadataFullName = MetadataNamespace + '.'+ functionName;
 			
-			var returnType = '';
-			var newReturnContent = '';
-			
-			if(!properties[a].returns)
-			{
-				returnType = 'global::Microsoft.OData.Client.DataServiceQuery';
-				newReturnContent = 'this.Context.CreateQuery'+ '(string.Join("/",\ global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim(\'/\'))) + "/' + functionMetadataFullName + '" + parameterString, true);';
-			}
-			else if(properties[a].returns.charAt(properties[a].returns.length - 1) != ']')
-			{
-				returnType = 'global::' + namespaceName + '.' + StringHelper.capitalizeInitial(properties[a].returns) + 'Single';
-				newReturnContent = 'new ' + returnType + '(this.Context, string.Join("/",\ global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim(\'/\'))) + "/' + functionMetadataFullName + '" + parameterString, true);';
-			}
-			else
-			{
-				returnType = 'global::Microsoft.OData.Client.DataServiceQuery<' + 'global::' + namespaceName + '.' + StringHelper.capitalizeInitial(properties[a].returns.substr(0, properties[a].returns.length-2)) + '>';
-				newReturnContent = 'this.Context.CreateQuery' + '<global::' + namespaceName + '.' + StringHelper.capitalizeInitial(properties[a].returns.substr(0, properties[a].returns.length-2)) + '>' + '(string.Join("/",\ global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim(\'/\'))) + "/' + functionMetadataFullName + '" + parameterString, true);';
-			}
-			
-			var paramListOnFunction = '';
+            var paramListOnFunction = '';
 			var paramString = '';
 			var params = properties[a].params;
 			
@@ -276,26 +258,79 @@ function genEntityType(entityType, types, namespaceName){
 			{
 				for(var o = 0; o < params.length; o++)
 				{
-					var typeDef = getTypeDefString(params[o], namespaceName, entityTypeNames);
+					var paraTypeDef = TypesHelper.GetParameterTypeString(params[o], namespaceName, types);
 					
+                    var hasUseEntityReferenceParam = false;
+                    
+                    if( o > 0)
+                    {
+                        paramString += ',\n\
+                    ';
+                    }
+                    else
+                    {
+                        paramString += ', ';
+                    }
+                    
+                    if(TypesHelper.IsEntityType(params[o].type, entityTypeNames))
+                    {
+                        if(!hasUseEntityReferenceParam)
+                        {
+                            hasUseEntityReferenceParam = true;
+                        }
+                        
+                        paramString += util.format('new global::Microsoft.OData.Client.UriEntityOperationParameter("%s", %s, useEntityReference)', StringHelper.excapeKeyword(params[o].name), StringHelper.excapeKeyword(params[o].name));
+                    }
+                    else
+                    {
+                        paramString += util.format('new global::Microsoft.OData.Client.UriOperationParameter("%s", %s)', StringHelper.excapeKeyword(params[o].name), StringHelper.excapeKeyword(params[o].name));
+                    }
+                    
 					if( o < params.length -1 )
 					{
-						paramListOnFunction += util.format('%s %s, ', typeDef, StringHelper.excapeKeyword(params[o].name));
+						paramListOnFunction += util.format('%s %s, ', paraTypeDef, StringHelper.excapeKeyword(params[o].name));
 					}
 					else
 					{
-						paramListOnFunction += util.format('%s %s', typeDef, StringHelper.excapeKeyword(params[o].name));
+						paramListOnFunction += util.format('%s %s', paraTypeDef, StringHelper.excapeKeyword(params[o].name));
+                        
+                        if(hasUseEntityReferenceParam)
+                        {
+                            paramListOnFunction +=', bool useEntityReference = false';
+                            hasUseEntityReferenceParam = false;
+                        }    
 					}
-					
-					paramString += util.format(', new global::Microsoft.OData.Client.UriOperationParameter("%s", %s)', StringHelper.excapeKeyword(params[o].name), StringHelper.excapeKeyword(params[o].name));
 				}
 			}
-			
+            
+			var returnType = '';
+			var newReturnContent = '';
+			var isReturnTypeEntityType = TypesHelper.IsEntityType(properties[a].returns.type, entityTypeNames);
+            var returnTypeName = TypesHelper.GetReturnTypeStringWithoutCollection(properties[a].returns, namespaceName, types);
+            
+            if(!properties[a].returns.isCollection)
+			{
+                if(isReturnTypeEntityType)
+                {
+                    returnType = returnTypeName + 'Single';
+                    newReturnContent = 'new ' + returnTypeName + 'Single' + '(this.Context.CreateFunctionQuerySingle<' + returnTypeName + '>(string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim(\'/\'))), "' + functionMetadataFullName + '", true' + paramString + '));';
+                }
+                else
+                {
+                    returnType = 'global::Microsoft.OData.Client.DataServiceQuerySingle<' + returnTypeName + '>';
+                    newReturnContent = 'this.Context.CreateFunctionQuerySingle<' + returnTypeName + '>(string.Join("/",\ global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim(\'/\'))), "' + functionMetadataFullName + '", true' + paramString + ');';
+                }
+			}
+			else
+			{
+				returnType = 'global::Microsoft.OData.Client.DataServiceQuery<' + returnTypeName + '>';
+				newReturnContent = 'this.Context.CreateFunctionQuery<' + returnTypeName + '>(string.Join("/",\ global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim(\'/\'))), "' + functionMetadataFullName + '", true' + paramString + ');';
+			}
+					
 			result += '        public ' + returnType + ' ' + functionName + '(' + paramListOnFunction + ')\n\
         {\n\
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(this.Context' + paramString + ');\n\
             global::System.Uri requestUri;\n\
-            Context.TryGetUri(this, out requestUri);\n\
+            Context.TryGetUri(this, out requestUri);\n\n\
             return '+ newReturnContent + '\n\
         }\n';
 		}
@@ -305,50 +340,58 @@ function genEntityType(entityType, types, namespaceName){
 			var actionFullName = namespaceName + '.'+ actionName;
 			var actionMetadataFullName = MetadataNamespace + '.'+ actionName;
 			
-			var returnType = '';
+			var returnTypeAction = '';
 			var newReturnType = '';
 			
-			returnType = 'global::Microsoft.OData.Client.DataServiceActionQuery';
+			returnTypeAction = 'global::Microsoft.OData.Client.DataServiceActionQuery';
 			newReturnType = 'new global::Microsoft.OData.Client.DataServiceActionQuery';
 			//Actions having return types are not implemented by Microsoft ODATA service, so here only cover no return type situation.
 			
 			var paramListOnAction = '';
-			var paramString = '';
-			var params = properties[a].params;
+			var paramStringAction = '';
+			var paramsAction = properties[a].params;
 			
-			if(params)
+			if(paramsAction)
 			{
-				for(var p = 0; p < params.length; p++)
+				for(var p = 0; p < paramsAction.length; p++)
 				{
-					var typeDef = getTypeDefString(params[p], namespaceName, entityTypeNames);
+					var paramTypeDef = TypesHelper.GetParameterTypeString(paramsAction[p], namespaceName, types);
 
-					var paramName = StringHelper.excapeKeyword(params[p].name);
+					var paramName = StringHelper.excapeKeyword(paramsAction[p].name);
 					
-					if( p < params.length -1 )
+					if( p < paramsAction.length -1 )
 					{
-						paramListOnAction += util.format('%s %s, ', typeDef, paramName);
+						paramListOnAction += util.format('%s %s, ', paramTypeDef, paramName);
 					}
 					else
 					{
-						paramListOnAction += util.format('%s %s', typeDef, paramName);
+						paramListOnAction += util.format('%s %s', paramTypeDef, paramName);
 					}
-					
-					paramString += util.format(', new global::Microsoft.OData.Client.BodyOperationParameter("%s", %s)', paramName, paramName);
+                    
+                    if( p > 0)
+                    {
+                        paramStringAction += ',\n\
+                    ';
+                    }
+                    else
+                    {
+                        paramStringAction += ', ';
+                    }
+                    
+					paramStringAction += util.format('new global::Microsoft.OData.Client.BodyOperationParameter("%s", %s)', paramName, paramName);
 				}
 			}
 			
-			result += '        public ' + returnType + ' ' + actionName + '(' + paramListOnAction + ')\n\
+			result += '        public ' + returnTypeAction + ' ' + actionName + '(' + paramListOnAction + ')\n\
         {\n\
             global::Microsoft.OData.Client.EntityDescriptor resource = Context.EntityTracker.TryGetEntityDescriptor(this);\n\
             if (resource == null)\n\
             {\n\
                 throw new global::System.Exception("cannot find entity");\n\
             }\n\n\
-            return '+ newReturnType +'(this.Context, resource.EditLink.OriginalString.Trim(\'/\') + "/' + actionMetadataFullName + '"' + paramString + ');\n\
+            return '+ newReturnType +'(this.Context, resource.EditLink.OriginalString.Trim(\'/\') + "/' + actionMetadataFullName + '"' + paramStringAction + ');\n\
         }\n';
 		}
-		
-		
 	}
 	
 	result += '    }\n'; //The end of entity type 
@@ -372,10 +415,17 @@ function genEntityType(entityType, types, namespaceName){
         /// </summary>\n', typeNameSingle);
 	result += util.format('\
         public %s(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)\n\
-            : base(context, path, isComposable) {}\n', typeNameSingle);
-		
+            : base(context, path, isComposable) {}\n\n', typeNameSingle);
+	result += util.format('\
+        /// <summary>\n\
+        /// Initialize a new %s object.\n\
+        /// </summary>\n', typeNameSingle);
+	result += util.format('\
+        public %s(global::Microsoft.OData.Client.DataServiceQuerySingle<%s> query)\n\
+            : base(query) {}\n', typeNameSingle, typeNameCap);
+            
 	var navProperties = [];
-	navProperties = getNavProperties(entityType, entityTypeNames);
+	navProperties = TypesHelper.GetNavProperties(entityType, entityTypeNames);
 	
 	for(var q = 0; q < navProperties.length; q++)
 	{
@@ -397,7 +447,8 @@ function genEntityType(entityType, types, namespaceName){
 		}
 		
 		result += util.format('\
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]\n\
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
+        [global::Microsoft.OData.Client.OriginalNameAttribute("%s")]\n\
         public %s %s\n\
         {\n\
             get\n\
@@ -412,9 +463,9 @@ function genEntityType(entityType, types, namespaceName){
                 }\n\
                 return this._%s;\n\
             }\n\
-        }\n', propertTypeString, navPropName, navPropName, navPropName, newPropString, navPropName);
+        }\n', navPropName, propertTypeString, navPropName, navPropName, navPropName, newPropString, navPropName);
 		result += util.format('\
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]\n\
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
         private %s _%s;\n', propertTypeString, navPropName);
 	}
 	
@@ -464,7 +515,7 @@ function codegen(jObj, namespaceName) {
 			
 			if( type.properties )
 			{
-				if(hasKeyProperty(type, jObj.types))
+				if(TypesHelper.HasKeyProperty(type, jObj.types))
 				{
 					result += genEntityType(type, jObj.types, namespaceName);
 				}
@@ -475,145 +526,6 @@ function codegen(jObj, namespaceName) {
     result += '}\n';
 
     return result;
-}
-
-function isEntityType(typeName, entityTypeNames)
-{
-	for(var i = 0; i < entityTypeNames.length ; i++)
-	{
-		if(typeName == entityTypeNames[i])
-		{
-			return true;
-		}
-	}
-	
-	return false;
-}
-
-function getTypeDefString(property, namespaceName, entityTypeNames)
-{
-	var isEntityTypeRestult = isEntityType(property.type, entityTypeNames);
-	var typeDef = typeMaps.MapType(property.type);
-	if(typeDef == StringHelper.capitalizeInitial(property.type))
-	{
-		typeDef = 'global::' + namespaceName + '.' + typeDef;
-		
-		if(isEntityTypeRestult && property.isCollection)
-		{
-			typeDef = 'global::Microsoft.OData.Client.DataServiceCollection<' + typeDef + '>';
-		}
-	}
-		
-	if(!isEntityTypeRestult && property.isCollection)
-	{
-		typeDef = 'global::System.Collections.ObjectModel.ObservableCollection<' + typeDef + '>';
-	}
-	
-	if(!property.isCollection && property.isNullable)
-	{
-		typeDef = 'global::System.Nullable<' + typeDef + '>';
-	}
-	
-	return typeDef;
-}
-
-function getEntityTypeNames(types)
-{
-	var entityTypeNames = [];
-	for(var i = 0; i < types.length; i ++)
-	{
-		if(hasKeyProperty(types[i], types))
-		{
-			entityTypeNames.push(types[i].name);
-		}
-	}
-	
-	return entityTypeNames;
-}
-
-function hasKeyProperty(type, types){
-    for(var i in type.properties){
-        if(type.properties[i].isKey){
-            return true;
-        }
-    }
-
-    if(type.baseType){
-        type = getType(type.baseType, types);
-
-        return hasKeyProperty(type, types);
-    }
-
-    return false;
-}
-
-function getType(typeName, types){
-    for(var i in types){
-        if(types[i].name == typeName){
-            return types[i];
-        }
-    }
-
-    return null;
-}
-
-// The parameter keyProperties is an array of key properties
-function getKeyProperties(type, types, keyProperties){
-    for(var i in type.properties){
-        if(type.properties[i].isKey){
-			keyProperties.push(type.properties[i]);            
-        }
-    }
-	
-	if ( keyProperties.length > 0 )
-	{
-		return true;
-	}
-
-    if(type.baseType){
-        type = getType(type.baseType, types);
-
-        return getKeyProperties(type, types, keyProperties);
-    }
-
-    return false;
-}
-
-//Find the non-nullable properties except key properties 
-function getNonNullableProperties(type, types, nonNullableProperties)
-{
-	for(var i in type.properties){
-		if((!type.properties[i].isNullable) && (!type.properties[i].isKey) && (type.properties[i].type != 'Action') && (type.properties[i].type != 'Function')){
-			nonNullableProperties.push(type.properties[i]);			
-		}
-	}
-	
-	if(type.baseType){
-        type = getType(type.baseType, types);
-
-        return getNonNullableProperties(type, types, nonNullableProperties);
-    }
-	
-	return nonNullableProperties.length > 0;
-}
-
-//Find the navigation properties that has type of other entity type
-function getNavProperties(type, entityTypeNames)
-{
-	var naviProperties = [];
-	
-	for(var i = 0; i < type.properties.length; i++){
-		var typeDef = typeMaps.MapType(type.properties[i].type);
-		if(typeDef != 'Function' && typeDef != 'Action' && typeDef == StringHelper.capitalizeInitial(type.properties[i].type))
-		{
-			if(isEntityType(type.properties[i].type, entityTypeNames))
-			{
-				naviProperties.push(type.properties[i]);
-			}
-		}
-	}
-		
-	return naviProperties;
 }
 
 exports.CodegenByObj = function (jObj, namespaceName) {
