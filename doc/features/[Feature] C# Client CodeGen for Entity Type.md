@@ -122,6 +122,12 @@ Here is the corresponding C# client code Photo class and PhotoSingle class sampl
         /// </summary>
         public PhotoSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
             : base(context, path, isComposable) {}
+
+        /// <summary>
+        /// Initialize a new PhotoSingle object.
+        /// </summary>
+        public PhotoSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<Photo> query)
+            : base(query) {}
     }
 ```
 
@@ -920,6 +926,12 @@ Here is the corresponding C# client code sample to show the base type and its in
         /// </summary>
         public PlanItemSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
             : base(context, path, isComposable) {}
+            
+        /// <summary>
+        /// Initialize a new PlanItemSingle object.
+        /// </summary>
+        public PlanItemSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<PlanItem> query)
+            : base(query) {}
     }
     [global::Microsoft.OData.Client.Key("PlanItemId")]
     [global::Microsoft.OData.Client.OriginalNameAttribute("PublicTransportation")]
@@ -967,8 +979,8 @@ Here is the corresponding C# client code sample to show the base type and its in
         /// <summary>
         /// Initialize a new PublicTransportationSingle object.
         /// </summary>
-        public PublicTransportationSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
-            : base(context, path, isComposable) {}
+        public PublicTransportationSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<PublicTransportation> query)
+            : base(query) {}
     }
     [global::Microsoft.OData.Client.Key("PlanItemId")]
     [global::Microsoft.OData.Client.OriginalNameAttribute("Flight")]
@@ -1079,7 +1091,14 @@ Here is the corresponding C# client code sample to show the base type and its in
         /// </summary>
         public FlightSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
             : base(context, path, isComposable) {}
+            
+        /// <summary>
+        /// Initialize a new FlightSingle object.
+        /// </summary>
+        public FlightSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<Flight> query)
+            : base(query) {}
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("From")]
         public global::OData.Service.V4.Client.AirportSingle From
         {
             get
@@ -1098,6 +1117,7 @@ Here is the corresponding C# client code sample to show the base type and its in
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
         private global::OData.Service.V4.Client.AirportSingle _From;
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("To")]
         public global::OData.Service.V4.Client.AirportSingle To
         {
             get
@@ -1116,6 +1136,7 @@ Here is the corresponding C# client code sample to show the base type and its in
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
         private global::OData.Service.V4.Client.AirportSingle _To;
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Airline")]
         public global::OData.Service.V4.Client.AirlineSingle Airline
         {
             get
@@ -1206,5 +1227,11 @@ Here is the corresponding C# client code sample to show the base type and its in
         /// </summary>
         public EventSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
             : base(context, path, isComposable) {}
+
+        /// <summary>
+        /// Initialize a new EventSingle object.
+        /// </summary>
+        public EventSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<Event> query)
+            : base(query) {}
     }
 ```
