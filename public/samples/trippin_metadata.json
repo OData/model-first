@@ -254,7 +254,10 @@
         {
           "name": "getFavoriteAirline",
           "type": "Function",
-          "returns": "airline",
+          "returns": 
+          {
+            "type": "airport"
+          },
           "operationType": "Bound"
         },
         {
@@ -266,7 +269,11 @@
               "type": "edm.string"
             }
           ],
-          "returns": "trip[]",
+          "returns": 
+            {
+                "type": "trip",
+                "isCollection": true
+            },
           "operationType": "Bound"
         },
         {
