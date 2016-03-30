@@ -20,13 +20,13 @@ function gnerate(model)
     {
         var entityType = model.types[i];
         var current = entityType.baseType;
-        while (current != undefined && current!='' && isEntityType(model, current))
+        while (current !== undefined && current !== '' && isEntityType(model, current))
         {
             var baseTypeName = current;
-            baseTypeName = GetPrefixedFullName(config.Constants.Code.DefaultNamespace, GetFixedName(baseTypeName));
-            var entityTypeFullName = GetPrefixedFullName(config.Constants.Code.DefaultNamespace, GetFixedName(entityType.name));
-            var returnTypeName = GetPrefixedFullName(config.Constants.Code.DefaultNamespace, GetFixedName(entityType.name + 'Single'));
-            result+=CastToMethod.format(baseTypeName, entityType.name[0].toUpperCase() + entityType.name.substr(1), entityTypeFullName, returnTypeName);
+            baseTypeName = GetPrefixedFullName(config.Constants.Code.DefaultNamespace, GetFixedName(CustomizeNaming(baseTypeName)));
+            var entityTypeFullName = GetPrefixedFullName(config.Constants.Code.DefaultNamespace, GetFixedName(CustomizeNaming(entityType.name)));
+            var returnTypeName = GetPrefixedFullName(config.Constants.Code.DefaultNamespace, GetFixedName(CustomizeNaming(entityType.name) + 'Single'));
+            result+=CastToMethod.format(baseTypeName, CustomizeNaming(entityType.name), entityTypeFullName, returnTypeName);
             
             baseTypeName = current;
             current = undefined;
@@ -34,7 +34,7 @@ function gnerate(model)
                 if(model.types[j].name === baseTypeName && !!model.types[j].baseType){
                     current = model.types[j].baseType;
                 }
-            };
+            }
         }
     }
     return result;
@@ -92,4 +92,14 @@ function isEntityType(model, typeName)
     }
 
     return returnValue;
+}
+
+exports.CustomizeNaming=CustomizeNaming;
+function CustomizeNaming(name){
+    if(name.length===1)
+    {
+        return name[0].toUpperCase();
+    } else if(name.length > 1){
+        return name[0].toUpperCase() + name.substr(1);
+    }
 }
