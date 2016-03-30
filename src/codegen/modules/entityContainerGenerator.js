@@ -26,7 +26,7 @@ var EntityContainer=config.Constants.Code.EntityContainer;
 var fullNamespace='Microsoft.OData.SampleService.Models.TripPin';
 
 // Need user configure or we got from the ymal?
-var languageDependentNamespace= config.Constants.Code.DefaultNamespace;
+var languageDependentNamespace= CustomizeNaming(config.Constants.Code.DefaultNamespace);
 
 var ModelHasInheritance = true;
 
@@ -35,10 +35,10 @@ var UseDataServiceCollection = true;
 var noComments='\
     /// <summary>\n\
     /// There are no comments for {0} in the schema.\n\
-    /// </summary>';
+    /// </summary>\n';
 
 var originalNameAttribute='\
-    [global::Microsoft.OData.Client.OriginalNameAttribute("{0}")]';
+    [global::Microsoft.OData.Client.OriginalNameAttribute("{0}")]\n';
 
 var containerClass='\
     public partial class {0} : global::Microsoft.OData.Client.DataServiceContext\n\
@@ -50,7 +50,7 @@ var containerConstructorComment = '\
         /// </summary>\n';
 
 var generatedCodeAttribute='\
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData Client.Design.T4", "2.4.0")]';
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData Client.Design.T4", "2.4.0")]\n';
 
 var containerConstructor='\
         public {0}(global::System.Uri serviceRoot) : \n\
@@ -118,20 +118,20 @@ var EntitySetProperty = '\
         /// There are no comments for {0} in the schema.\n\
         /// </summary>\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
-        [global::Microsoft.OData.Client.OriginalNameAttribute("{0}")]\n\
-        public global::Microsoft.OData.Client.DataServiceQuery<{1}> {0}\n\
+        [global::Microsoft.OData.Client.OriginalNameAttribute("{1}")]\n\
+        public global::Microsoft.OData.Client.DataServiceQuery<{2}> {0}\n\
         {\n\
             get\n\
             {\n\
                 if ((this._{0} == null))\n\
                 {\n\
-                    this._{0} = base.CreateQuery<{1}>({0});\n\
+                    this._{0} = base.CreateQuery<{2}>({0});\n\
                 }\n\
                 return this._{0};\n\
             }\n\
         }\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
-        private global::Microsoft.OData.Client.DataServiceQuery<{1}> _{0};\n';
+        private global::Microsoft.OData.Client.DataServiceQuery<{2}> _{0};\n';
 
 var AddToEntitySetMethod='\
         /// <summary>\n\
@@ -148,20 +148,20 @@ var SingletonProperty='\
         /// There are no comments for {0} in the schema.\n\
         /// </summary>\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
-        [global::Microsoft.OData.Client.OriginalNameAttribute("{0}")]\n\
-        public {2} {1}\n\
+        [global::Microsoft.OData.Client.OriginalNameAttribute("{1}")]\n\
+        public {3} {2}\n\
         {\n\
             get\n\
             {\n\
                 if ((this._{0} == null))\n\
                 {\n\
-                    this._{0} = new {2}(this, "originalSingletonName");\n\
+                    this._{0} = new {3}(this, "{1}");\n\
                 }\n\
                 return this._{0};\n\
             }\n\
         }\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
-        private {2} _{0};\n';
+        private {3} _{0};\n';
 
 var FunctionImportReturnCollectionResult='\
         /// <summary>\n\
@@ -211,16 +211,16 @@ function generateEntityContainer(model){
     }
 
     var result = '';
-
-    result += originalNameAttribute.format(EntityContainer) + ('\n');
-    result += containerClass.format(EntityContainer);
-    result += containerConstructorComment.format(EntityContainer);
-    result += generatedCodeAttribute.format(EntityContainer) + ('\n');
-    result += containerConstructor.format(EntityContainer);
+    result += noComments.format(CustomizeNaming(EntityContainer));
+    result += originalNameAttribute.format(EntityContainer);
+    result += containerClass.format(CustomizeNaming(EntityContainer));
+    result += containerConstructorComment.format(CustomizeNaming(EntityContainer));
+    result += generatedCodeAttribute;
+    result += containerConstructor.format(CustomizeNaming(EntityContainer));
     result += onContextCreated;
 
     result += resolveTypeFromNameComment;
-    result += generatedCodeAttribute.format(EntityContainer) + ('\n');
+    result += generatedCodeAttribute;
     result += ResolveTypeFromName.format(fullNamespace, languageDependentNamespace);
     
     result += StartForResolveNameFromType;
@@ -244,7 +244,7 @@ function generateEntityContainer(model){
 
     if(!!model.container.entitysets){
         model.container.entitysets.forEach(function(element){
-            result += EntitySetProperty.format(element.name, element.type.substring(0, element.type.length-2));
+            result += EntitySetProperty.format(CustomizeNaming(element.name),element.name , CustomizeNaming(element.type.substring(0, element.type.length-2)));
         });
     }
 
@@ -252,21 +252,20 @@ function generateEntityContainer(model){
     if(!!model.container.entitysets){
         model.container.entitysets.forEach(function(element){
             var type =element.type.substring(0, element.type.length-2);
-            result += AddToEntitySetMethod.format(element.name, type, GetUniqueParameterName(type));
+            result += AddToEntitySetMethod.format(CustomizeNaming(element.name), CustomizeNaming(type), GetUniqueParameterName(type));
         });
-    } 
-
+    }
     // Write Singletons
     if(!!model.container.singletons){
         model.container.singletons.forEach(function(element){
             var type =element.type.substring(0, element.type.length-2);
-            result += SingletonProperty.format(element.name, GetFixedName(element.name), element.type + 'Single');
+            result += SingletonProperty.format(CustomizeNaming(element.name), element.name, GetFixedName(CustomizeNaming(element.name)), CustomizeNaming(element.type) + 'Single');
         });
-    } 
+    }
 
     functions.forEach(function(element){
         var isReference = false;
-        if(_.includes(clrReferenceTypes, element.returns.type)|| isComplexOrEntityType(model, element.returns.type))
+        if(_.includes(clrReferenceTypes, element.returns.type) || isComplexOrEntityType(model, element.returns.type))
         { isReference = true; }
         if(isEntityType(model, element.returns.type))
         {
@@ -280,7 +279,7 @@ function generateEntityContainer(model){
 
         if(element.returns.isCollection)
         {
-            result += FunctionImportReturnCollectionResult.format(GetFixedName(element.name), element.name, returnTypeName, paramResult.parameterString, 
+            result += FunctionImportReturnCollectionResult.format(GetFixedName(CustomizeNaming(element.name)), element.name, returnTypeName, paramResult.parameterString, 
                 paramResult.parameterValues === '' ? '' : ', ' + paramResult.parameterValues, (!!element.IsComposable).toString(),
                 paramResult.useEntityReference ? ', bool useEntityReference = false' : '');
         }
@@ -303,7 +302,7 @@ function generateEntityContainer(model){
             }
 
 
-            result += FunctionImportReturnSingleResult.format(GetFixedName(element.name), element.name, returnType, constructReturnTypeStart, constructReturnTypeEnd, returnTypeName,
+            result += FunctionImportReturnSingleResult.format(GetFixedName(CustomizeNaming(element.name)), element.name, returnType, constructReturnTypeStart, constructReturnTypeEnd, returnTypeName,
              paramResult.parameterString, (paramResult.parameterValues === '') ? '' : ', ' + paramResult.parameterValues, (!!element.IsComposable).toString(),
              paramResult.useEntityReference ? ', bool useEntityReference = false' : '');
         }
@@ -314,7 +313,7 @@ function generateEntityContainer(model){
         GetParameterStrings(false, true, element.params, paramResult, model);
 
         returnTypeName = 'global::Microsoft.OData.Client.DataServiceActionQuery';
-        result += ActionImport.format(GetFixedName(element.name), element.name, returnTypeName, paramResult.parameterString, 
+        result += ActionImport.format(GetFixedName(CustomizeNaming(element.name)), element.name, returnTypeName, paramResult.parameterString, 
             !!(paramResult.parameterValues) ? ', ' + paramResult.parameterValues : '');
     });
 
@@ -360,7 +359,7 @@ function GetParameterStrings(isBound, isAction, parameters, paramResult, model)
         {
             paramResult.parameterValues += BodyOperationParameterConstructor.format(param.name, GetFixedName(param.name));
         }
-        else  if (isEntityType(model, param.type))
+        else if (isEntityType(model, param.type))
         {
             paramResult.useEntityReference = true;
             paramResult.parameterValues += UriEntityOperationParameterConstructor.format(param.name, GetFixedName(param.name),'useEntityReference');
@@ -428,7 +427,7 @@ function GetClrTypeName(edmType, isReference, isOperationParameter)
     if(clrTypeName === 'UNKNOWN')
     {
         // need refine
-        clrTypeName = GetPrefixedFullName(languageDependentNamespace, GetFixedName(edmType.type));
+        clrTypeName = GetPrefixedFullName(languageDependentNamespace, GetFixedName(CustomizeNaming(edmType.type)));
 
     }
 
@@ -640,6 +639,16 @@ function GetPrimitiveTypeName(edmPrimitiveType)
     }
 
     return type;
+}
+
+exports.CustomizeNaming=CustomizeNaming;
+function CustomizeNaming(name){
+    if(name.length===1)
+    {
+        return name[0].toUpperCase();
+    } else if(name.length > 1){
+        return name[0].toUpperCase() + name.substr(1);
+    }
 }
 
 var clrReferenceTypes=[

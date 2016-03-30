@@ -17,7 +17,7 @@ describe('[Client CodeGen] Entity Container', function () {
         };
     }
 
-    it('Entitysets should match.', function () {
+    fit('Entitysets should match.', function () {
         var entityContainer = {
             'entitysets': [
                 {
@@ -33,35 +33,35 @@ describe('[Client CodeGen] Entity Container', function () {
         };
         var expected ='\
         /// <summary>\n\
-        /// There are no comments for airports in the schema.\n\
+        /// There are no comments for Airports in the schema.\n\
         /// </summary>\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
         [global::Microsoft.OData.Client.OriginalNameAttribute("airports")]\n\
-        public global::Microsoft.OData.Client.DataServiceQuery<airpo> airports\n\
+        public global::Microsoft.OData.Client.DataServiceQuery<Airpo> Airports\n\
         {\n\
             get\n\
             {\n\
-                if ((this._airports == null))\n\
+                if ((this._Airports == null))\n\
                 {\n\
-                    this._airports = base.CreateQuery<airpo>(airports);\n\
+                    this._Airports = base.CreateQuery<Airpo>(Airports);\n\
                 }\n\
-                return this._airports;\n\
+                return this._Airports;\n\
             }\n\
         }\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
-        private global::Microsoft.OData.Client.DataServiceQuery<airpo> _airports;\n\
+        private global::Microsoft.OData.Client.DataServiceQuery<Airpo> _Airports;\n\
         /// <summary>\n\
-        /// There are no comments for airports in the schema.\n\
+        /// There are no comments for Airports in the schema.\n\
         /// </summary>\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
-        public void AddToairports(airpo airpo)\n\
+        public void AddToAirports(Airpo airpo)\n\
         {\n\
-            base.AddObject("airports", airpo);\n\
+            base.AddObject("Airports", airpo);\n\
         }\n';
         TestEntityContainer(entityContainer, expected);
     });
 
-    it('Singletons should match.', function () {
+    fit('Singletons should match.', function () {
         var entityContainer = {
             'entitysets': [],
             'singletons': [
@@ -77,27 +77,27 @@ describe('[Client CodeGen] Entity Container', function () {
         };
         var expected ='\
         /// <summary>\n\
-        /// There are no comments for me in the schema.\n\
+        /// There are no comments for Me in the schema.\n\
         /// </summary>\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
         [global::Microsoft.OData.Client.OriginalNameAttribute("me")]\n\
-        public personSingle me\n\
+        public PersonSingle Me\n\
         {\n\
             get\n\
             {\n\
-                if ((this._me == null))\n\
+                if ((this._Me == null))\n\
                 {\n\
-                    this._me = new personSingle(this, "originalSingletonName");\n\
+                    this._Me = new PersonSingle(this, "me");\n\
                 }\n\
-                return this._me;\n\
+                return this._Me;\n\
             }\n\
         }\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
-        private personSingle _me;\n';
+        private PersonSingle _Me;\n';
         TestEntityContainer(entityContainer, expected);
     });
 
-    it('Functions return values should match.', function () {
+    fit('Functions return values should match.', function () {
         var entityContainer = {
             'entitysets': [],
             'singletons': [],
@@ -113,12 +113,12 @@ describe('[Client CodeGen] Entity Container', function () {
         };
         var expected ='\
         /// <summary>\n\
-        /// There are no comments for getNearestAirport in the schema.\n\
+        /// There are no comments for GetNearestAirport in the schema.\n\
         /// </summary>\n\
         [global::Microsoft.OData.Client.OriginalNameAttribute("getNearestAirport")]\n\
-        public global::Microsoft.OData.Client.DataServiceQuery<global::{0}.airport> getNearestAirport()\n\
+        public global::Microsoft.OData.Client.DataServiceQuery<global::{0}.Airport> GetNearestAirport()\n\
         {\n\
-            return this.CreateFunctionQuery<global::{0}.airport>("", "getNearestAirport", false);\n\
+            return this.CreateFunctionQuery<global::{0}.Airport>("", "getNearestAirport", false);\n\
         }\n'.format(languageDependentNamespace);
 
         TestEntityContainer(entityContainer, expected);
@@ -139,10 +139,10 @@ describe('[Client CodeGen] Entity Container', function () {
 
         expected ='\
         /// <summary>\n\
-        /// There are no comments for getNearestAirport in the schema.\n\
+        /// There are no comments for GetNearestAirport in the schema.\n\
         /// </summary>\n\
         [global::Microsoft.OData.Client.OriginalNameAttribute("getNearestAirport")]\n\
-        public global::Microsoft.OData.Client.DataServiceQuery<double> getNearestAirport()\n\
+        public global::Microsoft.OData.Client.DataServiceQuery<double> GetNearestAirport()\n\
         {\n\
             return this.CreateFunctionQuery<double>("", "getNearestAirport", false);\n\
         }\n';
@@ -165,12 +165,12 @@ describe('[Client CodeGen] Entity Container', function () {
 
         expected ='\
         /// <summary>\n\
-        /// There are no comments for getNearestAirport in the schema.\n\
+        /// There are no comments for GetNearestAirport in the schema.\n\
         /// </summary>\n\
         [global::Microsoft.OData.Client.OriginalNameAttribute("getNearestAirport")]\n\
-        public global::{0}.airportSingle getNearestAirport()\n\
+        public global::{0}.AirportSingle GetNearestAirport()\n\
         {\n\
-            return new global::{0}.airportSingle(this.CreateFunctionQuerySingle<global::{0}.airport>("", "getNearestAirport", false));\n\
+            return new global::{0}.AirportSingle(this.CreateFunctionQuerySingle<global::{0}.Airport>("", "getNearestAirport", false));\n\
         }\n'.format(languageDependentNamespace);
 
         TestEntityContainer(entityContainer, expected);
@@ -192,10 +192,10 @@ describe('[Client CodeGen] Entity Container', function () {
 
         expected ='\
         /// <summary>\n\
-        /// There are no comments for getNearestAirport in the schema.\n\
+        /// There are no comments for GetNearestAirport in the schema.\n\
         /// </summary>\n\
         [global::Microsoft.OData.Client.OriginalNameAttribute("getNearestAirport")]\n\
-        public global::Microsoft.OData.Client.DataServiceQuerySingle<global::System.Nullable<double>> getNearestAirport()\n\
+        public global::Microsoft.OData.Client.DataServiceQuerySingle<global::System.Nullable<double>> GetNearestAirport()\n\
         {\n\
             return this.CreateFunctionQuerySingle<global::System.Nullable<double>>("", "getNearestAirport", false);\n\
         }\n';
@@ -219,10 +219,10 @@ describe('[Client CodeGen] Entity Container', function () {
 
         expected ='\
         /// <summary>\n\
-        /// There are no comments for getNearestAirport in the schema.\n\
+        /// There are no comments for GetNearestAirport in the schema.\n\
         /// </summary>\n\
         [global::Microsoft.OData.Client.OriginalNameAttribute("getNearestAirport")]\n\
-        public global::Microsoft.OData.Client.DataServiceQuerySingle<double> getNearestAirport()\n\
+        public global::Microsoft.OData.Client.DataServiceQuerySingle<double> GetNearestAirport()\n\
         {\n\
             return this.CreateFunctionQuerySingle<double>("", "getNearestAirport", false);\n\
         }\n';
@@ -230,7 +230,7 @@ describe('[Client CodeGen] Entity Container', function () {
         TestEntityContainer(entityContainer, expected);
     });
 
-    it('Functions parameters should match.', function () {
+    fit('Functions parameters should match.', function () {
         var entityContainer = {
             'entitysets': [],
             'singletons': [],
@@ -257,10 +257,10 @@ describe('[Client CodeGen] Entity Container', function () {
         };
         var expected ='\
         /// <summary>\n\
-        /// There are no comments for getNearestAirport in the schema.\n\
+        /// There are no comments for GetNearestAirport in the schema.\n\
         /// </summary>\n\
         [global::Microsoft.OData.Client.OriginalNameAttribute("getNearestAirport")]\n\
-        public global::Microsoft.OData.Client.DataServiceQuerySingle<double> getNearestAirport(global::{0}.trip lat, double lon, bool useEntityReference = false)\n\
+        public global::Microsoft.OData.Client.DataServiceQuerySingle<double> GetNearestAirport(global::{0}.Trip lat, double lon, bool useEntityReference = false)\n\
         {\n\
             return this.CreateFunctionQuerySingle<double>("", "getNearestAirport", false, new global::Microsoft.OData.Client.UriEntityOperationParameter("lat", lat, useEntityReference),\n\
                     new global::Microsoft.OData.Client.UriOperationParameter("lon", lon));\n\
@@ -299,10 +299,10 @@ describe('[Client CodeGen] Entity Container', function () {
         };
         expected ='\
         /// <summary>\n\
-        /// There are no comments for getNearestAirport in the schema.\n\
+        /// There are no comments for GetNearestAirport in the schema.\n\
         /// </summary>\n\
         [global::Microsoft.OData.Client.OriginalNameAttribute("getNearestAirport")]\n\
-        public global::Microsoft.OData.Client.DataServiceQuerySingle<double> getNearestAirport(global::System.Collections.Generic.ICollection<global::{0}.trip> lat, global::System.Collections.Generic.ICollection<double> lon1, global::System.Nullable<double> lon2, bool useEntityReference = false)\n\
+        public global::Microsoft.OData.Client.DataServiceQuerySingle<double> GetNearestAirport(global::System.Collections.Generic.ICollection<global::{0}.Trip> lat, global::System.Collections.Generic.ICollection<double> lon1, global::System.Nullable<double> lon2, bool useEntityReference = false)\n\
         {\n\
             return this.CreateFunctionQuerySingle<double>("", "getNearestAirport", false, new global::Microsoft.OData.Client.UriEntityOperationParameter("lat", lat, useEntityReference),\n\
                     new global::Microsoft.OData.Client.UriOperationParameter("lon1", lon1),\n\
@@ -312,7 +312,7 @@ describe('[Client CodeGen] Entity Container', function () {
         TestEntityContainer(entityContainer, expected);
     });
 
-    it('Actions should match.', function () {
+    fit('Actions should match.', function () {
         var entityContainer = {
             'entitysets': [],
             'singletons': [],
@@ -337,10 +337,10 @@ describe('[Client CodeGen] Entity Container', function () {
 
         var expected ='\
         /// <summary>\n\
-        /// There are no comments for getNearestAirport in the schema.\n\
+        /// There are no comments for GetNearestAirport in the schema.\n\
         /// </summary>\n\
         [global::Microsoft.OData.Client.OriginalNameAttribute("getNearestAirport")]\n\
-        public global::Microsoft.OData.Client.DataServiceActionQuery getNearestAirport(global::{0}.trip lat, double lon)\n\
+        public global::Microsoft.OData.Client.DataServiceActionQuery GetNearestAirport(global::{0}.Trip lat, double lon)\n\
         {\n\
             return new global::Microsoft.OData.Client.DataServiceActionQuery(this, this.BaseUri.OriginalString.Trim(\'/\') + "getNearestAirport", new global::Microsoft.OData.Client.BodyOperationParameter("lat", lat),\n\
                     new global::Microsoft.OData.Client.BodyOperationParameter("lon", lon));\n\
@@ -428,7 +428,10 @@ describe('[Client CodeGen] Entity Container', function () {
 
         model.container = input;
         var output ='\
-    [global::Microsoft.OData.Client.OriginalNameAttribute("{0}")]\n\
+    /// <summary>\n\
+    /// There are no comments for {0} in the schema.\n\
+    /// </summary>\n\
+    [global::Microsoft.OData.Client.OriginalNameAttribute("{1}")]\n\
     public partial class {0} : global::Microsoft.OData.Client.DataServiceContext\n\
     {\n\
         /// <summary>\n\
@@ -453,7 +456,7 @@ describe('[Client CodeGen] Entity Container', function () {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData Client.Design.T4", "2.4.0")]\n\
         protected global::System.Type ResolveTypeFromName(string typeName)\n\
         {\n\
-            global::System.Type resolvedType = this.DefaultResolveType(typeName, {1}, {2});\n\
+            global::System.Type resolvedType = this.DefaultResolveType(typeName, {2}, {3});\n\
             if ((resolvedType != null))\n\
             {\n\
                 return resolvedType;\n\
@@ -469,13 +472,13 @@ describe('[Client CodeGen] Entity Container', function () {
         protected string ResolveNameFromType(global::System.Type clientType)\n\
         {\n\
             global::Microsoft.OData.Client.OriginalNameAttribute originalNameAttribute = (global::Microsoft.OData.Client.OriginalNameAttribute)global::System.Linq.Enumerable.SingleOrDefault(global::Microsoft.OData.Client.Utility.GetCustomAttributes(clientType, typeof(global::Microsoft.OData.Client.OriginalNameAttribute), true));\n\
-            if (clientType.Namespace.Equals("{2}", global::System.StringComparison.Ordinal))\n\
+            if (clientType.Namespace.Equals("{3}", global::System.StringComparison.Ordinal))\n\
             {\n\
                 if (originalNameAttribute != null)\n\
                 {\n\
-                    return string.Concat("{1}.", originalNameAttribute.OriginalName);\n\
+                    return string.Concat("{2}.", originalNameAttribute.OriginalName);\n\
                 }\n\
-                return string.Concat("{1}.", clientType.Name);\n\
+                return string.Concat("{2}.", clientType.Name);\n\
             }\n\
             if (originalNameAttribute != null)\n\
             {\n\
@@ -483,10 +486,11 @@ describe('[Client CodeGen] Entity Container', function () {
             }\n\
             return clientType.FullName;\n\
         }\n\
-{3}\
-    }\n'.format(EntityContainer, fullNamespace, languageDependentNamespace, expected);
+{4}\
+    }\n'.format(entityContainerGenerator.CustomizeNaming(EntityContainer), EntityContainer, fullNamespace,
+    entityContainerGenerator.CustomizeNaming(languageDependentNamespace), expected);
 
-        var actual = entityContainerGenerator.generate(model);
-        expect(actual).toEqual(output);
+    var actual = entityContainerGenerator.generate(model);
+    expect(actual).toEqual(output);
     }
 });
