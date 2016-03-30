@@ -17,142 +17,142 @@ describe('[Client CodeGen] CastTo Method', function () {
         };
     }
 
-    fit('Entitysets should match.', function () {
+    it('Entitysets should match.', function () {
         var model = {
-          "types": [
+          'types': [
             {
-              "properties": [
+              'properties': [
                 {
-                  "name": "address",
-                  "type": "edm.string"
+                  'name': 'address',
+                  'type': 'edm.string'
                 },
                 {
-                  "name": "city",
-                  "type": "city"
+                  'name': 'city',
+                  'type': 'city'
                 }
               ],
-              "name": "location"
+              'name': 'location'
             },
             {
-              "properties": [
+              'properties': [
                 {
-                  "name": "planItemId",
-                  "isKey": true,
-                  "type": "edm.string"
+                  'name': 'planItemId',
+                  'isKey': true,
+                  'type': 'edm.string'
                 },
                 {
-                  "name": "confirmationCode",
-                  "isNullable": true,
-                  "type": "edm.string"
+                  'name': 'confirmationCode',
+                  'isNullable': true,
+                  'type': 'edm.string'
                 },
                 {
-                  "name": "startsAt",
-                  "type": "edm.datetimeoffset",
-                  "isNullable": true
+                  'name': 'startsAt',
+                  'type': 'edm.datetimeoffset',
+                  'isNullable': true
                 },
                 {
-                  "name": "endsAt",
-                  "type": "edm.datetimeoffset",
-                  "isNullable": true
+                  'name': 'endsAt',
+                  'type': 'edm.datetimeoffset',
+                  'isNullable': true
                 },
                 {
-                  "name": "duration",
-                  "type": "edm.duration",
-                  "isNullable": true
+                  'name': 'duration',
+                  'type': 'edm.duration',
+                  'isNullable': true
                 }
               ],
-              "name": "planItem"
+              'name': 'planItem'
             },
             {
-              "properties": [
+              'properties': [
                 {
-                  "name": "seatNumber",
-                  "isNullable": true,
-                  "type": "edm.string"
+                  'name': 'seatNumber',
+                  'isNullable': true,
+                  'type': 'edm.string'
                 }
               ],
-              "name": "publicTransportation",
-              "baseType": "planItem"
+              'name': 'publicTransportation',
+              'baseType': 'planItem'
             },
             {
-              "properties": [
+              'properties': [
                 {
-                  "name": "flightNumber",
-                  "type": "edm.string"
+                  'name': 'flightNumber',
+                  'type': 'edm.string'
                 },
                 {
-                  "name": "from",
-                  "type": "airport",
-                  "isNullable": true
+                  'name': 'from',
+                  'type': 'airport',
+                  'isNullable': true
                 },
                 {
-                  "name": "to",
-                  "type": "airport",
-                  "isNullable": true
+                  'name': 'to',
+                  'type': 'airport',
+                  'isNullable': true
                 },
                 {
-                  "name": "airline",
-                  "type": "airline",
-                  "isNullable": true
+                  'name': 'airline',
+                  'type': 'airline',
+                  'isNullable': true
                 }
               ],
-              "name": "flight",
-              "baseType": "publicTransportation"
+              'name': 'flight',
+              'baseType': 'publicTransportation'
             },
             {
-              "properties": [
+              'properties': [
                 {
-                  "name": "description",
-                  "isNullable": true,
-                  "type": "edm.string"
+                  'name': 'description',
+                  'isNullable': true,
+                  'type': 'edm.string'
                 },
                 {
-                  "name": "occursAt",
-                  "type": "eventLocation",
-                  "isNullable": true
+                  'name': 'occursAt',
+                  'type': 'eventLocation',
+                  'isNullable': true
                 }
               ],
-              "name": "event",
-              "baseType": "planItem"
+              'name': 'event',
+              'baseType': 'planItem'
             },
           ]
         };
         var expected ='\
         /// <summary>\n\
-        /// Cast an entity of type global::OData.Service.V4.Client.planItem to its derived type global::OData.Service.V4.Client.publicTransportation\n\
+        /// Cast an entity of type global::OData.Service.V4.Client.PlanItem to its derived type global::OData.Service.V4.Client.PublicTransportation\n\
         /// </summary>\n\
         /// <param name="source">source entity</param>\n\
-        public static global::OData.Service.V4.Client.publicTransportationSingle CastToPublicTransportation(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::OData.Service.V4.Client.planItem> source)\n\
+        public static global::OData.Service.V4.Client.PublicTransportationSingle CastToPublicTransportation(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::OData.Service.V4.Client.PlanItem> source)\n\
         {\n\
-            global::Microsoft.OData.Client.DataServiceQuerySingle<global::OData.Service.V4.Client.publicTransportation> query = source.CastTo<global::OData.Service.V4.Client.publicTransportation>();\n\
-            return new global::OData.Service.V4.Client.publicTransportationSingle(source.Context, query.GetPath(null));\n\
+            global::Microsoft.OData.Client.DataServiceQuerySingle<global::OData.Service.V4.Client.PublicTransportation> query = source.CastTo<global::OData.Service.V4.Client.PublicTransportation>();\n\
+            return new global::OData.Service.V4.Client.PublicTransportationSingle(source.Context, query.GetPath(null));\n\
         }\n\
         /// <summary>\n\
-        /// Cast an entity of type global::OData.Service.V4.Client.publicTransportation to its derived type global::OData.Service.V4.Client.flight\n\
+        /// Cast an entity of type global::OData.Service.V4.Client.PublicTransportation to its derived type global::OData.Service.V4.Client.Flight\n\
         /// </summary>\n\
         /// <param name="source">source entity</param>\n\
-        public static global::OData.Service.V4.Client.flightSingle CastToFlight(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::OData.Service.V4.Client.publicTransportation> source)\n\
+        public static global::OData.Service.V4.Client.FlightSingle CastToFlight(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::OData.Service.V4.Client.PublicTransportation> source)\n\
         {\n\
-            global::Microsoft.OData.Client.DataServiceQuerySingle<global::OData.Service.V4.Client.flight> query = source.CastTo<global::OData.Service.V4.Client.flight>();\n\
-            return new global::OData.Service.V4.Client.flightSingle(source.Context, query.GetPath(null));\n\
+            global::Microsoft.OData.Client.DataServiceQuerySingle<global::OData.Service.V4.Client.Flight> query = source.CastTo<global::OData.Service.V4.Client.Flight>();\n\
+            return new global::OData.Service.V4.Client.FlightSingle(source.Context, query.GetPath(null));\n\
         }\n\
         /// <summary>\n\
-        /// Cast an entity of type global::OData.Service.V4.Client.planItem to its derived type global::OData.Service.V4.Client.flight\n\
+        /// Cast an entity of type global::OData.Service.V4.Client.PlanItem to its derived type global::OData.Service.V4.Client.Flight\n\
         /// </summary>\n\
         /// <param name="source">source entity</param>\n\
-        public static global::OData.Service.V4.Client.flightSingle CastToFlight(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::OData.Service.V4.Client.planItem> source)\n\
+        public static global::OData.Service.V4.Client.FlightSingle CastToFlight(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::OData.Service.V4.Client.PlanItem> source)\n\
         {\n\
-            global::Microsoft.OData.Client.DataServiceQuerySingle<global::OData.Service.V4.Client.flight> query = source.CastTo<global::OData.Service.V4.Client.flight>();\n\
-            return new global::OData.Service.V4.Client.flightSingle(source.Context, query.GetPath(null));\n\
+            global::Microsoft.OData.Client.DataServiceQuerySingle<global::OData.Service.V4.Client.Flight> query = source.CastTo<global::OData.Service.V4.Client.Flight>();\n\
+            return new global::OData.Service.V4.Client.FlightSingle(source.Context, query.GetPath(null));\n\
         }\n\
         /// <summary>\n\
-        /// Cast an entity of type global::OData.Service.V4.Client.planItem to its derived type global::OData.Service.V4.Client.@event\n\
+        /// Cast an entity of type global::OData.Service.V4.Client.PlanItem to its derived type global::OData.Service.V4.Client.Event\n\
         /// </summary>\n\
         /// <param name="source">source entity</param>\n\
-        public static global::OData.Service.V4.Client.eventSingle CastToEvent(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::OData.Service.V4.Client.planItem> source)\n\
+        public static global::OData.Service.V4.Client.EventSingle CastToEvent(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::OData.Service.V4.Client.PlanItem> source)\n\
         {\n\
-            global::Microsoft.OData.Client.DataServiceQuerySingle<global::OData.Service.V4.Client.@event> query = source.CastTo<global::OData.Service.V4.Client.@event>();\n\
-            return new global::OData.Service.V4.Client.eventSingle(source.Context, query.GetPath(null));\n\
+            global::Microsoft.OData.Client.DataServiceQuerySingle<global::OData.Service.V4.Client.Event> query = source.CastTo<global::OData.Service.V4.Client.Event>();\n\
+            return new global::OData.Service.V4.Client.EventSingle(source.Context, query.GetPath(null));\n\
         }\n';
 
         var actual = castToMethodGenerator.generateCastTo(model);

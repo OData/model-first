@@ -232,29 +232,37 @@ function generateEntityContainer(model){
     var singletons=[];
     var functions=[];
     var actions=[];
-    !!model.container.operations && model.container.operations.forEach(function(element){
-        if(element.returns){
-            functions = functions.concat(element);
-        } else {
-            actions = actions.concat(element);
-        }
-    });
+    if(!!model.container.operations){
+        model.container.operations.forEach(function(element){
+            if(element.returns){
+                functions = functions.concat(element);
+            } else {
+                actions = actions.concat(element);
+            }
+        });
+    } 
 
-    !!model.container.entitysets && model.container.entitysets.forEach(function(element){
-        result += EntitySetProperty.format(element.name, element.type.substring(0, element.type.length-2));
-    });
+    if(!!model.container.entitysets){
+        model.container.entitysets.forEach(function(element){
+            result += EntitySetProperty.format(element.name, element.type.substring(0, element.type.length-2));
+        });
+    }
 
     // Write AddTo methods
-    !!model.container.entitysets && model.container.entitysets.forEach(function(element){
-        var type =element.type.substring(0, element.type.length-2);
-        result += AddToEntitySetMethod.format(element.name, type, GetUniqueParameterName(type));
-    });
+    if(!!model.container.entitysets){
+        model.container.entitysets.forEach(function(element){
+            var type =element.type.substring(0, element.type.length-2);
+            result += AddToEntitySetMethod.format(element.name, type, GetUniqueParameterName(type));
+        });
+    } 
 
     // Write Singletons
-    !!model.container.singletons && model.container.singletons.forEach(function(element){
-        var type =element.type.substring(0, element.type.length-2);
-        result += SingletonProperty.format(element.name, GetFixedName(element.name), element.type + 'Single');
-    });
+    if(!!model.container.singletons){
+        model.container.singletons.forEach(function(element){
+            var type =element.type.substring(0, element.type.length-2);
+            result += SingletonProperty.format(element.name, GetFixedName(element.name), element.type + 'Single');
+        });
+    } 
 
     functions.forEach(function(element){
         var isReference = false;
