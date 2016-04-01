@@ -22,6 +22,20 @@ var app = express();
 app.set('views', constants.Paths.Views);
 app.set('view engine', 'ejs');
 
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin",'*');
+  res.header("Access-Control-Allow-Headers",'Content-Type');
+  next();
+});
+app.use('/public/client',function (req, res, next) {
+  res.header("Content-Disposition",'attachment');
+  next();
+});
+app.use('/public/server',function (req, res, next) {
+  res.header("Content-Disposition",'attachment');
+  next();
+});
+
 app.use(bodyParser.json({ type: 'application/json' }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());

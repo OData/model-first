@@ -42,7 +42,8 @@ exports.post = function(req, res){
 			if(req.body){
 				csharpCodeWriter(codegen.CodegenByObj(req.body, constants.Code.DefaultNamespace));
 				zipCSharpCodes();
-				res.download(constants.Paths.CSharpZipPackage + constants.FileNames.CSharpZipPackage, constants.FileNames.CSharpZipPackage);
+				res.send({link: !!req.connection.encrypted ? 'https://' : 'http://' + req.headers.host 
+					+ constants.Paths.CSharpZipPackage.substr(1) + constants.FileNames.CSharpZipPackage});
 			}
 		}
 		else{
