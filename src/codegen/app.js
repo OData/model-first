@@ -22,28 +22,42 @@ var app = express();
 app.set('views', constants.Paths.Views);
 app.set('view engine', 'ejs');
 
-app.use(bodyParser.json({ type: 'application/json' }));
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(function (req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+});
+app.use('/public/client', function (req, res, next) {
+    res.header('Content-Disposition', 'attachment');
+    next();
+});
+app.use('/public/server', function (req, res, next) {
+    res.header('Content-Disposition', 'attachment');
+    next();
+});
+
+app.use(bodyParser.json({type: 'application/json'}));
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
-app.use(session({ 
-	cookie: { maxAge: 60000 }, 
+app.use(session({
+    cookie: {maxAge: 60000},
     secret: 'codegen',
-    resave: false, 
+    resave: false,
     saveUninitialized: false}));
 app.use(flash());
 app.use(express.static(path.join(__dirname, constants.Paths.Static)));
 
-app.use(function(req, res, next){
-  var title = req.flash('title');
-  res.locals.title = title.length ? title : 'CodeGen';
+app.use(function (req, res, next) {
+    var title = req.flash('title');
+    res.locals.title = title.length ? title : 'CodeGen';
 
-  var metadata = req.flash('metadata');
-  res.locals.metadata = metadata.length ? metadata : 'Load A Sample First!';
+    var metadata = req.flash('metadata');
+    res.locals.metadata = metadata.length ? metadata : 'Load A Sample First!';
 
-  var csharpCode = req.flash('csharpCode');
-  res.locals.csharpCode = csharpCode.length ? csharpCode : 'No Results!';
+    var csharpCode = req.flash('csharpCode');
+    res.locals.csharpCode = csharpCode.length ? csharpCode : 'No Results!';
 
-  next();
+    next();
 });
 
 app.use('/', routes);
