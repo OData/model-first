@@ -2,6 +2,7 @@ var fs = require('fs');
 var EasyZip = require('easy-zip').EasyZip;
 var StringHelper = require('../helpers/stringhelper');
 var Logger = require('./logger');
+var logger = Logger.getInstance();
 
 /*
 ** Zip the whole folder to a package.
@@ -11,7 +12,6 @@ var Logger = require('./logger');
 **     callback: The callback function.
 */
 exports.zipFolder = function(folderPath, zipPath, callback){
-    var logger = Logger.getInstance();
     try{
         var easyZip = traverseFolder(folderPath);
         easyZip.writeToFile(zipPath);
@@ -33,7 +33,7 @@ exports.zipFolder = function(folderPath, zipPath, callback){
 **     returns an EasyZip instance. 
 */
 function traverseFolder(folderPath, easyZip, folder){
-    if(!easyZip){
+    if(null === easyZip){
         easyZip = new EasyZip();
     }
     var folderName = StringHelper.getLastSegment(folderPath);
