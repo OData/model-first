@@ -1,38 +1,41 @@
 describe('[OData Service Client Codegen: CSharp] Test', function(){
-	var codegen = require('../../src/codegen/modules/csharpClientCodegen');
-	var genEnumType;
-	var genComplexType;
+  var codegen = require('../../src/codegen/modules/csharpClientCodegen');
+  var constants = require('../../src/codegen/config').Constants;
+  var genEnumType;
+  var genComplexType;
     var genEntityType;
-    var namespaceName = 'ODataV4Client.Proxies.TripPin';
+    var namespaceName = constants.Code.DefaultNamespace;
+    var genExBoundOperations;
 
-	beforeEach(function(){
-		genEnumType = codegen.genEnumType;
-		genComplexType = codegen.genComplexType;
-        genEntityType = codegen.genEntityType;
-	});
+  beforeEach(function(){
+    genEnumType = codegen.genEnumType;
+    genComplexType = codegen.genComplexType;
+    genEntityType = codegen.genEntityType;
+    genExBoundOperations = codegen.genExBoundOperations;
+  });
 
-	it('generation for enum type.', function(){
-		var enumTypeObj = {
-		    name: 'personGender',
-		    members: [
-		        {
-		            name: 'unknown',
-		            value: 0
-		        },
-		        {
-		            name: 'female',
-		            value: 1
-		        },
-		        {
-		            name: 'male',
-		            value: 2
-		        }
-		    ],
-		    flags: false,
-		    underlyingType: 'edm.int32'
-		};
+  it('generation for enum type.', function(){
+    var enumTypeObj = {
+        name: 'personGender',
+        members: [
+            {
+                name: 'unknown',
+                value: 0
+            },
+            {
+                name: 'female',
+                value: 1
+            },
+            {
+                name: 'male',
+                value: 2
+            }
+        ],
+        flags: false,
+        underlyingType: 'edm.int32'
+    };
 
-		var expected = '\
+    var expected = '\
     [global::Microsoft.OData.Client.OriginalNameAttribute("PersonGender")]\n\
     public enum PersonGender: int\n\
     {\n\
@@ -43,91 +46,91 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
         [global::Microsoft.OData.Client.OriginalNameAttribute("Male")]\n\
         Male = 2\n\
     }\n\n';
-		var actual = genEnumType(enumTypeObj);
+    var actual = genEnumType(enumTypeObj);
 
-		expect(actual).toEqual(expected);
-	});
+    expect(actual).toEqual(expected);
+  });
 
-	it('generation for complex type.', function(){
-		var complexTypes = [
-			{
-				name: 'myComplexTypeRef',
-				properties: [
-					{
-						name: 'city',
-						type: 'edm.string'
-					},
-					{
-						name: 'code',
-						type: 'edm.int32'
-					}
-				]
-			},
-			{
-				name: 'myComplexTypeAncestor',
-				properties: [
-					{
-						name: 'id',
-						type: 'edm.int32'
-					},
-				]
-			},
-			{
-				name: 'myComplexTypeBase',
-				baseType: 'myComplexTypeAncestor',
-				properties: [
-					{
-						name: 'name',
-						type: 'edm.string'
-					},
-					{
-						name: 'age',
-						type: 'edm.int32'
-					},
-					{
-						name: 'location',
-						type: 'myComplexTypeRef'
-					}
-				]
-			},
-			{
-				name: 'myComplexTypeSuper',
-				baseType: 'myComplexTypeBase',
-				properties: [
-					{
-						name: 'employeeId',
-						type: 'edm.int32'
-					},
-					{
-						name: 'department',
-						type: 'edm.string'
-					}
-				]
-			}
-		];
+  it('generation for complex type.', function(){
+    var complexTypes = [
+      {
+        name: 'myComplexTypeRef',
+        properties: [
+          {
+            name: 'city',
+            type: 'edm.string'
+          },
+          {
+            name: 'code',
+            type: 'edm.int32'
+          }
+        ]
+      },
+      {
+        name: 'myComplexTypeAncestor',
+        properties: [
+          {
+            name: 'id',
+            type: 'edm.int32'
+          },
+        ]
+      },
+      {
+        name: 'myComplexTypeBase',
+        baseType: 'myComplexTypeAncestor',
+        properties: [
+          {
+            name: 'name',
+            type: 'edm.string'
+          },
+          {
+            name: 'age',
+            type: 'edm.int32'
+          },
+          {
+            name: 'location',
+            type: 'myComplexTypeRef'
+          }
+        ]
+      },
+      {
+        name: 'myComplexTypeSuper',
+        baseType: 'myComplexTypeBase',
+        properties: [
+          {
+            name: 'employeeId',
+            type: 'edm.int32'
+          },
+          {
+            name: 'department',
+            type: 'edm.string'
+          }
+        ]
+      }
+    ];
 
-		var complexType = {
-			name: 'myComplexTypeSuper',
-			baseType: 'myComplexTypeBase',
-			properties: [
-				{
-					name: 'employeeId',
-					type: 'edm.int32'
-				},
-				{
-					name: 'department',
-					type: 'edm.string'
-				}
-			]
-		};
+    var complexType = {
+      name: 'myComplexTypeSuper',
+      baseType: 'myComplexTypeBase',
+      properties: [
+        {
+          name: 'employeeId',
+          type: 'edm.int32'
+        },
+        {
+          name: 'department',
+          type: 'edm.string'
+        }
+      ]
+    };
 
-		var ns = 'ModelFirst.CodeGen.Test';
+    
 
-		var expected = '\
+    var expected = '\
     [global::Microsoft.OData.Client.OriginalNameAttribute("MyComplexTypeSuper")]\n\
     public partial class MyComplexTypeSuper: MyComplexTypeBase\n\
     {\n\
-        public static MyComplexTypeSuper CreateMyComplexTypeSuper(int id, string name, int age, global::ModelFirst.CodeGen.Test.MyComplexTypeRef location, int employeeId, string department)\n\
+        public static MyComplexTypeSuper CreateMyComplexTypeSuper(int id, string name, int age, global::' + namespaceName + '.MyComplexTypeRef location, int employeeId, string department)\n\
         {\n\
             MyComplexTypeSuper myComplexTypeSuper = new MyComplexTypeSuper();\n\
             myComplexTypeSuper.Id = id;\n\
@@ -191,13 +194,13 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
     }\n\
 \n';
 
-    var actual = genComplexType(complexType, complexTypes, ns);
+    var actual = genComplexType(complexType, complexTypes, namespaceName);
 
     expect(actual).toEqual(expected);
 
-	});
+  });
     
-	    it('generation for Photo entity type.', function () {
+      it('generation for Photo entity type.', function () {
         var entityTypeObj = {
         'types':[
         {
@@ -310,12 +313,12 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
 
         expect(actual).toEqual(expected);
     });
-	
-	it('generation for Person entity type.', function () {
-		
+  
+  it('generation for Person entity type.', function () {
+    
         var Obj = 
 {'types': [
-	{
+  {
       'properties': [
         {
           'name': 'userName',
@@ -444,7 +447,7 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
         }
       ],
       'name': 'person'
-	},
+  },
     {
       'properties': [
         {
@@ -484,7 +487,7 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
       ],
       'name': 'airline'
     }
-	]
+  ]
 };
 
         var expected ='\
@@ -601,7 +604,7 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
         partial void OnEmailsChanged();\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
         [global::Microsoft.OData.Client.OriginalNameAttribute("AddressInfo")]\n\
-        public global::System.Collections.ObjectModel.ObservableCollection<global::ODataV4Client.Proxies.TripPin.Location> AddressInfo\n\
+        public global::System.Collections.ObjectModel.ObservableCollection<global::' + namespaceName + '.Location> AddressInfo\n\
         {\n\
             get\n\
             {\n\
@@ -616,12 +619,12 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
             }\n\
         }\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
-        private global::System.Collections.ObjectModel.ObservableCollection<global::ODataV4Client.Proxies.TripPin.Location> _AddressInfo = new global::System.Collections.ObjectModel.ObservableCollection<global::ODataV4Client.Proxies.TripPin.Location>();\n\
-        partial void OnAddressInfoChanging(global::System.Collections.ObjectModel.ObservableCollection<global::ODataV4Client.Proxies.TripPin.Location> value);\n\
+        private global::System.Collections.ObjectModel.ObservableCollection<global::' + namespaceName + '.Location> _AddressInfo = new global::System.Collections.ObjectModel.ObservableCollection<global::' + namespaceName + '.Location>();\n\
+        partial void OnAddressInfoChanging(global::System.Collections.ObjectModel.ObservableCollection<global::' + namespaceName + '.Location> value);\n\
         partial void OnAddressInfoChanged();\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
         [global::Microsoft.OData.Client.OriginalNameAttribute("Gender")]\n\
-        public global::System.Nullable<global::ODataV4Client.Proxies.TripPin.PersonGender> Gender\n\
+        public global::System.Nullable<global::' + namespaceName + '.PersonGender> Gender\n\
         {\n\
             get\n\
             {\n\
@@ -636,8 +639,8 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
             }\n\
         }\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
-        private global::System.Nullable<global::ODataV4Client.Proxies.TripPin.PersonGender> _Gender;\n\
-        partial void OnGenderChanging(global::System.Nullable<global::ODataV4Client.Proxies.TripPin.PersonGender> value);\n\
+        private global::System.Nullable<global::' + namespaceName + '.PersonGender> _Gender;\n\
+        partial void OnGenderChanging(global::System.Nullable<global::' + namespaceName + '.PersonGender> value);\n\
         partial void OnGenderChanged();\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
         [global::Microsoft.OData.Client.OriginalNameAttribute("Concurrency")]\n\
@@ -661,7 +664,7 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
         partial void OnConcurrencyChanged();\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
         [global::Microsoft.OData.Client.OriginalNameAttribute("Friends")]\n\
-        public global::Microsoft.OData.Client.DataServiceCollection<global::ODataV4Client.Proxies.TripPin.Person> Friends\n\
+        public global::Microsoft.OData.Client.DataServiceCollection<global::' + namespaceName + '.Person> Friends\n\
         {\n\
             get\n\
             {\n\
@@ -676,12 +679,12 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
             }\n\
         }\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
-        private global::Microsoft.OData.Client.DataServiceCollection<global::ODataV4Client.Proxies.TripPin.Person> _Friends = new global::Microsoft.OData.Client.DataServiceCollection<global::ODataV4Client.Proxies.TripPin.Person>(null, global::Microsoft.OData.Client.TrackingMode.None);\n\
-        partial void OnFriendsChanging(global::Microsoft.OData.Client.DataServiceCollection<global::ODataV4Client.Proxies.TripPin.Person> value);\n\
+        private global::Microsoft.OData.Client.DataServiceCollection<global::' + namespaceName + '.Person> _Friends = new global::Microsoft.OData.Client.DataServiceCollection<global::' + namespaceName + '.Person>(null, global::Microsoft.OData.Client.TrackingMode.None);\n\
+        partial void OnFriendsChanging(global::Microsoft.OData.Client.DataServiceCollection<global::' + namespaceName + '.Person> value);\n\
         partial void OnFriendsChanged();\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
         [global::Microsoft.OData.Client.OriginalNameAttribute("Trips")]\n\
-        public global::Microsoft.OData.Client.DataServiceCollection<global::ODataV4Client.Proxies.TripPin.Trip> Trips\n\
+        public global::Microsoft.OData.Client.DataServiceCollection<global::' + namespaceName + '.Trip> Trips\n\
         {\n\
             get\n\
             {\n\
@@ -696,12 +699,12 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
             }\n\
         }\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
-        private global::Microsoft.OData.Client.DataServiceCollection<global::ODataV4Client.Proxies.TripPin.Trip> _Trips = new global::Microsoft.OData.Client.DataServiceCollection<global::ODataV4Client.Proxies.TripPin.Trip>(null, global::Microsoft.OData.Client.TrackingMode.None);\n\
-        partial void OnTripsChanging(global::Microsoft.OData.Client.DataServiceCollection<global::ODataV4Client.Proxies.TripPin.Trip> value);\n\
+        private global::Microsoft.OData.Client.DataServiceCollection<global::' + namespaceName + '.Trip> _Trips = new global::Microsoft.OData.Client.DataServiceCollection<global::' + namespaceName + '.Trip>(null, global::Microsoft.OData.Client.TrackingMode.None);\n\
+        partial void OnTripsChanging(global::Microsoft.OData.Client.DataServiceCollection<global::' + namespaceName + '.Trip> value);\n\
         partial void OnTripsChanged();\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
         [global::Microsoft.OData.Client.OriginalNameAttribute("Photo")]\n\
-        public global::ODataV4Client.Proxies.TripPin.Photo Photo\n\
+        public global::' + namespaceName + '.Photo Photo\n\
         {\n\
             get\n\
             {\n\
@@ -716,15 +719,15 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
             }\n\
         }\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
-        private global::ODataV4Client.Proxies.TripPin.Photo _Photo;\n\
-        partial void OnPhotoChanging(global::ODataV4Client.Proxies.TripPin.Photo value);\n\
+        private global::' + namespaceName + '.Photo _Photo;\n\
+        partial void OnPhotoChanging(global::' + namespaceName + '.Photo value);\n\
         partial void OnPhotoChanged();\n\
         [global::Microsoft.OData.Client.OriginalNameAttribute("GetFriendFavoriteAirline")]\n\
-        public global::ODataV4Client.Proxies.TripPin.AirlineSingle GetFriendFavoriteAirline(global::ODataV4Client.Proxies.TripPin.Person friend, global::System.Collections.Generic.ICollection<global::ODataV4Client.Proxies.TripPin.Photo> friendPhotos, bool useEntityReference = false)\n\
+        public global::' + namespaceName + '.AirlineSingle GetFriendFavoriteAirline(global::' + namespaceName + '.Person friend, global::System.Collections.Generic.ICollection<global::' + namespaceName + '.Photo> friendPhotos, bool useEntityReference = false)\n\
         {\n\
             global::System.Uri requestUri;\n\
             Context.TryGetUri(this, out requestUri);\n\n\
-            return new global::ODataV4Client.Proxies.TripPin.AirlineSingle(this.Context.CreateFunctionQuerySingle<global::ODataV4Client.Proxies.TripPin.Airline>(string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim(\'/\'))), "Microsoft.OData.SampleService.Models.TripPin.GetFriendFavoriteAirline", true, new global::Microsoft.OData.Client.UriEntityOperationParameter("friend", friend, useEntityReference),\n\
+            return new global::' + namespaceName + '.AirlineSingle(this.Context.CreateFunctionQuerySingle<global::' + namespaceName + '.Airline>(string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim(\'/\'))), "Microsoft.OData.SampleService.Models.TripPin.GetFriendFavoriteAirline", true, new global::Microsoft.OData.Client.UriEntityOperationParameter("friend", friend, useEntityReference),\n\
                     new global::Microsoft.OData.Client.UriEntityOperationParameter("friendPhotos", friendPhotos, useEntityReference)));\n\
         }\n\
         [global::Microsoft.OData.Client.OriginalNameAttribute("GetFriendPhotosCount")]\n\
@@ -773,7 +776,7 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
             : base(query) {}\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
         [global::Microsoft.OData.Client.OriginalNameAttribute("Friends")]\n\
-        public global::Microsoft.OData.Client.DataServiceQuery<global::ODataV4Client.Proxies.TripPin.Person> Friends\n\
+        public global::Microsoft.OData.Client.DataServiceQuery<global::' + namespaceName + '.Person> Friends\n\
         {\n\
             get\n\
             {\n\
@@ -783,16 +786,16 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
                 }\n\
                 if ((this._Friends == null))\n\
                 {\n\
-                    this._Friends = Context.CreateQuery<global::ODataV4Client.Proxies.TripPin.Person>(GetPath("Friends"));\n\
+                    this._Friends = Context.CreateQuery<global::' + namespaceName + '.Person>(GetPath("Friends"));\n\
                 }\n\
                 return this._Friends;\n\
             }\n\
         }\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
-        private global::Microsoft.OData.Client.DataServiceQuery<global::ODataV4Client.Proxies.TripPin.Person> _Friends;\n\
+        private global::Microsoft.OData.Client.DataServiceQuery<global::' + namespaceName + '.Person> _Friends;\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
         [global::Microsoft.OData.Client.OriginalNameAttribute("Trips")]\n\
-        public global::Microsoft.OData.Client.DataServiceQuery<global::ODataV4Client.Proxies.TripPin.Trip> Trips\n\
+        public global::Microsoft.OData.Client.DataServiceQuery<global::' + namespaceName + '.Trip> Trips\n\
         {\n\
             get\n\
             {\n\
@@ -802,16 +805,16 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
                 }\n\
                 if ((this._Trips == null))\n\
                 {\n\
-                    this._Trips = Context.CreateQuery<global::ODataV4Client.Proxies.TripPin.Trip>(GetPath("Trips"));\n\
+                    this._Trips = Context.CreateQuery<global::' + namespaceName + '.Trip>(GetPath("Trips"));\n\
                 }\n\
                 return this._Trips;\n\
             }\n\
         }\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
-        private global::Microsoft.OData.Client.DataServiceQuery<global::ODataV4Client.Proxies.TripPin.Trip> _Trips;\n\
+        private global::Microsoft.OData.Client.DataServiceQuery<global::' + namespaceName + '.Trip> _Trips;\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
         [global::Microsoft.OData.Client.OriginalNameAttribute("Photo")]\n\
-        public global::ODataV4Client.Proxies.TripPin.PhotoSingle Photo\n\
+        public global::' + namespaceName + '.PhotoSingle Photo\n\
         {\n\
             get\n\
             {\n\
@@ -821,20 +824,20 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
                 }\n\
                 if ((this._Photo == null))\n\
                 {\n\
-                    this._Photo = new global::ODataV4Client.Proxies.TripPin.PhotoSingle(this.Context, GetPath("Photo"));\n\
+                    this._Photo = new global::' + namespaceName + '.PhotoSingle(this.Context, GetPath("Photo"));\n\
                 }\n\
                 return this._Photo;\n\
             }\n\
         }\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
-        private global::ODataV4Client.Proxies.TripPin.PhotoSingle _Photo;\n\
+        private global::' + namespaceName + '.PhotoSingle _Photo;\n\
     }\n';
         var actual = genEntityType(Obj.types[0], Obj.types, namespaceName);
 
         expect(actual).toEqual(expected);
     });
-	
-	it('generation for base type PlanItem entity type and its inheritances.', function () {
+  
+  it('generation for base type PlanItem entity type and its inheritances.', function () {
     var entityTypeObj = {
         'types':[
         {
@@ -941,7 +944,7 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
         }
     ]};
     
-	        var expected ='\
+          var expected ='\
     [global::Microsoft.OData.Client.Key("PlanItemId")]\n\
     [global::Microsoft.OData.Client.OriginalNameAttribute("PlanItem")]\n\
     public partial class PlanItem : global::Microsoft.OData.Client.BaseEntityType, global::System.ComponentModel.INotifyPropertyChanged\n\
@@ -1175,7 +1178,7 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
         partial void OnFlightNumberChanged();\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
         [global::Microsoft.OData.Client.OriginalNameAttribute("From")]\n\
-        public global::ODataV4Client.Proxies.TripPin.Airport From\n\
+        public global::' + namespaceName + '.Airport From\n\
         {\n\
             get\n\
             {\n\
@@ -1190,12 +1193,12 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
             }\n\
         }\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
-        private global::ODataV4Client.Proxies.TripPin.Airport _From;\n\
-        partial void OnFromChanging(global::ODataV4Client.Proxies.TripPin.Airport value);\n\
+        private global::' + namespaceName + '.Airport _From;\n\
+        partial void OnFromChanging(global::' + namespaceName + '.Airport value);\n\
         partial void OnFromChanged();\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
         [global::Microsoft.OData.Client.OriginalNameAttribute("To")]\n\
-        public global::ODataV4Client.Proxies.TripPin.Airport To\n\
+        public global::' + namespaceName + '.Airport To\n\
         {\n\
             get\n\
             {\n\
@@ -1210,12 +1213,12 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
             }\n\
         }\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
-        private global::ODataV4Client.Proxies.TripPin.Airport _To;\n\
-        partial void OnToChanging(global::ODataV4Client.Proxies.TripPin.Airport value);\n\
+        private global::' + namespaceName + '.Airport _To;\n\
+        partial void OnToChanging(global::' + namespaceName + '.Airport value);\n\
         partial void OnToChanged();\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
         [global::Microsoft.OData.Client.OriginalNameAttribute("Airline")]\n\
-        public global::ODataV4Client.Proxies.TripPin.Airline Airline\n\
+        public global::' + namespaceName + '.Airline Airline\n\
         {\n\
             get\n\
             {\n\
@@ -1230,8 +1233,8 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
             }\n\
         }\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
-        private global::ODataV4Client.Proxies.TripPin.Airline _Airline;\n\
-        partial void OnAirlineChanging(global::ODataV4Client.Proxies.TripPin.Airline value);\n\
+        private global::' + namespaceName + '.Airline _Airline;\n\
+        partial void OnAirlineChanging(global::' + namespaceName + '.Airline value);\n\
         partial void OnAirlineChanged();\n\
     }\n\
     [global::Microsoft.OData.Client.OriginalNameAttribute("FlightSingle")]\n\
@@ -1254,7 +1257,7 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
             : base(query) {}\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
         [global::Microsoft.OData.Client.OriginalNameAttribute("From")]\n\
-        public global::ODataV4Client.Proxies.TripPin.AirportSingle From\n\
+        public global::' + namespaceName + '.AirportSingle From\n\
         {\n\
             get\n\
             {\n\
@@ -1264,16 +1267,16 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
                 }\n\
                 if ((this._From == null))\n\
                 {\n\
-                    this._From = new global::ODataV4Client.Proxies.TripPin.AirportSingle(this.Context, GetPath("From"));\n\
+                    this._From = new global::' + namespaceName + '.AirportSingle(this.Context, GetPath("From"));\n\
                 }\n\
                 return this._From;\n\
             }\n\
         }\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
-        private global::ODataV4Client.Proxies.TripPin.AirportSingle _From;\n\
+        private global::' + namespaceName + '.AirportSingle _From;\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
         [global::Microsoft.OData.Client.OriginalNameAttribute("To")]\n\
-        public global::ODataV4Client.Proxies.TripPin.AirportSingle To\n\
+        public global::' + namespaceName + '.AirportSingle To\n\
         {\n\
             get\n\
             {\n\
@@ -1283,16 +1286,16 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
                 }\n\
                 if ((this._To == null))\n\
                 {\n\
-                    this._To = new global::ODataV4Client.Proxies.TripPin.AirportSingle(this.Context, GetPath("To"));\n\
+                    this._To = new global::' + namespaceName + '.AirportSingle(this.Context, GetPath("To"));\n\
                 }\n\
                 return this._To;\n\
             }\n\
         }\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
-        private global::ODataV4Client.Proxies.TripPin.AirportSingle _To;\n\
+        private global::' + namespaceName + '.AirportSingle _To;\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
         [global::Microsoft.OData.Client.OriginalNameAttribute("Airline")]\n\
-        public global::ODataV4Client.Proxies.TripPin.AirlineSingle Airline\n\
+        public global::' + namespaceName + '.AirlineSingle Airline\n\
         {\n\
             get\n\
             {\n\
@@ -1302,20 +1305,20 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
                 }\n\
                 if ((this._Airline == null))\n\
                 {\n\
-                    this._Airline = new global::ODataV4Client.Proxies.TripPin.AirlineSingle(this.Context, GetPath("Airline"));\n\
+                    this._Airline = new global::' + namespaceName + '.AirlineSingle(this.Context, GetPath("Airline"));\n\
                 }\n\
                 return this._Airline;\n\
             }\n\
         }\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
-        private global::ODataV4Client.Proxies.TripPin.AirlineSingle _Airline;\n\
+        private global::' + namespaceName + '.AirlineSingle _Airline;\n\
     }\n\
     [global::Microsoft.OData.Client.Key("PlanItemId")]\n\
     [global::Microsoft.OData.Client.OriginalNameAttribute("Event")]\n\
     public partial class Event : PlanItem\n\
     {\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
-        public static Event CreateEvent(int planItemId, global::ODataV4Client.Proxies.TripPin.EventLocation occursAt)\n\
+        public static Event CreateEvent(int planItemId, global::' + namespaceName + '.EventLocation occursAt)\n\
         {\n\
             Event @event = new Event();\n\
             @event.PlanItemId = planItemId;\n\
@@ -1348,7 +1351,7 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
         partial void OnDescriptionChanged();\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
         [global::Microsoft.OData.Client.OriginalNameAttribute("OccursAt")]\n\
-        public global::ODataV4Client.Proxies.TripPin.EventLocation OccursAt\n\
+        public global::' + namespaceName + '.EventLocation OccursAt\n\
         {\n\
             get\n\
             {\n\
@@ -1363,8 +1366,8 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
             }\n\
         }\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
-        private global::ODataV4Client.Proxies.TripPin.EventLocation _OccursAt;\n\
-        partial void OnOccursAtChanging(global::ODataV4Client.Proxies.TripPin.EventLocation value);\n\
+        private global::' + namespaceName + '.EventLocation _OccursAt;\n\
+        partial void OnOccursAtChanging(global::' + namespaceName + '.EventLocation value);\n\
         partial void OnOccursAtChanged();\n\
     }\n\
     [global::Microsoft.OData.Client.OriginalNameAttribute("EventSingle")]\n\
@@ -1393,5 +1396,662 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
         
         expect(actual).toEqual(expected);
     });
-    
+
+  it('generation for extension bound functions with primitive type parameters and primitive type returns.', function(){
+    var entityType = {
+      name: 'person',
+      properties: [
+          {
+            name: 'myFunction1',
+            type: 'Function',
+            operationType: 'Bound',
+            params: [
+              {
+                name: 'tripId',
+                type: 'edm.int32'
+              }
+            ],
+            returns: {
+              type: 'edm.string'
+            }
+          }
+        ]
+    };
+
+    var expected = '\
+        /// <summary>\n\
+        /// There are no comments for MyFunction1 in the schema.\n\
+        /// </summary>\n\
+        [global::Microsoft.OData.Client.OriginalNameAttribute("MyFunction1")]\n\
+        public static global::Microsoft.OData.Client.DataServiceQuerySingle<string> MyFunction1(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, int tripId)\n\
+        {\n\
+            if (!source.IsComposable)\n\
+            {\n\
+                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
+            }\n\
+\n\
+            return source.CreateFunctionQuerySingle<string>("' + constants.Code.DefaultNamespace + '.MyFunction1", true, new global::Microsoft.OData.Client.UriOperationParameter("tripId", tripId));\n\
+        }\n\
+\n';
+
+    var actual = genExBoundOperations(entityType, namespaceName);
+
+    expect(actual).toEqual(expected);
+  });
+
+  it('generation for extension bound functions with collection of primitive type parameters and collection of primitive type returns', function(){
+    var entityType = {
+      name: 'person',
+      properties: [
+          {
+            name: 'myFunction2',
+            type: 'Function',
+            operationType: 'Bound',
+            params: [
+              {
+                name: 'tripIds',
+                type: 'edm.int32',
+                isCollection: true
+              }
+            ],
+            returns: {
+              type: 'edm.string',
+              isCollection: true
+            }
+          }
+        ]
+    };
+
+    var expected = '\
+        /// <summary>\n\
+        /// There are no comments for MyFunction2 in the schema.\n\
+        /// </summary>\n\
+        [global::Microsoft.OData.Client.OriginalNameAttribute("MyFunction2")]\n\
+        public static global::Microsoft.OData.Client.DataServiceQuery<string> MyFunction2(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, global::System.Collections.Generic.ICollection<int> tripIds)\n\
+        {\n\
+            if (!source.IsComposable)\n\
+            {\n\
+                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
+            }\n\
+\n\
+            return source.CreateFunctionQuery<string>("' + constants.Code.DefaultNamespace + '.MyFunction2", true, new global::Microsoft.OData.Client.UriOperationParameter("tripIds", tripIds));\n\
+        }\n\
+\n';
+  
+    var actual = genExBoundOperations(entityType, namespaceName);
+    expect(actual).toEqual(expected);
+  });
+
+  it('generation for extension bound functions with entity type parameters and entity type returns', function(){
+    var entityType = {
+      name: 'person',
+      properties: [
+          {
+            name: 'myFunction3',
+            type: 'Function',
+            operationType: 'Bound',
+            params: [
+              {
+                name: 'trip',
+                type: 'trip'
+              }
+            ],
+            returns: {
+              type: 'person'
+            }
+          }
+        ]
+    }; 
+
+    var expected = '\
+        /// <summary>\n\
+        /// There are no comments for MyFunction3 in the schema.\n\
+        /// </summary>\n\
+        [global::Microsoft.OData.Client.OriginalNameAttribute("MyFunction3")]\n\
+        public static global::' + namespaceName + '.PersonSingle MyFunction3(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, global::' + namespaceName + '.Trip trip, bool useEntityReference = false)\n\
+        {\n\
+            if (!source.IsComposable)\n\
+            {\n\
+                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
+            }\n\
+\n\
+            return new global::' + namespaceName + '.PersonSingle(source.CreateFunctionQuerySingle<global::' + namespaceName + '.Person>("' + constants.Code.DefaultNamespace + '.MyFunction3", true, new global::Microsoft.OData.Client.UriEntityOperationParameter("trip", trip, useEntityReference)));\n\
+        }\n\
+\n';
+
+    var actual = genExBoundOperations(entityType, namespaceName);
+    expect(actual).toEqual(expected);
+  });
+
+  it('generation for extension bound functions with collection of entity type parameters and collection of entity type returns', function(){
+    var entityType = {
+      name: 'person',
+      properties: [
+          {
+            name: 'myFunction4',
+            type: 'Function',
+            operationType: 'Bound',
+            params: [
+              {
+                name: 'trips',
+                type: 'trip',
+                isCollection: true
+              }
+            ],
+            returns: {
+              type: 'person',
+              isCollection: true
+            }
+          }
+        ]
+    }; 
+
+    var expected = '\
+        /// <summary>\n\
+        /// There are no comments for MyFunction4 in the schema.\n\
+        /// </summary>\n\
+        [global::Microsoft.OData.Client.OriginalNameAttribute("MyFunction4")]\n\
+        public static global::Microsoft.OData.Client.DataServiceQuery<global::' + namespaceName + '.Person> MyFunction4(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, global::System.Collections.Generic.ICollection<global::' + namespaceName + '.Trip> trips, bool useEntityReference = true)\n\
+        {\n\
+            if (!source.IsComposable)\n\
+            {\n\
+                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
+            }\n\
+\n\
+            return source.CreateFunctionQuery<global::' + namespaceName + '.Person>("' + constants.Code.DefaultNamespace + '.MyFunction4", true, new global::Microsoft.OData.Client.UriEntityOperationParameter("trips", trips, useEntityReference));\n\
+        }\n\
+\n';
+    var actual = genExBoundOperations(entityType, namespaceName);
+    expect(actual).toEqual(expected);
+  });
+
+  it('generation for extension bound actions with primitive type parameters', function(){
+    var entityType = {
+      name: 'person',
+      properties: [
+          {
+            name: 'myAction1',
+            type: 'Action',
+            operationType: 'Bound',
+            params: [
+              {
+                name: 'tripId',
+                type: 'edm.int32'
+              }
+            ]
+          }
+        ]
+    }; 
+
+    var expected = '\
+        /// <summary>\n\
+        /// There are no comments for MyAction1 in the schema.\n\
+        /// </summary>\n\
+        [global::Microsoft.OData.Client.OriginalNameAttribute("MyAction1")]\n\
+        public static global::Microsoft.OData.Client.DataServiceActionQuery MyAction1(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, int tripId)\n\
+        {\n\
+            if (!source.IsComposable)\n\
+            {\n\
+                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
+            }\n\
+\n\
+            return new global::Microsoft.OData.Client.DataServiceActionQuery(\n\
+                source.Context,\n\
+                source.AppendRequestUri("' + constants.Code.DefaultNamespace + '.MyAction1"),\n\
+                new global::Microsoft.OData.Client.BodyOperationParameter("tripId", tripId));\n\
+        }\n\
+\n';
+    var actual = genExBoundOperations(entityType, namespaceName);
+    expect(actual).toEqual(expected);
+  });
+
+  it('generation for extension bound actions with collection of primitive type parameters', function(){
+    var entityType = {
+      name: 'person',
+      properties: [
+          {
+            name: 'myAction2',
+            type: 'Action',
+            operationType: 'Bound',
+            params: [
+              {
+                name: 'tripIds',
+                type: 'edm.int32',
+                isCollection: true
+              }
+            ]
+          }
+        ]
+    }; 
+
+    var expected = '\
+        /// <summary>\n\
+        /// There are no comments for MyAction2 in the schema.\n\
+        /// </summary>\n\
+        [global::Microsoft.OData.Client.OriginalNameAttribute("MyAction2")]\n\
+        public static global::Microsoft.OData.Client.DataServiceActionQuery MyAction2(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, global::System.Collections.Generic.ICollection<int> tripIds)\n\
+        {\n\
+            if (!source.IsComposable)\n\
+            {\n\
+                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
+            }\n\
+\n\
+            return new global::Microsoft.OData.Client.DataServiceActionQuery(\n\
+                source.Context,\n\
+                source.AppendRequestUri("' + constants.Code.DefaultNamespace + '.MyAction2"),\n\
+                new global::Microsoft.OData.Client.BodyOperationParameter("tripIds", tripIds));\n\
+        }\n\
+\n';
+    var actual = genExBoundOperations(entityType, namespaceName);
+    expect(actual).toEqual(expected);
+  });
+
+  it('generation for extension bound actions with entity type parameters', function(){
+    var entityType = {
+      name: 'person',
+      properties: [
+          {
+            name: 'myAction3',
+            type: 'Action',
+            operationType: 'Bound',
+            params: [
+              {
+                name: 'trip',
+                type: 'trip'
+              }
+            ]
+          }
+        ]
+    }; 
+
+    var expected = '\
+        /// <summary>\n\
+        /// There are no comments for MyAction3 in the schema.\n\
+        /// </summary>\n\
+        [global::Microsoft.OData.Client.OriginalNameAttribute("MyAction3")]\n\
+        public static global::Microsoft.OData.Client.DataServiceActionQuery MyAction3(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, global::' + namespaceName + '.Trip trip)\n\
+        {\n\
+            if (!source.IsComposable)\n\
+            {\n\
+                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
+            }\n\
+\n\
+            return new global::Microsoft.OData.Client.DataServiceActionQuery(\n\
+                source.Context,\n\
+                source.AppendRequestUri("' + constants.Code.DefaultNamespace + '.MyAction3"),\n\
+                new global::Microsoft.OData.Client.BodyOperationParameter("trip", trip));\n\
+        }\n\
+\n';
+      var actual = genExBoundOperations(entityType, namespaceName);
+    expect(actual).toEqual(expected);
+  });
+
+  it('generation for extension bound actions with collection of entity type parameters', function(){
+    var entityType = {
+      name: 'person',
+      properties: [
+          {
+            name: 'myAction4',
+            type: 'Action',
+            operationType: 'Bound',
+            params: [
+              {
+                name: 'trips',
+                type: 'trip',
+                isCollection: true
+              }
+            ]
+          }
+        ]
+    }; 
+    var expected = '\
+        /// <summary>\n\
+        /// There are no comments for MyAction4 in the schema.\n\
+        /// </summary>\n\
+        [global::Microsoft.OData.Client.OriginalNameAttribute("MyAction4")]\n\
+        public static global::Microsoft.OData.Client.DataServiceActionQuery MyAction4(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, global::System.Collections.Generic.ICollection<global::' + namespaceName + '.Trip> trips)\n\
+        {\n\
+            if (!source.IsComposable)\n\
+            {\n\
+                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
+            }\n\
+\n\
+            return new global::Microsoft.OData.Client.DataServiceActionQuery(\n\
+                source.Context,\n\
+                source.AppendRequestUri("' + constants.Code.DefaultNamespace + '.MyAction4"),\n\
+                new global::Microsoft.OData.Client.BodyOperationParameter("trips", trips));\n\
+        }\n\
+\n';
+    var actual = genExBoundOperations(entityType, namespaceName);
+    expect(actual).toEqual(expected);
+  });
+
+  it('generation for extension bound functions with primitive type parameters and primitive type returns.', function(){
+    var entityType = {
+      name: 'person',
+      properties: [
+          {
+            name: 'myFunction1',
+            type: 'Function',
+            operationType: 'Bound',
+            params: [
+              {
+                name: 'tripId',
+                type: 'edm.int32'
+              }
+            ],
+            returns: {
+              type: 'edm.string'
+            }
+          }
+        ]
+    };
+
+    var expected = '\
+        /// <summary>\n\
+        /// There are no comments for MyFunction1 in the schema.\n\
+        /// </summary>\n\
+        [global::Microsoft.OData.Client.OriginalNameAttribute("MyFunction1")]\n\
+        public static global::Microsoft.OData.Client.DataServiceQuerySingle<string> MyFunction1(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, int tripId)\n\
+        {\n\
+            if (!source.IsComposable)\n\
+            {\n\
+                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
+            }\n\
+\n\
+            return source.CreateFunctionQuerySingle<string>("' + constants.Code.DefaultNamespace + '.MyFunction1", true, new global::Microsoft.OData.Client.UriOperationParameter("tripId", tripId));\n\
+        }\n\
+\n';
+
+        var actual = genExBoundOperations(entityType, namespaceName);
+
+    expect(actual).toEqual(expected);
+  });
+
+  it('generation for extension bound functions with collection of primitive type parameters and collection of primitive type returns', function(){
+    var entityType = {
+      name: 'person',
+      properties: [
+          {
+            name: 'myFunction2',
+            type: 'Function',
+            operationType: 'Bound',
+            params: [
+              {
+                name: 'tripIds',
+                type: 'edm.int32',
+                isCollection: true
+              }
+            ],
+            returns: {
+              type: 'edm.string',
+              isCollection: true
+            }
+          }
+        ]
+    };
+
+    var expected = '\
+        /// <summary>\n\
+        /// There are no comments for MyFunction2 in the schema.\n\
+        /// </summary>\n\
+        [global::Microsoft.OData.Client.OriginalNameAttribute("MyFunction2")]\n\
+        public static global::Microsoft.OData.Client.DataServiceQuery<string> MyFunction2(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, global::System.Collections.Generic.ICollection<int> tripIds)\n\
+        {\n\
+            if (!source.IsComposable)\n\
+            {\n\
+                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
+            }\n\
+\n\
+            return source.CreateFunctionQuery<string>("' + constants.Code.DefaultNamespace + '.MyFunction2", true, new global::Microsoft.OData.Client.UriOperationParameter("tripIds", tripIds));\n\
+        }\n\
+\n';
+  
+    var actual = genExBoundOperations(entityType, namespaceName);
+    expect(actual).toEqual(expected);
+  });
+
+  it('generation for extension bound functions with entity type parameters and entity type returns', function(){
+    var entityType = {
+      name: 'person',
+      properties: [
+          {
+            name: 'myFunction3',
+            type: 'Function',
+            operationType: 'Bound',
+            params: [
+              {
+                name: 'trip',
+                type: 'trip'
+              }
+            ],
+            returns: {
+              type: 'person'
+            }
+          }
+        ]
+    }; 
+
+    var expected = '\
+        /// <summary>\n\
+        /// There are no comments for MyFunction3 in the schema.\n\
+        /// </summary>\n\
+        [global::Microsoft.OData.Client.OriginalNameAttribute("MyFunction3")]\n\
+        public static global::' + namespaceName + '.PersonSingle MyFunction3(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, global::' + namespaceName + '.Trip trip, bool useEntityReference = false)\n\
+        {\n\
+            if (!source.IsComposable)\n\
+            {\n\
+                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
+            }\n\
+\n\
+            return new global::' + namespaceName + '.PersonSingle(source.CreateFunctionQuerySingle<global::' + namespaceName + '.Person>("' + constants.Code.DefaultNamespace + '.MyFunction3", true, new global::Microsoft.OData.Client.UriEntityOperationParameter("trip", trip, useEntityReference)));\n\
+        }\n\
+\n';
+
+    var actual = genExBoundOperations(entityType, namespaceName);
+    expect(actual).toEqual(expected);
+  });
+
+  it('generation for extension bound functions with collection of entity type parameters and collection of entity type returns', function(){
+    var entityType = {
+      name: 'person',
+      properties: [
+          {
+            name: 'myFunction4',
+            type: 'Function',
+            operationType: 'Bound',
+            params: [
+              {
+                name: 'trips',
+                type: 'trip',
+                isCollection: true
+              }
+            ],
+            returns: {
+              type: 'person',
+              isCollection: true
+            }
+          }
+        ]
+    }; 
+
+    var expected = '\
+        /// <summary>\n\
+        /// There are no comments for MyFunction4 in the schema.\n\
+        /// </summary>\n\
+        [global::Microsoft.OData.Client.OriginalNameAttribute("MyFunction4")]\n\
+        public static global::Microsoft.OData.Client.DataServiceQuery<global::' + namespaceName + '.Person> MyFunction4(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, global::System.Collections.Generic.ICollection<global::' + namespaceName + '.Trip> trips, bool useEntityReference = true)\n\
+        {\n\
+            if (!source.IsComposable)\n\
+            {\n\
+                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
+            }\n\
+\n\
+            return source.CreateFunctionQuery<global::' + namespaceName + '.Person>("' + constants.Code.DefaultNamespace + '.MyFunction4", true, new global::Microsoft.OData.Client.UriEntityOperationParameter("trips", trips, useEntityReference));\n\
+        }\n\
+\n';
+    var actual = genExBoundOperations(entityType, namespaceName);
+    expect(actual).toEqual(expected);
+  });
+
+  it('generation for extension bound actions with primitive type parameters', function(){
+    var entityType = {
+      name: 'person',
+      properties: [
+          {
+            name: 'myAction1',
+            type: 'Action',
+            operationType: 'Bound',
+            params: [
+              {
+                name: 'tripId',
+                type: 'edm.int32'
+              }
+            ]
+          }
+        ]
+    }; 
+
+    var expected = '\
+        /// <summary>\n\
+        /// There are no comments for MyAction1 in the schema.\n\
+        /// </summary>\n\
+        [global::Microsoft.OData.Client.OriginalNameAttribute("MyAction1")]\n\
+        public static global::Microsoft.OData.Client.DataServiceActionQuery MyAction1(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, int tripId)\n\
+        {\n\
+            if (!source.IsComposable)\n\
+            {\n\
+                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
+            }\n\
+\n\
+            return new global::Microsoft.OData.Client.DataServiceActionQuery(\n\
+                source.Context,\n\
+                source.AppendRequestUri("' + constants.Code.DefaultNamespace + '.MyAction1"),\n\
+                new global::Microsoft.OData.Client.BodyOperationParameter("tripId", tripId));\n\
+        }\n\
+\n';
+    var actual = genExBoundOperations(entityType, namespaceName);
+    expect(actual).toEqual(expected);
+  });
+
+  it('generation for extension bound actions with collection of primitive type parameters', function(){
+    var entityType = {
+      name: 'person',
+      properties: [
+          {
+            name: 'myAction2',
+            type: 'Action',
+            operationType: 'Bound',
+            params: [
+              {
+                name: 'tripIds',
+                type: 'edm.int32',
+                isCollection: true
+              }
+            ]
+          }
+        ]
+    }; 
+
+    var expected = '\
+        /// <summary>\n\
+        /// There are no comments for MyAction2 in the schema.\n\
+        /// </summary>\n\
+        [global::Microsoft.OData.Client.OriginalNameAttribute("MyAction2")]\n\
+        public static global::Microsoft.OData.Client.DataServiceActionQuery MyAction2(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, global::System.Collections.Generic.ICollection<int> tripIds)\n\
+        {\n\
+            if (!source.IsComposable)\n\
+            {\n\
+                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
+            }\n\
+\n\
+            return new global::Microsoft.OData.Client.DataServiceActionQuery(\n\
+                source.Context,\n\
+                source.AppendRequestUri("' + constants.Code.DefaultNamespace + '.MyAction2"),\n\
+                new global::Microsoft.OData.Client.BodyOperationParameter("tripIds", tripIds));\n\
+        }\n\
+\n';
+    var actual = genExBoundOperations(entityType, namespaceName);
+    expect(actual).toEqual(expected);
+  });
+
+  it('generation for extension bound actions with entity type parameters', function(){
+    var entityType = {
+      name: 'person',
+      properties: [
+          {
+            name: 'myAction3',
+            type: 'Action',
+            operationType: 'Bound',
+            params: [
+              {
+                name: 'trip',
+                type: 'trip'
+              }
+            ]
+          }
+        ]
+    }; 
+
+    var expected = '\
+        /// <summary>\n\
+        /// There are no comments for MyAction3 in the schema.\n\
+        /// </summary>\n\
+        [global::Microsoft.OData.Client.OriginalNameAttribute("MyAction3")]\n\
+        public static global::Microsoft.OData.Client.DataServiceActionQuery MyAction3(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, global::' + namespaceName + '.Trip trip)\n\
+        {\n\
+            if (!source.IsComposable)\n\
+            {\n\
+                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
+            }\n\
+\n\
+            return new global::Microsoft.OData.Client.DataServiceActionQuery(\n\
+                source.Context,\n\
+                source.AppendRequestUri("' + constants.Code.DefaultNamespace + '.MyAction3"),\n\
+                new global::Microsoft.OData.Client.BodyOperationParameter("trip", trip));\n\
+        }\n\
+\n';
+      var actual = genExBoundOperations(entityType, namespaceName);
+    expect(actual).toEqual(expected);
+  });
+
+  it('generation for extension bound actions with collection of entity type parameters', function(){
+    var entityType = {
+      name: 'person',
+      properties: [
+          {
+            name: 'myAction4',
+            type: 'Action',
+            operationType: 'Bound',
+            params: [
+              {
+                name: 'trips',
+                type: 'trip',
+                isCollection: true
+              }
+            ]
+          }
+        ]
+    }; 
+    var expected = '\
+        /// <summary>\n\
+        /// There are no comments for MyAction4 in the schema.\n\
+        /// </summary>\n\
+        [global::Microsoft.OData.Client.OriginalNameAttribute("MyAction4")]\n\
+        public static global::Microsoft.OData.Client.DataServiceActionQuery MyAction4(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, global::System.Collections.Generic.ICollection<global::' + namespaceName + '.Trip> trips)\n\
+        {\n\
+            if (!source.IsComposable)\n\
+            {\n\
+                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
+            }\n\
+\n\
+            return new global::Microsoft.OData.Client.DataServiceActionQuery(\n\
+                source.Context,\n\
+                source.AppendRequestUri("' + constants.Code.DefaultNamespace + '.MyAction4"),\n\
+                new global::Microsoft.OData.Client.BodyOperationParameter("trips", trips));\n\
+        }\n\
+\n';
+    var actual = genExBoundOperations(entityType, namespaceName);
+    expect(actual).toEqual(expected);
+  });
 });

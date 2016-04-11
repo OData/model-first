@@ -5,7 +5,6 @@
       "current": "1.0.0"
     },
     "description": "TripPin is a fictional reference service demonstrating the capabilities of OData v4.",
-    "namespace": "Microsoft.OData.SampleService.Models.TripPin",
     "termsOfService": "http://swagger.io/terms/",
     "contact": {
       "name": "API Support",
@@ -90,18 +89,15 @@
         "params": [
           {
             "name": "lat",
-            "type": "trip",
-            "isNullable": true
+            "type": "edm.double"
           },
           {
             "name": "lon",
-            "type": "edm.double",
-            "isCollection": true
+            "type": "edm.double"
           }
         ],
         "returns": {
-            "type": "edm.double",
-            "isNullable": true
+          "type": "airport"
         }
       },
       {
@@ -121,7 +117,7 @@
         },
         {
           "name": "female",
-          "value": 1
+          "value": -1
         },
         {
           "name": "male",
@@ -254,9 +250,8 @@
         {
           "name": "getFavoriteAirline",
           "type": "Function",
-          "returns": 
-          {
-            "type": "airport"
+          "returns": {
+            "type": "airline"
           },
           "operationType": "Bound"
         },
@@ -269,11 +264,10 @@
               "type": "edm.string"
             }
           ],
-          "returns": 
-            {
-                "type": "trip",
-                "isCollection": true
-            },
+          "returns": {
+            "type": "trip",
+            "isCollection": true
+          },
           "operationType": "Bound"
         },
         {
@@ -453,9 +447,15 @@
         {
           "name": "getInvolvedPeople",
           "type": "Function",
+      "params": [
+        {
+          "name": "trip2",
+        "type": "trip"
+        }
+      ],
           "returns": {
-              "type": "person",
-              "isCollection": true
+            "type": "person",
+            "isCollection": true
           },
           "operationType": "Bound"
         }

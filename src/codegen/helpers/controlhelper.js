@@ -8,7 +8,7 @@ var defaultNamespace = constants.Code.DefaultNamespace;
 exports.processSample = function (samplePath, callback){
 	fs.readFile(samplePath, function(err, data){
 		if(err){
-			callback(err, null);
+			return callback(err, null);
 		}
 
 		var csharpCode = codegen.Codegen(data, defaultNamespace);
@@ -17,7 +17,7 @@ exports.processSample = function (samplePath, callback){
 			csharpCode: csharpCode 
 		};
 
-		callback(null, result);
+		return callback(null, result);
 	});
 };
 
