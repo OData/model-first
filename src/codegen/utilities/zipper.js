@@ -33,7 +33,7 @@ exports.zipFolder = function(folderPath, zipPath, callback){
 **     returns an EasyZip instance. 
 */
 function traverseFolder(folderPath, easyZip, folder){
-    if(null === easyZip){
+    if(!easyZip){
         easyZip = new EasyZip();
     }
     var folderName = StringHelper.getLastSegment(folderPath);

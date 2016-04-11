@@ -3,32 +3,46 @@ var config = require('../config');
 var codegen = require('../modules/csharpClientCodegen');
 var ctrlhelper = require('../helpers/controlhelper');
 var codewriter = require('../utilities/codewriter');
+var guid = require('../utilities/guid');
 var zipper = require('../utilities/zipper');
-
+var Logger = require('../utilities/logger');
+var logger = Logger.getInstance();
 var constants = config.Constants;
 
-function csharpCodeWriter(content) {
-    codewriter.writeCodes(constants.FileNames.CSharpCode, constants.Paths.CSharpCode, content);
-}
-
-function zipCSharpCodes() {
-    var files = [
-        {name: constants.FileNames.CSharpCode, path: constants.Paths.CSharpCode + constants.FileNames.CSharpCode}
-    ];
-
-    zipper.zip(files, constants.Paths.CSharpZipPackage + constants.FileNames.CSharpZipPackage);
-}
-
-exports.get = function (req, res) {
+exports.get = function(req, res){
     var query = req.query;
-    if (query) {
-        if (query.name == 'csharp') {
-            ctrlhelper.processSample(constants.Paths.TripPinMetadataSample, function (err, result) {
-                csharpCodeWriter(result.csharpCode);
-                zipCSharpCodes();
-                res.download(constants.Paths.CSharpZipPackage + constants.FileNames.CSharpZipPackage, constants.FileNames.CSharpZipPackage);
-            });
-        } else {
+    if(query){
+        if(query.name == 'csharp'){
+            logger.logInfo('Processing TripPin Sample metadata...')
+            ctrlhelper.processSample(constants.Paths.TripPinMetadataSample, function(err, result){
+                if(err){
+                    logger.logErr(err);
+                    return res.send(err);
+                }
+
+                logger.logInfo('Generating the CSharp code for OData v4 service...');
+                codewriter.createCSharpProject(constants.FileNames.CSharpZipPackage, result.csharpCode, function(err, folderName){
+                    if(err){
+                        logger.logErr(err);
+                        return res.send('aaaaaaaaaaaaaaaaaaaaa');
+                    }
+
+                    zipper.zipFolder(constants.Paths.CSharpPackage + folderName, constants.Paths.CSharpZipPackage + folderName + '.zip', function(err){
+                        if(err){
+                            logger.logErr(err);
+                            return res.send('err');
+                        }
+
+                        setTimeout(function(){
+                            res.download(constants.Paths.CSharpZipPackage + folderName + '.zip', folderName + '.zip');
+                            logger.logSuc('Success to download!');
+                        }, 1000);
+                    });
+                });
+            }); 
+        }
+        else{
+            logger.logErr('Cannot generate the ' + query.name + ' code!');
             res.send('Error: Cannot generate the ' + query.name + ' code!');
         }
     }
@@ -36,14 +50,32 @@ exports.get = function (req, res) {
 
 exports.post = function (req, res) {
     var query = req.query;
-    if (query) {
-        if (query.name == 'csharp') {
-            if (req.body) {
-                csharpCodeWriter(codegen.CodegenByObj(req.body, constants.Code.DefaultNamespace));
-                zipCSharpCodes();
-                res.send({link: !!req.connection.encrypted ? 'https://' : 'http://' + req.headers.host + constants.Paths.CSharpZipPackage.substr(1) + constants.FileNames.CSharpZipPackage});
+    if(query){
+        if(query.name == 'csharp'){
+            if(req.body){
+                logger.logInfo('Processing request\'s metadata...');
+                var csharpCode = codegen.CodegenByObj(req.body, constants.Code.DefaultNamespace);
+                logger.logInfo('Generating the CSharp code for OData v4 service...');
+                codewriter.createCSharpProject(constants.FileNames.CSharpZipPackage, csharpCode, function(err, folderName){
+                    if(err){
+                        logger.logErr(err);
+                        return res.send('err');
+                    }
+
+                    zipper.zipFolder(constants.Paths.CSharpPackage + folderName, constants.Paths.CSharpZipPackage + folderName + '.zip', function(err){
+                        if(err){
+                            logger.logErr(err);
+                            return res.send('err');
+                        }
+
+                        res.send({link: !!req.connection.encrypted ? 'https://' : 'http://' + req.headers.host + constants.Paths.CSharpZipPackage.substr(1) + folderName + '.zip'});
+                        logger.logSuc('Success to download!');
+                    });
+                });
             }
-        } else {
+        }
+        else{
+            logger.logErr('Cannot generate the ' + query.name + ' code!');
             res.send('Error: Cannot generate the ' + query.name + ' code!');
         }
     }
