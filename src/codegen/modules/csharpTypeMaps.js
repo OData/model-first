@@ -36,11 +36,21 @@ var PrimitiveTypeMappings = {
     'edm.geometrycollection': 'global::Microsoft.Spatial.GeometryCollection'
 };
 
+var RefTypes = [
+    'edm.binary', 'edm.string', 'edm.stream', 'edm.geography', 'edm.geographypoint',
+    'edm.geographylinestring', 'edm.geographypolygon', 'edm.geographymultipoint', 'edm.geographymultilinestring', 'edm.geographymultipolygon',
+    'edm.geographycollection', 'edm.geometry', 'edm.geometrypoint', 'edm.geometrylinestring', 'edm.geometrypolygon',
+    'edm.geometrymultipoint', 'edm.geometrymultilinestring', 'edm.geometrymultipolygon', 'edm.geometrycollection'
+];
+
 exports.MapType = function(type){
-	if(PrimitiveTypeMappings[type]){
-		return { type: PrimitiveTypeMappings[type], isPrimitive: true };
-	}
-	else{
-		return { type: StringHelper.capitalizeInitial(type), isPrimitive: false };
-	}
+    var isRefType = false;
+    if(PrimitiveTypeMappings[type]){
+        isRefType = RefTypes.indexOf(type) == -1 ? false : true;
+
+        return { type: PrimitiveTypeMappings[type], isPrimitive: true, isRefType: isRefType };
+    }
+    else{
+        return { type: StringHelper.capitalizeInitial(type), isPrimitive: false, isRefType: true };
+    }
 };
