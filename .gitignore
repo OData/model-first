@@ -240,4 +240,5 @@ dist/*
 nbproject/*
 
 # Ignore the codegen folder.
-public/client
+public/client/csharp/packages
+public/client/csharp/zips

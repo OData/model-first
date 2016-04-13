@@ -1,41 +1,57 @@
 var fs = require('fs');
+var EasyZip = require('easy-zip').EasyZip;
+var StringHelper = require('../helpers/stringhelper');
+var Logger = require('./logger');
 
-exports.zip = function (files, zipPath) {
-    var NativeZip = require('node-native-zip');
-    var archive = new NativeZip();
-    archive.addFiles(files, function (err) {
-        if (err) {
-            return console.log('Error while adding files', err);
-        }
-
-        var buff = archive.toBuffer();
-
-        fs.writeFile(zipPath, buff, function () {
-            console.log('Finish to zip files');
-        });
-    });
+/*
+** Zip the whole folder to a package.
+** @params:
+**     folderPath: The folder path.
+**     zipPath: The path of target package.
+**     callback: The callback function.
+*/
+exports.zipFolder = function(folderPath, zipPath, callback){
+    var logger = Logger.getInstance();
+    try{
+        var easyZip = traverseFolder(folderPath);
+        easyZip.writeToFile(zipPath);
+        logger.logSuc('Finish to zip files');
+        return callback();
+    }
+    catch(err){
+        return callback(err);
+    }
 };
-exports.verify = function (files) {
-    var exists = false;
-    for (var i in files) {
-        var path = files[i].path;
-        exists = fs.existsSync(path);
-        if (!exists) {
-            console.log('File ' + files[i].name + ' is not found!');
 
-            return false;
+/*
+** Traverse the target folder and its sub-folder, and set all the folders and files for EasyZip module.
+** @params:
+**     folderPath: The path of the folder which will be zipped.
+**     easyZip: An instance of EasyZip. This parameter is only used in recursive invocations. Set it to null at first.
+**     folder: An property of EasyZip instance. This parameter is only used in recursive invocations. Set it to null at first.
+** @returns:
+**     returns an EasyZip instance. 
+*/
+function traverseFolder(folderPath, easyZip, folder){
+    if(!easyZip){
+        easyZip = new EasyZip();
+    }
+    var folderName = StringHelper.getLastSegment(folderPath);
+    folder = folder ? folder.folder(folderName) : easyZip.folder(folderName);
+    var files = fs.readdirSync(folderPath);
+    if(null !== files && null !== files.length && files.length > 0){
+        for(var i = 0; i < files.length; i++){
+            var filePath = StringHelper.addSlash(folderPath) + files[i];
+            var stats = fs.statSync(filePath);
+            if(stats.isFile()){
+                var content = fs.readFileSync(filePath);
+                folder.file(files[i], content);
+            }
+            else if(stats.isDirectory()){
+                easyZip = traverseFolder(filePath, easyZip, folder);
+            }
         }
     }
-    console.log('Found them!');
-    return true;
-};
-exports.verifyZip = function (zip) {
-    var exists = fs.existsSync(zip);
-    if (exists) {
-        console.log('Found it!');
-    } else {
-        console.log('Cannot find the file on the path ' + zip);
-    }
 
-    return exists;
-};
+    return easyZip;
+}

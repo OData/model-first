@@ -1,6 +1,8 @@
 var util = require('util');
 var typeMaps = require('./csharpTypeMaps');
 var StringHelper = require('../helpers/stringhelper');
+var constants = require('../config').Constants;
+var container = require('./entityContainerGenerator');
 
 function hasKeyProperty(type, types){
 	for(var i in type.properties){
@@ -247,6 +249,207 @@ public static %s Create%s', typeName, typeName);
 	}
 }
 
+function getCLRType(type, namespaceName){
+	var typeInfo = typeMaps.MapType(type.type);
+	var clrType = typeInfo.type;
+
+	if(typeInfo.isPrimitive === false){
+		clrType = util.format('global::%s.%s', namespaceName, typeInfo.type);
+	}
+	
+	if(typeInfo.isPrimitive && typeInfo.isRefType === false && type.isNullable && type.isNullable === true){
+		clrType = util.format('global::System.Nullable<%s>', typeInfo.type);
+	}
+
+	return clrType;
+}
+
+function getExBoundOpOperationCLRType(type, namespaceName){
+	var typeInfo = typeMaps.MapType(type.type);
+	var clrType = getCLRType(type, namespaceName);
+	if(typeInfo.isPrimitive === true){
+		// Process primitive-type.
+		clrType = type.isCollection && type.isCollection === true ?
+			util.format('global::Microsoft.OData.Client.DataServiceQuery<%s>', clrType) :
+			util.format('global::Microsoft.OData.Client.DataServiceQuerySingle<%s>', clrType);
+	}
+	else{ // isPrimitive === false
+		// Process entity-type.
+		clrType = type.isCollection && type.isCollection === true ?
+			util.format('global::Microsoft.OData.Client.DataServiceQuery<%s>', clrType) :
+			util.format('%sSingle', clrType);
+	}
+
+	return clrType;
+}
+
+function getExBoundOpParameterCLRType(type, namespaceName){
+	var typeInfo = typeMaps.MapType(type.type);
+	var clrType = getCLRType(type, namespaceName);
+	if(typeInfo.isPrimitive === true){
+		// Process primitive-type.
+		clrType = type.isCollection && type.isCollection === true ?
+			util.format('global::System.Collections.Generic.ICollection<%s>', clrType) :
+			clrType;
+	}
+	else{ // isPrimitive === false
+		// Process entity-type.
+		clrType = type.isCollection && type.isCollection === true ?
+			util.format('global::System.Collections.Generic.ICollection<%s>', clrType) :
+			util.format('%s', clrType);
+	}
+
+	return clrType;
+}
+
+function getExBoundOpParams(boundParam, params, namespaceName, opType){
+	var type = { type: boundParam };
+	var paramsStr = util.format('this global::Microsoft.OData.Client.DataServiceQuerySingle<%s> source', getCLRType(type, namespaceName));
+	var containsEntityType = false;
+	var isCollection = false;
+	if(params && params.length > 0){
+		for(var i = 0; i < params.length; i++){
+			var clrType = typeMaps.MapType(params[i].type);
+			if(clrType.isPrimitive === false && containsEntityType === false){
+				containsEntityType = true;
+				isCollection = params[i].isCollection && params[i].isCollection;
+			}
+			paramsStr += util.format(', %s %s',
+				getExBoundOpParameterCLRType(params[i], namespaceName),
+				params[i].name);
+		}
+	}
+	// Maybe there has a bug in T4 template.
+	return containsEntityType && opType && opType === 'Function' ? 
+		paramsStr + (isCollection ? ', bool useEntityReference = true' : ', bool useEntityReference = false') : 
+		paramsStr;
+}
+
+function getExBoundFuncReturns(returns, namespaceName, operationName, paramsStr){
+	var returnsStr = '';
+	var typeInfo = typeMaps.MapType(returns.type);
+	var clrType = getCLRType(returns, namespaceName);
+	if(typeInfo.isPrimitive === true){
+		// Process primitive-type.
+		returnsStr = returns.isCollection && returns.isCollection === true ?
+			util.format('\
+\n\
+            return source.CreateFunctionQuery<%s>("%s.%s", true%s);\n', clrType, constants.Code.DefaultNamespace, operationName, paramsStr) :
+			util.format('\
+\n\
+            return source.CreateFunctionQuerySingle<%s>("%s.%s", true%s);\n', clrType, constants.Code.DefaultNamespace, operationName, paramsStr);
+	}
+	else{ // isPrimitive === false
+		// Process entity-type.
+		returnsStr = returns.isCollection && returns.isCollection === true ?
+			util.format('\
+\n\
+            return source.CreateFunctionQuery<%s>("%s.%s", true%s);\n', clrType, constants.Code.DefaultNamespace, operationName, paramsStr) :
+			util.format('\
+\n\
+            return new %sSingle(source.CreateFunctionQuerySingle<%s>("%s.%s", true%s));\n', clrType, clrType, constants.Code.DefaultNamespace, operationName, paramsStr);
+	}
+
+	return returnsStr;
+}
+
+exports.genExBoundOperation = genExBoundOperation;
+function genExBoundOperation(operation, boundParam, namespaceName){
+	var result = '';
+	var operationFrame = '';
+	if(operation && operation.operationType === 'Bound'){
+		var operationName = StringHelper.capitalizeInitial(operation.name);
+		var operationParams = getExBoundOpParams(boundParam, operation.params, namespaceName, operation.type);
+		var operationType = '';
+		var operationBody = '\
+            if (!source.IsComposable)\n\
+            {\n\
+                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
+            }\n';
+		if(operation.type === 'Function'){
+			if(operation.returns){
+				var paramsStr = '';
+				if(operation.params && operation.params.length > 0){
+					for(var i = 0; i < operation.params.length; i++){
+						var clrType = typeMaps.MapType(operation.params[i].type);
+						if(clrType.isPrimitive){
+							paramsStr += util.format(', new global::Microsoft.OData.Client.UriOperationParameter("%s", %s)', operation.params[i].name, operation.params[i].name);
+						}
+						else{
+							paramsStr += util.format(', new global::Microsoft.OData.Client.UriEntityOperationParameter("%s", %s, useEntityReference)', operation.params[i].name, operation.params[i].name);
+						}
+					}
+				}
+				operationType = getExBoundOpOperationCLRType(operation.returns, namespaceName);
+				operationBody += getExBoundFuncReturns(operation.returns, namespaceName, operationName, paramsStr);
+			}
+			else{
+				console.error('The unbound function %s must have a return value.', operationName);
+
+				return '';
+			}
+		}
+		else{ // operation.type === Action
+			operationType = 'global::Microsoft.OData.Client.DataServiceActionQuery';
+			operationBody += util.format('\
+\n\
+            return new global::Microsoft.OData.Client.DataServiceActionQuery(\n\
+                source.Context,\n\
+                source.AppendRequestUri("%s.%s")', constants.Code.DefaultNamespace, operationName);
+			if(operation.params && operation.params.length > 0){
+				for(var j = 0; j < operation.params.length; j++){
+				    operationBody += util.format('\
+,\n\
+                new global::Microsoft.OData.Client.BodyOperationParameter("%s", %s)', operation.params[j].name, operation.params[j].name);
+			    }
+			}
+			
+			operationBody += ');\n';
+		}
+
+		operationFrame = util.format('\
+        /// <summary>\n\
+        /// There are no comments for %s in the schema.\n\
+        /// </summary>\n\
+        [global::Microsoft.OData.Client.OriginalNameAttribute("%s")]\n\
+        public static %s %s(%s)\n\
+        {\n\
+%s\
+        }\n', operationName, operationName, operationType, operationName, operationParams, operationBody);
+	}
+
+	return operationFrame;
+}
+
+exports.genExBoundOperations = genExBoundOperations;
+function genExBoundOperations(entityType, namespaceName){
+	var boundParam = entityType.name;
+	var props = entityType.properties;
+	var result = '';
+	for(var i = 0; i < props.length; i++){
+		if(props[i].type === 'Function' || props[i].type === 'Action'){
+			result += genExBoundOperation(props[i], boundParam, namespaceName) + '\n';
+		}
+	}
+
+	return result;
+}
+
+exports.genExtensionMethods = genExtensionMethods;
+function genExtensionMethods(methods){
+	var result = '\
+    /// <summary>\n\
+    /// Class containing all extension methods\n\
+    /// </summary>\n\
+    public static class ExtensionMethods\n\
+    {\n';
+	result += methods;
+	result += '\
+    }\n';
+
+	return result;
+}
+
 exports.codegen = codegen;
 function codegen(jObj, namespaceName) {
     var result = '';
@@ -278,9 +481,12 @@ function codegen(jObj, namespaceName) {
         result += '------------------------------------------------------------*/\n';
     }
 
+    var exBoundOps = '';
     result += util.format('\
 namespace %s\n{\n', namespaceName);
+    result += container.generate(jObj);
     if (jObj.types) {
+    	
         for (var j in jObj.types) {
             var type = jObj.types[j];
             if (type.members) {
@@ -290,8 +496,16 @@ namespace %s\n{\n', namespaceName);
 			if(!type.members && !hasKeyProperty(type, jObj.types)){
 				result += genComplexType(type, jObj.types, namespaceName);
 			}
+
+			if(!type.members && hasKeyProperty(type, jObj.types)){
+				// Generate extension methods.
+				// Generate extension bound operations.
+				exBoundOps += genExBoundOperations(type, namespaceName);
+			}
         }
     }
+	// Put on the extension methods class frame.
+	result += genExtensionMethods(exBoundOps);
 
     result += '\
 }\n';

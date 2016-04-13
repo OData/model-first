@@ -6,12 +6,15 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var routes = require('./router');
 var config = require('./config');
+var Logger = require('./utilities/logger');
 var constants = config.Constants;
+
+Logger.getInstance(constants.Logs.Suc, constants.Logs.Info, constants.Logs.Err);
 
 var DirectoryManager = require('./utilities/directoryMgr');
 var dmgr = new DirectoryManager();
 var paths = [
-    constants.Paths.CSharpCode,
+    constants.Paths.CSharpPackage,
     constants.Paths.CSharpZipPackage
 ];
 dmgr.create(paths);
