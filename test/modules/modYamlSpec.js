@@ -6,6 +6,7 @@ api:\n\
   name: TripPin OData Reference Service\n\
   version: 3\n\
   description: TripPin is a fictional reference service demonstrating the capabilities of OData v4.\n\
+  namespace: Microsoft.OData.SampleService.Models.TripPin\n\
   termsOfService: http://swagger.io/terms/\n\
   contact:\n\
     name: API Support\n\
@@ -31,6 +32,11 @@ api:\n\
         expect(model.api.description).toEqual('TripPin is a fictional reference service demonstrating the capabilities of OData v4.');
     });
 
+    it('Api namespace should match', function () {
+        var model = Morpho.convertFrom.yaml.call(Morpho, input, {}, {});
+        expect(model.api.namespace).toEqual('Microsoft.OData.SampleService.Models.TripPin');
+    });
+    
     it('Api termsOfService should match', function () {
         var model = Morpho.convertFrom.yaml.call(Morpho, input, {}, {});
         expect(model.api.termsOfService).toEqual('http://swagger.io/terms/');
@@ -64,6 +70,21 @@ api:\n\
        var model = Morpho.convertFrom.yaml.call(Morpho, inputForVersion, {}, {});
        expect(model.api.version.current).toEqual('1.2.3');
     });
+    
+    var inputForDefaultVersionAndNamespace = '\
+api:\n\
+  name: apiName\n';
+    
+    it ('Api default version should match', function() {
+       var model = Morpho.convertFrom.yaml.call(Morpho, inputForDefaultVersionAndNamespace, {}, {});
+       expect(model.api.version.current).toEqual('0.0.0.0');
+    });
+
+    it ('Api default namespace should match', function() {
+       var model = Morpho.convertFrom.yaml.call(Morpho, inputForDefaultVersionAndNamespace, {}, {});
+       expect(model.api.namespace).toEqual('Default.Namespace');
+    });
+    
 });
 
 describe('[YAML] Primitive type definitions test', function () {

@@ -10,6 +10,7 @@ The core JSON model uses word api instead of info as the root level container el
       "current": 0
     },
     "description": "TripPin is a fictional reference service demonstrating the capabilities of OData v4."
+    "namespace": "Microsoft.OData.SampleService.Models.TripPin"
     "termsOfService": "http://swagger.io/terms/"
     "contact": {
         "name": "API Support"
@@ -31,13 +32,14 @@ Field Name|	Description
 api	| Provides metadata about the API. The metadata can be used by the clients if needed
 ------------------------------------------------------------
 
-Two required fields within api.
+Three required fields within api.
 
 ----------------------------
 Field Name|	Description
 -----------|----------------
 name	| Required. The title of the application.
-version	| Required. Provides the version of the application API (not to be confused with the specification version).
+version	| Required. Provides the version of the application API (not to be confused with the specification version). Default value is "0.0.0.0".
+namespace | Required. The namespace of the application API. Default value is "Default.Namespace".
 ------------------------------------------------------------
 
 Two formats of version available:
@@ -60,8 +62,9 @@ Here is a YAML sample:
 api:
   name: TripPin OData Reference Service
   version:
-    current: 0
+    current: 0.0.0.0
   description: TripPin is a fictional reference service demonstrating the capabilities of OData v4.
+  namespace: Microsoft.OData.SampleService.Models.TripPin
   termsOfService: http://swagger.io/terms/
   contact:
     name: API Support
@@ -80,13 +83,14 @@ Field Name|	Description|
 api	| Provides metadata about the API. The metadata can be used by the clients if needed
 ------------------------------------------------------------
 
-Two required fields within api.
+Three required fields within api.
 
 ----------------------------
 Field Name|	Description
 -----------|----------------
 name	| Required. The title of the application.
-version	| Required. Provides the version of the application API (not to be confused with the specification version).
+version	| Required. Provides the version of the application API (not to be confused with the specification version). Default value is "0.0.0.0".
+namespace | Required. The namespace of the application API. Default value is "Default.Namespace".
 ------------------------------------------------------------
 
 Two formats of version available:
@@ -101,7 +105,9 @@ version: 1.0
 For other fields within api see section 3.1.
 
 ##3.	Swagger Format Info Object support
-Swagger is supported as one of the output formats, here converting core model to a Swagger schema uses the one-to-one mapping.
+Swagger is supported as one of the output formats, here converting core model to a Swagger schema uses the one-to-one mapping. 
+
+Note: Swagger does not have the namespace field in the info object.
 
 Here is 1 sample of an info element:
 
@@ -144,8 +150,8 @@ description	|string|	A short description of the application. GFM syntax can be u
 termsOfService	|string|	The Terms of Service for the API.
 contact	|Contact Object| The contact information for the exposed API.
 license	|License Object| The license information for the exposed API.
-version	|string|	Required. Provides the version of the application API (not to be confused with the specification version).
-----------------------------------------------------------------------------------------------
+version	|string|	Required. Provides the version of the application API (not to be confused with the specification version). Default value is "0.0.0.0".
+----------------------------------------------------------------------------------------------------------------------------------------
 
 Contact Object
 Contact information for the exposed API.
