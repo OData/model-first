@@ -39,7 +39,7 @@ Field Name|	Description
 -----------|----------------
 name	| Required. The title of the application.
 version	| Required. Provides the version of the application API (not to be confused with the specification version). Default value is "0.0.0.0".
-namespace | Required. The namespace of the application API. Corresponding to the Namespace attribute in [CSDL Section 5.1.1 Attribute Namespace](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part3-csdl/odata-v4.0-errata02-os-part3-csdl-complete.html#_Toc406397948)) Default value is "Default.Namespace".
+namespace | Required. The namespace of the application API. Corresponding to the Namespace attribute in [CSDL Section 5.1.1 Attribute Namespace](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part3-csdl/odata-v4.0-errata02-os-part3-csdl-complete.html#_Toc406397948) Default value is "Default.Namespace".
 ------------------------------------------------------------
 
 Two formats of version available:
