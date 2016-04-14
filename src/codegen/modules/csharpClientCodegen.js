@@ -700,6 +700,10 @@ function codegen(jObj, namespaceName) {
         if (api.description) {
             result += util.format(' * Description: %s\n', api.description);
         }
+        if (api.namespace){
+            result += util.format(' * Namespace: %s\n', api.namespace);
+            MetadataNamespace = api.namespace;
+        }
         if (api.conformance) {
             result += util.format(' * Conformance-Level: %s\n', api.conformance);
         }
