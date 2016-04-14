@@ -4,6 +4,7 @@ api:
   version:
     current: 1.0.0
   description: "TripPin is a fictional reference service demonstrating the capabilities of OData v4."
+  namespace: "Microsoft.OData.SampleService.Models.TripPin"
   termsOfService: http://swagger.io/terms/
   contact:
     name: API Support

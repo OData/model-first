@@ -255,6 +255,16 @@ function fromYaml(str, errors, config, callback) {
     var state = {};
     visitor.visitObj(obj, {
         'api': function (obj) {
+            if(!obj.version)
+            {
+                obj.version = {current: '0.0.0.0'};
+            }
+            
+            if(!obj.namespace)
+            {
+                obj.namespace = 'Default.Namespace';
+            }
+            
             state.api = obj;
         },
         'types': function (arr) {

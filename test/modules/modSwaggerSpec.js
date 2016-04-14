@@ -223,7 +223,7 @@ describe('[Swagger] To Swagger test', function () {
 
         var info = {
             'title': 'host',
-            'version': '0.1',
+            'version': '0.0.0.0',
             'schemes': ['http'],
             'host': 'odata.org',
             'basePath': '/odata'
@@ -269,6 +269,22 @@ describe('[Swagger] To Swagger test', function () {
                 'name': 'Apache 2.0',
                 'url': 'http://www.apache.org/licenses/LICENSE-2.0.html'
             }
+        };
+
+        assertApi(jsonModel, expected);
+    });
+    
+    it('Info default version field should match', function () {
+        var jsonModel =
+                {
+                    'api': {
+                        'name': 'TripPin OData Reference Service',
+                    }
+                };
+
+        var expected = {
+            'title': 'TripPin OData Reference Service',
+            'version': '0.0.0.0'
         };
 
         assertApi(jsonModel, expected);
