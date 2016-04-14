@@ -1085,6 +1085,82 @@ function genExtensionMethods(methods){
 	return result;
 }
 
+exports.genByKey = genByKey;
+function genByKey(types, namespaceName) {
+    var result = '';
+    
+    for (var j = 0; j < types.length; j++) 
+    {
+        var type = types[j];
+        
+        if( type.properties )
+        {
+            if(TypesHelper.HasKeyProperty(type, types))
+            {
+                var entityTypeName = StringHelper.excapeKeyword(type.name);
+                
+                var entityFullName = namespaceName + '.' + StringHelper.capitalizeInitial(type.name);
+                
+                var entityFullNameSingle = entityFullName + 'Single';
+                
+                var keyProperties = [];
+                TypesHelper.GetKeyProperties(type, types, keyProperties);
+                
+                var keyComments = '';
+                var keyParamList = '';
+                var keyDictionary = '';
+                
+                for(var k = 0; k < keyProperties.length; k++)
+                {
+                    var keyName = StringHelper.excapeKeyword(keyProperties[k].name);
+                    keyComments += util.format('\
+        /// <param name="%s">The value of %s</param>\n', keyName, keyName);
+                    if(k === 0)
+                    {
+                        keyParamList +=',\n\
+            ';
+                    }
+                    else
+                    {
+                        keyParamList +=', ';
+                        keyDictionary +=',\n';
+                    }
+                    keyParamList += util.format('%s %s', TypesHelper.GetTypeDefString(keyProperties[k], namespaceName, types), keyName);
+                    keyDictionary += util.format('                { "%s", %s }', StringHelper.capitalizeInitial(keyName), keyName);
+                }
+                
+                result += util.format('\
+        /// <summary>\n\
+        /// Get an entity of type global::%s as global::%s specified by key from an entity set\n\
+        /// </summary>\n\
+        /// <param name="source">source entity set</param>\n\
+        /// <param name="keys">dictionary with the names and values of keys</param>\n\
+        public static global::%s ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::%s> source, global::System.Collections.Generic.Dictionary<string, object> keys)\n\
+        {\n\
+            return new global::%s(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));\n\
+        }\n', entityFullName, entityFullNameSingle, entityFullNameSingle, entityFullName, entityFullNameSingle);
+        
+                result += util.format('\
+        /// <summary>\n\
+        /// Get an entity of type global::%s as global::%s specified by key from an entity set\n\
+        /// </summary>\n\
+        /// <param name="source">source entity set</param>\n\
+%s\
+        public static global::%s ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::%s> source%s)\n\
+        {\n\
+            global::System.Collections.Generic.Dictionary<string, object> keys = new global::System.Collections.Generic.Dictionary<string, object>\n\
+            {\n\
+%s\n\
+            };\n\
+            return new global::%s(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));\n\
+        }\n', entityFullName, entityFullNameSingle, keyComments, entityFullNameSingle, entityFullName, keyParamList, keyDictionary, entityFullNameSingle);
+            }
+        }
+    }
+
+    return result;
+}
+
 exports.codegen = codegen;
 function codegen(jObj, namespaceName) {
     var result = '';

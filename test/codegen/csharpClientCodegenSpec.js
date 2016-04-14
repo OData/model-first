@@ -1,41 +1,43 @@
-describe('[OData Service Client Codegen: CSharp] Test', function(){
-  var codegen = require('../../src/codegen/modules/csharpClientCodegen');
-  var constants = require('../../src/codegen/config').Constants;
-  var genEnumType;
-  var genComplexType;
+describe('[OData Service Client Codegen: CSharp] Test', function () {
+    var codegen = require('../../src/codegen/modules/csharpClientCodegen');
+    var constants = require('../../src/codegen/config').Constants;
+    var genEnumType;
+    var genComplexType;
     var genEntityType;
+    var genByKey;
     var namespaceName = constants.Code.DefaultNamespace;
     var genExBoundOperations;
 
-  beforeEach(function(){
-    genEnumType = codegen.genEnumType;
-    genComplexType = codegen.genComplexType;
-    genEntityType = codegen.genEntityType;
-    genExBoundOperations = codegen.genExBoundOperations;
-  });
+    beforeEach(function () {
+        genEnumType = codegen.genEnumType;
+        genComplexType = codegen.genComplexType;
+        genEntityType = codegen.genEntityType;
+        genExBoundOperations = codegen.genExBoundOperations;
+        genByKey = codegen.genByKey;
+    });
 
-  it('generation for enum type.', function(){
-    var enumTypeObj = {
-        name: 'personGender',
-        members: [
-            {
-                name: 'unknown',
-                value: 0
-            },
-            {
-                name: 'female',
-                value: 1
-            },
-            {
-                name: 'male',
-                value: 2
-            }
-        ],
-        flags: false,
-        underlyingType: 'edm.int32'
-    };
+    it('generation for enum type.', function () {
+        var enumTypeObj = {
+            name: 'personGender',
+            members: [
+                {
+                    name: 'unknown',
+                    value: 0
+                },
+                {
+                    name: 'female',
+                    value: 1
+                },
+                {
+                    name: 'male',
+                    value: 2
+                }
+            ],
+            flags: false,
+            underlyingType: 'edm.int32'
+        };
 
-    var expected = '\
+        var expected = '\
     [global::Microsoft.OData.Client.OriginalNameAttribute("PersonGender")]\n\
     public enum PersonGender: int\n\
     {\n\
@@ -46,87 +48,87 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
         [global::Microsoft.OData.Client.OriginalNameAttribute("Male")]\n\
         Male = 2\n\
     }\n\n';
-    var actual = genEnumType(enumTypeObj);
+        var actual = genEnumType(enumTypeObj);
 
-    expect(actual).toEqual(expected);
-  });
+        expect(actual).toEqual(expected);
+    });
 
-  it('generation for complex type.', function(){
-    var complexTypes = [
-      {
-        name: 'myComplexTypeRef',
-        properties: [
+    it('generation for complex type.', function () {
+        var complexTypes = [
           {
-            name: 'city',
-            type: 'edm.string'
+              name: 'myComplexTypeRef',
+              properties: [
+                {
+                    name: 'city',
+                    type: 'edm.string'
+                },
+                {
+                    name: 'code',
+                    type: 'edm.int32'
+                }
+              ]
           },
           {
-            name: 'code',
-            type: 'edm.int32'
+              name: 'myComplexTypeAncestor',
+              properties: [
+                {
+                    name: 'id',
+                    type: 'edm.int32'
+                },
+              ]
+          },
+          {
+              name: 'myComplexTypeBase',
+              baseType: 'myComplexTypeAncestor',
+              properties: [
+                {
+                    name: 'name',
+                    type: 'edm.string'
+                },
+                {
+                    name: 'age',
+                    type: 'edm.int32'
+                },
+                {
+                    name: 'location',
+                    type: 'myComplexTypeRef'
+                }
+              ]
+          },
+          {
+              name: 'myComplexTypeSuper',
+              baseType: 'myComplexTypeBase',
+              properties: [
+                {
+                    name: 'employeeId',
+                    type: 'edm.int32'
+                },
+                {
+                    name: 'department',
+                    type: 'edm.string'
+                }
+              ]
           }
-        ]
-      },
-      {
-        name: 'myComplexTypeAncestor',
-        properties: [
-          {
-            name: 'id',
-            type: 'edm.int32'
-          },
-        ]
-      },
-      {
-        name: 'myComplexTypeBase',
-        baseType: 'myComplexTypeAncestor',
-        properties: [
-          {
-            name: 'name',
-            type: 'edm.string'
-          },
-          {
-            name: 'age',
-            type: 'edm.int32'
-          },
-          {
-            name: 'location',
-            type: 'myComplexTypeRef'
-          }
-        ]
-      },
-      {
-        name: 'myComplexTypeSuper',
-        baseType: 'myComplexTypeBase',
-        properties: [
-          {
-            name: 'employeeId',
-            type: 'edm.int32'
-          },
-          {
-            name: 'department',
-            type: 'edm.string'
-          }
-        ]
-      }
-    ];
+        ];
 
-    var complexType = {
-      name: 'myComplexTypeSuper',
-      baseType: 'myComplexTypeBase',
-      properties: [
-        {
-          name: 'employeeId',
-          type: 'edm.int32'
-        },
-        {
-          name: 'department',
-          type: 'edm.string'
-        }
-      ]
-    };
+        var complexType = {
+            name: 'myComplexTypeSuper',
+            baseType: 'myComplexTypeBase',
+            properties: [
+              {
+                  name: 'employeeId',
+                  type: 'edm.int32'
+              },
+              {
+                  name: 'department',
+                  type: 'edm.string'
+              }
+            ]
+        };
 
-    
 
-    var expected = '\
+
+        var expected = '\
     [global::Microsoft.OData.Client.OriginalNameAttribute("MyComplexTypeSuper")]\n\
     public partial class MyComplexTypeSuper: MyComplexTypeBase\n\
     {\n\
@@ -194,33 +196,34 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
     }\n\
 \n';
 
-    var actual = genComplexType(complexType, complexTypes, namespaceName);
+        var actual = genComplexType(complexType, complexTypes, namespaceName);
 
-    expect(actual).toEqual(expected);
+        expect(actual).toEqual(expected);
 
-  });
-    
-      it('generation for Photo entity type.', function () {
+    });
+
+    it('generation for Photo entity type.', function () {
         var entityTypeObj = {
-        'types':[
-        {
-          'properties': [
+            'types': [
             {
-              'name': 'id',
-              'type': 'edm.int64',
-              'isKey': true
-            },
-            {
-              'name': 'name',
-              'isNullable': true,
-              'type': 'edm.string'
+                'properties': [
+                  {
+                      'name': 'id',
+                      'type': 'edm.int64',
+                      'isKey': true
+                  },
+                  {
+                      'name': 'name',
+                      'isNullable': true,
+                      'type': 'edm.string'
+                  }
+                ],
+                'name': 'photo'
             }
-          ],
-          'name': 'photo'
-        }
-    ]};
+            ]
+        };
 
-        var expected ='\
+        var expected = '\
     [global::Microsoft.OData.Client.Key("Id")]\n\
     [global::Microsoft.OData.Client.OriginalNameAttribute("Photo")]\n\
     public partial class Photo : global::Microsoft.OData.Client.BaseEntityType, global::System.ComponentModel.INotifyPropertyChanged\n\
@@ -313,184 +316,185 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
 
         expect(actual).toEqual(expected);
     });
-  
-  it('generation for Person entity type.', function () {
-    
-        var Obj = 
-{'types': [
-  {
-      'properties': [
-        {
-          'name': 'userName',
-          'type': 'edm.string',
-          'isKey': true
-        },
-        {
-          'name': 'firstName',
-          'type': 'edm.string'
-        },
-        {
-          'name': 'lastName',
-          'type': 'edm.string'
-        },
-        {
-          'name': 'emails',
-          'type': 'edm.string',
-          'isCollection': true,
-          'isNullable': true
-        },
-        {
-          'name': 'addressInfo',
-          'type': 'location',
-          'isCollection': true,
-          'isNullable': true
-        },
-        {
-          'name': 'gender',
-          'type': 'personGender',
-          'isNullable': true
-        },
-        {
-          'name': 'concurrency',
-          'type': 'edm.int64',
-          'isNullable': false
-        },
-        {
-          'name': 'friends',
-          'type': 'person',
-          'isCollection': true,
-          'isNullable': true
-        },
-        {
-          'name': 'trips',
-          'type': 'trip',
-          'isCollection': true,
-          'isNullable': true
-        },
-        {
-          'name': 'photo',
-          'type': 'photo',
-          'isNullable': true
-        },
-        {
-          'name': 'GetFriendFavoriteAirline',
-          'type': 'Function',
-          'params': [
-            {
-              'name': 'friend',
-              'type': 'person',
-              'isNullable': false
-            },
-            {
-              'name': 'friendPhotos',
-              'type': 'photo',
-              'isCollection': true
-            }
-          ],
-          'returns': 
-          {
-              'type': 'airline',
-          },
-          'operationType': 'Bound'
-        },
-        {
-          'name': 'GetFriendPhotosCount',
-          'type': 'Function',
-          'params': [
-            {
-              'name': 'userName',
-              'type': 'edm.string',
-              'isNullable': false
-            }
-          ],
-          'returns': 
+
+    it('generation for Person entity type.', function () {
+
+        var Obj =
+{
+    'types': [
+     {
+         'properties': [
            {
-              'type': 'edm.int32',
+               'name': 'userName',
+               'type': 'edm.string',
+               'isKey': true
            },
-          'operationType': 'Bound'
-        },
-        {
-          'name': 'GetFriendsTripsCount',
-          'type': 'Function',
-          'params': [
-            {
-              'name': 'userName',
-              'type': 'edm.string'
-            },
-            {
-              'name': 'howFar',
-              'type': 'edm.double',
-              'isNullable': true
-            }
-          ],
-          'returns':
-            {
-              'type': 'edm.int32',
-              'isCollection': true
-            },
-          'operationType': 'Bound'
-        },
-        {
-          'name': 'shareTrip',
-          'type': 'Action',
-          'params': [
-            {
-              'name': 'sharedTo',
-              'type': 'edm.string'
-            },
-            {
-              'name': 'tripId',
-              'type': 'edm.int32'
-            }
-          ],
-          'operationType': 'Bound'
-        }
-      ],
-      'name': 'person'
-  },
-    {
-      'properties': [
-        {
-          'name': 'id',
-          'type': 'edm.int64',
-          'isKey': true
-        },
-        {
-          'name': 'name',
-          'isNullable': true,
-          'type': 'edm.string'
-        }
-      ],
-      'name': 'photo'
-    },
-    {
-      'properties': [
-        {
-          'name': 'tripId',
-          'isKey': true,
-          'type': 'edm.string'
-        },
-      ],
-      'name': 'trip'
-    },
-    {
-      'properties': [
-        {
-          'name': 'airlineCode',
-          'type': 'edm.string',
-          'isKey': true
-        },
-        {
-          'name': 'name',
-          'type': 'edm.string'
-        }
-      ],
-      'name': 'airline'
-    }
-  ]
+           {
+               'name': 'firstName',
+               'type': 'edm.string'
+           },
+           {
+               'name': 'lastName',
+               'type': 'edm.string'
+           },
+           {
+               'name': 'emails',
+               'type': 'edm.string',
+               'isCollection': true,
+               'isNullable': true
+           },
+           {
+               'name': 'addressInfo',
+               'type': 'location',
+               'isCollection': true,
+               'isNullable': true
+           },
+           {
+               'name': 'gender',
+               'type': 'personGender',
+               'isNullable': true
+           },
+           {
+               'name': 'concurrency',
+               'type': 'edm.int64',
+               'isNullable': false
+           },
+           {
+               'name': 'friends',
+               'type': 'person',
+               'isCollection': true,
+               'isNullable': true
+           },
+           {
+               'name': 'trips',
+               'type': 'trip',
+               'isCollection': true,
+               'isNullable': true
+           },
+           {
+               'name': 'photo',
+               'type': 'photo',
+               'isNullable': true
+           },
+           {
+               'name': 'GetFriendFavoriteAirline',
+               'type': 'Function',
+               'params': [
+                 {
+                     'name': 'friend',
+                     'type': 'person',
+                     'isNullable': false
+                 },
+                 {
+                     'name': 'friendPhotos',
+                     'type': 'photo',
+                     'isCollection': true
+                 }
+               ],
+               'returns':
+               {
+                   'type': 'airline',
+               },
+               'operationType': 'Bound'
+           },
+           {
+               'name': 'GetFriendPhotosCount',
+               'type': 'Function',
+               'params': [
+                 {
+                     'name': 'userName',
+                     'type': 'edm.string',
+                     'isNullable': false
+                 }
+               ],
+               'returns':
+                {
+                    'type': 'edm.int32',
+                },
+               'operationType': 'Bound'
+           },
+           {
+               'name': 'GetFriendsTripsCount',
+               'type': 'Function',
+               'params': [
+                 {
+                     'name': 'userName',
+                     'type': 'edm.string'
+                 },
+                 {
+                     'name': 'howFar',
+                     'type': 'edm.double',
+                     'isNullable': true
+                 }
+               ],
+               'returns':
+                 {
+                     'type': 'edm.int32',
+                     'isCollection': true
+                 },
+               'operationType': 'Bound'
+           },
+           {
+               'name': 'shareTrip',
+               'type': 'Action',
+               'params': [
+                 {
+                     'name': 'sharedTo',
+                     'type': 'edm.string'
+                 },
+                 {
+                     'name': 'tripId',
+                     'type': 'edm.int32'
+                 }
+               ],
+               'operationType': 'Bound'
+           }
+         ],
+         'name': 'person'
+     },
+       {
+           'properties': [
+             {
+                 'name': 'id',
+                 'type': 'edm.int64',
+                 'isKey': true
+             },
+             {
+                 'name': 'name',
+                 'isNullable': true,
+                 'type': 'edm.string'
+             }
+           ],
+           'name': 'photo'
+       },
+       {
+           'properties': [
+             {
+                 'name': 'tripId',
+                 'isKey': true,
+                 'type': 'edm.string'
+             },
+           ],
+           'name': 'trip'
+       },
+       {
+           'properties': [
+             {
+                 'name': 'airlineCode',
+                 'type': 'edm.string',
+                 'isKey': true
+             },
+             {
+                 'name': 'name',
+                 'type': 'edm.string'
+             }
+           ],
+           'name': 'airline'
+       }
+    ]
 };
 
-        var expected ='\
+        var expected = '\
     [global::Microsoft.OData.Client.Key("UserName")]\n\
     [global::Microsoft.OData.Client.OriginalNameAttribute("Person")]\n\
     public partial class Person : global::Microsoft.OData.Client.BaseEntityType, global::System.ComponentModel.INotifyPropertyChanged\n\
@@ -836,115 +840,116 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
 
         expect(actual).toEqual(expected);
     });
-  
-  it('generation for base type PlanItem entity type and its inheritances.', function () {
-    var entityTypeObj = {
-        'types':[
-        {
-          'properties': [
+
+    it('generation for base type PlanItem entity type and its inheritances.', function () {
+        var entityTypeObj = {
+            'types': [
             {
-              'name': 'planItemId',
-              'isKey': true,
-              'type': 'edm.int32'
+                'properties': [
+                  {
+                      'name': 'planItemId',
+                      'isKey': true,
+                      'type': 'edm.int32'
+                  },
+                  {
+                      'name': 'confirmationCode',
+                      'isNullable': true,
+                      'type': 'edm.string'
+                  },
+                  {
+                      'name': 'startsAt',
+                      'type': 'edm.datetimeoffset',
+                      'isNullable': true
+                  },
+                  {
+                      'name': 'endsAt',
+                      'type': 'edm.datetimeoffset',
+                      'isNullable': true
+                  },
+                  {
+                      'name': 'duration',
+                      'type': 'edm.duration',
+                      'isNullable': true
+                  }
+                ],
+                'name': 'planItem'
             },
             {
-              'name': 'confirmationCode',
-              'isNullable': true,
-              'type': 'edm.string'
+                'properties': [
+                  {
+                      'name': 'seatNumber',
+                      'isNullable': true,
+                      'type': 'edm.string'
+                  }
+                ],
+                'name': 'publicTransportation',
+                'baseType': 'planItem'
             },
             {
-              'name': 'startsAt',
-              'type': 'edm.datetimeoffset',
-              'isNullable': true
+                'properties': [
+                  {
+                      'name': 'flightNumber',
+                      'type': 'edm.string'
+                  },
+                  {
+                      'name': 'from',
+                      'type': 'airport',
+                      'isNullable': true
+                  },
+                  {
+                      'name': 'to',
+                      'type': 'airport',
+                      'isNullable': true
+                  },
+                  {
+                      'name': 'airline',
+                      'type': 'airline',
+                      'isNullable': true
+                  }
+                ],
+                'name': 'flight',
+                'baseType': 'publicTransportation'
             },
             {
-              'name': 'endsAt',
-              'type': 'edm.datetimeoffset',
-              'isNullable': true
+                'properties': [
+                  {
+                      'name': 'description',
+                      'isNullable': true,
+                      'type': 'edm.string'
+                  },
+                  {
+                      'name': 'occursAt',
+                      'type': 'eventLocation',
+                      'isNullable': false
+                  }
+                ],
+                'name': 'event',
+                'baseType': 'planItem'
             },
             {
-              'name': 'duration',
-              'type': 'edm.duration',
-              'isNullable': true
+                'properties': [
+                  {
+                      'name': 'airlineCode',
+                      'type': 'edm.string',
+                      'isKey': true
+                  }
+                ],
+                'name': 'airline'
+            },
+            {
+                'properties': [
+                  {
+                      'name': 'icaoCode',
+                      'type': 'edm.string',
+                      'isKey': true
+                  }
+                ],
+                'name': 'airport'
             }
-          ],
-          'name': 'planItem'
-        },
-        {
-          'properties': [
-            {
-              'name': 'seatNumber',
-              'isNullable': true,
-              'type': 'edm.string'
-            }
-          ],
-          'name': 'publicTransportation',
-          'baseType': 'planItem'
-        },
-        {
-          'properties': [
-            {
-              'name': 'flightNumber',
-              'type': 'edm.string'
-            },
-            {
-              'name': 'from',
-              'type': 'airport',
-              'isNullable': true
-            },
-            {
-              'name': 'to',
-              'type': 'airport',
-              'isNullable': true
-            },
-            {
-              'name': 'airline',
-              'type': 'airline',
-              'isNullable': true
-            }
-          ],
-          'name': 'flight',
-          'baseType': 'publicTransportation'
-        },
-        {
-          'properties': [
-            {
-              'name': 'description',
-              'isNullable': true,
-              'type': 'edm.string'
-            },
-            {
-              'name': 'occursAt',
-              'type': 'eventLocation',
-              'isNullable': false
-            }
-          ],
-          'name': 'event',
-          'baseType': 'planItem'
-        },
-        {
-          'properties': [
-            {
-              'name': 'airlineCode',
-              'type': 'edm.string',
-              'isKey': true
-            }
-          ],
-          'name': 'airline'
-        },
-        {
-          'properties': [
-            {
-              'name': 'icaoCode',
-              'type': 'edm.string',
-              'isKey': true
-            }
-          ],
-          'name': 'airport'
-        }
-    ]};
-    
-          var expected ='\
+            ]
+        };
+
+        var expected = '\
     [global::Microsoft.OData.Client.Key("PlanItemId")]\n\
     [global::Microsoft.OData.Client.OriginalNameAttribute("PlanItem")]\n\
     public partial class PlanItem : global::Microsoft.OData.Client.BaseEntityType, global::System.ComponentModel.INotifyPropertyChanged\n\
@@ -1393,361 +1398,32 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
         actual += genEntityType(entityTypeObj.types[1], entityTypeObj.types, namespaceName);
         actual += genEntityType(entityTypeObj.types[2], entityTypeObj.types, namespaceName);
         actual += genEntityType(entityTypeObj.types[3], entityTypeObj.types, namespaceName);
-        
+
         expect(actual).toEqual(expected);
     });
 
-  it('generation for extension bound functions with primitive type parameters and primitive type returns.', function(){
-    var entityType = {
-      name: 'person',
-      properties: [
-          {
-            name: 'myFunction1',
-            type: 'Function',
-            operationType: 'Bound',
-            params: [
-              {
-                name: 'tripId',
-                type: 'edm.int32'
-              }
-            ],
-            returns: {
-              type: 'edm.string'
-            }
-          }
-        ]
-    };
-
-    var expected = '\
-        /// <summary>\n\
-        /// There are no comments for MyFunction1 in the schema.\n\
-        /// </summary>\n\
-        [global::Microsoft.OData.Client.OriginalNameAttribute("MyFunction1")]\n\
-        public static global::Microsoft.OData.Client.DataServiceQuerySingle<string> MyFunction1(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, int tripId)\n\
-        {\n\
-            if (!source.IsComposable)\n\
-            {\n\
-                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
-            }\n\
-\n\
-            return source.CreateFunctionQuerySingle<string>("' + constants.Code.DefaultNamespace + '.MyFunction1", true, new global::Microsoft.OData.Client.UriOperationParameter("tripId", tripId));\n\
-        }\n\
-\n';
-
-    var actual = genExBoundOperations(entityType, namespaceName);
-
-    expect(actual).toEqual(expected);
-  });
-
-  it('generation for extension bound functions with collection of primitive type parameters and collection of primitive type returns', function(){
-    var entityType = {
-      name: 'person',
-      properties: [
-          {
-            name: 'myFunction2',
-            type: 'Function',
-            operationType: 'Bound',
-            params: [
-              {
-                name: 'tripIds',
-                type: 'edm.int32',
-                isCollection: true
-              }
-            ],
-            returns: {
-              type: 'edm.string',
-              isCollection: true
-            }
-          }
-        ]
-    };
-
-    var expected = '\
-        /// <summary>\n\
-        /// There are no comments for MyFunction2 in the schema.\n\
-        /// </summary>\n\
-        [global::Microsoft.OData.Client.OriginalNameAttribute("MyFunction2")]\n\
-        public static global::Microsoft.OData.Client.DataServiceQuery<string> MyFunction2(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, global::System.Collections.Generic.ICollection<int> tripIds)\n\
-        {\n\
-            if (!source.IsComposable)\n\
-            {\n\
-                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
-            }\n\
-\n\
-            return source.CreateFunctionQuery<string>("' + constants.Code.DefaultNamespace + '.MyFunction2", true, new global::Microsoft.OData.Client.UriOperationParameter("tripIds", tripIds));\n\
-        }\n\
-\n';
-  
-    var actual = genExBoundOperations(entityType, namespaceName);
-    expect(actual).toEqual(expected);
-  });
-
-  it('generation for extension bound functions with entity type parameters and entity type returns', function(){
-    var entityType = {
-      name: 'person',
-      properties: [
-          {
-            name: 'myFunction3',
-            type: 'Function',
-            operationType: 'Bound',
-            params: [
-              {
-                name: 'trip',
-                type: 'trip'
-              }
-            ],
-            returns: {
-              type: 'person'
-            }
-          }
-        ]
-    }; 
-
-    var expected = '\
-        /// <summary>\n\
-        /// There are no comments for MyFunction3 in the schema.\n\
-        /// </summary>\n\
-        [global::Microsoft.OData.Client.OriginalNameAttribute("MyFunction3")]\n\
-        public static global::' + namespaceName + '.PersonSingle MyFunction3(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, global::' + namespaceName + '.Trip trip, bool useEntityReference = false)\n\
-        {\n\
-            if (!source.IsComposable)\n\
-            {\n\
-                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
-            }\n\
-\n\
-            return new global::' + namespaceName + '.PersonSingle(source.CreateFunctionQuerySingle<global::' + namespaceName + '.Person>("' + constants.Code.DefaultNamespace + '.MyFunction3", true, new global::Microsoft.OData.Client.UriEntityOperationParameter("trip", trip, useEntityReference)));\n\
-        }\n\
-\n';
-
-    var actual = genExBoundOperations(entityType, namespaceName);
-    expect(actual).toEqual(expected);
-  });
-
-  it('generation for extension bound functions with collection of entity type parameters and collection of entity type returns', function(){
-    var entityType = {
-      name: 'person',
-      properties: [
-          {
-            name: 'myFunction4',
-            type: 'Function',
-            operationType: 'Bound',
-            params: [
-              {
-                name: 'trips',
-                type: 'trip',
-                isCollection: true
-              }
-            ],
-            returns: {
-              type: 'person',
-              isCollection: true
-            }
-          }
-        ]
-    }; 
-
-    var expected = '\
-        /// <summary>\n\
-        /// There are no comments for MyFunction4 in the schema.\n\
-        /// </summary>\n\
-        [global::Microsoft.OData.Client.OriginalNameAttribute("MyFunction4")]\n\
-        public static global::Microsoft.OData.Client.DataServiceQuery<global::' + namespaceName + '.Person> MyFunction4(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, global::System.Collections.Generic.ICollection<global::' + namespaceName + '.Trip> trips, bool useEntityReference = true)\n\
-        {\n\
-            if (!source.IsComposable)\n\
-            {\n\
-                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
-            }\n\
-\n\
-            return source.CreateFunctionQuery<global::' + namespaceName + '.Person>("' + constants.Code.DefaultNamespace + '.MyFunction4", true, new global::Microsoft.OData.Client.UriEntityOperationParameter("trips", trips, useEntityReference));\n\
-        }\n\
-\n';
-    var actual = genExBoundOperations(entityType, namespaceName);
-    expect(actual).toEqual(expected);
-  });
-
-  it('generation for extension bound actions with primitive type parameters', function(){
-    var entityType = {
-      name: 'person',
-      properties: [
-          {
-            name: 'myAction1',
-            type: 'Action',
-            operationType: 'Bound',
-            params: [
-              {
-                name: 'tripId',
-                type: 'edm.int32'
-              }
+    it('generation for extension bound functions with primitive type parameters and primitive type returns.', function () {
+        var entityType = {
+            name: 'person',
+            properties: [
+                {
+                    name: 'myFunction1',
+                    type: 'Function',
+                    operationType: 'Bound',
+                    params: [
+                      {
+                          name: 'tripId',
+                          type: 'edm.int32'
+                      }
+                    ],
+                    returns: {
+                        type: 'edm.string'
+                    }
+                }
             ]
-          }
-        ]
-    }; 
+        };
 
-    var expected = '\
-        /// <summary>\n\
-        /// There are no comments for MyAction1 in the schema.\n\
-        /// </summary>\n\
-        [global::Microsoft.OData.Client.OriginalNameAttribute("MyAction1")]\n\
-        public static global::Microsoft.OData.Client.DataServiceActionQuery MyAction1(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, int tripId)\n\
-        {\n\
-            if (!source.IsComposable)\n\
-            {\n\
-                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
-            }\n\
-\n\
-            return new global::Microsoft.OData.Client.DataServiceActionQuery(\n\
-                source.Context,\n\
-                source.AppendRequestUri("' + constants.Code.DefaultNamespace + '.MyAction1"),\n\
-                new global::Microsoft.OData.Client.BodyOperationParameter("tripId", tripId));\n\
-        }\n\
-\n';
-    var actual = genExBoundOperations(entityType, namespaceName);
-    expect(actual).toEqual(expected);
-  });
-
-  it('generation for extension bound actions with collection of primitive type parameters', function(){
-    var entityType = {
-      name: 'person',
-      properties: [
-          {
-            name: 'myAction2',
-            type: 'Action',
-            operationType: 'Bound',
-            params: [
-              {
-                name: 'tripIds',
-                type: 'edm.int32',
-                isCollection: true
-              }
-            ]
-          }
-        ]
-    }; 
-
-    var expected = '\
-        /// <summary>\n\
-        /// There are no comments for MyAction2 in the schema.\n\
-        /// </summary>\n\
-        [global::Microsoft.OData.Client.OriginalNameAttribute("MyAction2")]\n\
-        public static global::Microsoft.OData.Client.DataServiceActionQuery MyAction2(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, global::System.Collections.Generic.ICollection<int> tripIds)\n\
-        {\n\
-            if (!source.IsComposable)\n\
-            {\n\
-                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
-            }\n\
-\n\
-            return new global::Microsoft.OData.Client.DataServiceActionQuery(\n\
-                source.Context,\n\
-                source.AppendRequestUri("' + constants.Code.DefaultNamespace + '.MyAction2"),\n\
-                new global::Microsoft.OData.Client.BodyOperationParameter("tripIds", tripIds));\n\
-        }\n\
-\n';
-    var actual = genExBoundOperations(entityType, namespaceName);
-    expect(actual).toEqual(expected);
-  });
-
-  it('generation for extension bound actions with entity type parameters', function(){
-    var entityType = {
-      name: 'person',
-      properties: [
-          {
-            name: 'myAction3',
-            type: 'Action',
-            operationType: 'Bound',
-            params: [
-              {
-                name: 'trip',
-                type: 'trip'
-              }
-            ]
-          }
-        ]
-    }; 
-
-    var expected = '\
-        /// <summary>\n\
-        /// There are no comments for MyAction3 in the schema.\n\
-        /// </summary>\n\
-        [global::Microsoft.OData.Client.OriginalNameAttribute("MyAction3")]\n\
-        public static global::Microsoft.OData.Client.DataServiceActionQuery MyAction3(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, global::' + namespaceName + '.Trip trip)\n\
-        {\n\
-            if (!source.IsComposable)\n\
-            {\n\
-                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
-            }\n\
-\n\
-            return new global::Microsoft.OData.Client.DataServiceActionQuery(\n\
-                source.Context,\n\
-                source.AppendRequestUri("' + constants.Code.DefaultNamespace + '.MyAction3"),\n\
-                new global::Microsoft.OData.Client.BodyOperationParameter("trip", trip));\n\
-        }\n\
-\n';
-      var actual = genExBoundOperations(entityType, namespaceName);
-    expect(actual).toEqual(expected);
-  });
-
-  it('generation for extension bound actions with collection of entity type parameters', function(){
-    var entityType = {
-      name: 'person',
-      properties: [
-          {
-            name: 'myAction4',
-            type: 'Action',
-            operationType: 'Bound',
-            params: [
-              {
-                name: 'trips',
-                type: 'trip',
-                isCollection: true
-              }
-            ]
-          }
-        ]
-    }; 
-    var expected = '\
-        /// <summary>\n\
-        /// There are no comments for MyAction4 in the schema.\n\
-        /// </summary>\n\
-        [global::Microsoft.OData.Client.OriginalNameAttribute("MyAction4")]\n\
-        public static global::Microsoft.OData.Client.DataServiceActionQuery MyAction4(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, global::System.Collections.Generic.ICollection<global::' + namespaceName + '.Trip> trips)\n\
-        {\n\
-            if (!source.IsComposable)\n\
-            {\n\
-                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
-            }\n\
-\n\
-            return new global::Microsoft.OData.Client.DataServiceActionQuery(\n\
-                source.Context,\n\
-                source.AppendRequestUri("' + constants.Code.DefaultNamespace + '.MyAction4"),\n\
-                new global::Microsoft.OData.Client.BodyOperationParameter("trips", trips));\n\
-        }\n\
-\n';
-    var actual = genExBoundOperations(entityType, namespaceName);
-    expect(actual).toEqual(expected);
-  });
-
-  it('generation for extension bound functions with primitive type parameters and primitive type returns.', function(){
-    var entityType = {
-      name: 'person',
-      properties: [
-          {
-            name: 'myFunction1',
-            type: 'Function',
-            operationType: 'Bound',
-            params: [
-              {
-                name: 'tripId',
-                type: 'edm.int32'
-              }
-            ],
-            returns: {
-              type: 'edm.string'
-            }
-          }
-        ]
-    };
-
-    var expected = '\
+        var expected = '\
         /// <summary>\n\
         /// There are no comments for MyFunction1 in the schema.\n\
         /// </summary>\n\
@@ -1765,33 +1441,33 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
 
         var actual = genExBoundOperations(entityType, namespaceName);
 
-    expect(actual).toEqual(expected);
-  });
+        expect(actual).toEqual(expected);
+    });
 
-  it('generation for extension bound functions with collection of primitive type parameters and collection of primitive type returns', function(){
-    var entityType = {
-      name: 'person',
-      properties: [
-          {
-            name: 'myFunction2',
-            type: 'Function',
-            operationType: 'Bound',
-            params: [
-              {
-                name: 'tripIds',
-                type: 'edm.int32',
-                isCollection: true
-              }
-            ],
-            returns: {
-              type: 'edm.string',
-              isCollection: true
-            }
-          }
-        ]
-    };
+    it('generation for extension bound functions with collection of primitive type parameters and collection of primitive type returns', function () {
+        var entityType = {
+            name: 'person',
+            properties: [
+                {
+                    name: 'myFunction2',
+                    type: 'Function',
+                    operationType: 'Bound',
+                    params: [
+                      {
+                          name: 'tripIds',
+                          type: 'edm.int32',
+                          isCollection: true
+                      }
+                    ],
+                    returns: {
+                        type: 'edm.string',
+                        isCollection: true
+                    }
+                }
+            ]
+        };
 
-    var expected = '\
+        var expected = '\
         /// <summary>\n\
         /// There are no comments for MyFunction2 in the schema.\n\
         /// </summary>\n\
@@ -1806,33 +1482,33 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
             return source.CreateFunctionQuery<string>("' + constants.Code.DefaultNamespace + '.MyFunction2", true, new global::Microsoft.OData.Client.UriOperationParameter("tripIds", tripIds));\n\
         }\n\
 \n';
-  
-    var actual = genExBoundOperations(entityType, namespaceName);
-    expect(actual).toEqual(expected);
-  });
 
-  it('generation for extension bound functions with entity type parameters and entity type returns', function(){
-    var entityType = {
-      name: 'person',
-      properties: [
-          {
-            name: 'myFunction3',
-            type: 'Function',
-            operationType: 'Bound',
-            params: [
-              {
-                name: 'trip',
-                type: 'trip'
-              }
-            ],
-            returns: {
-              type: 'person'
-            }
-          }
-        ]
-    }; 
+        var actual = genExBoundOperations(entityType, namespaceName);
+        expect(actual).toEqual(expected);
+    });
 
-    var expected = '\
+    it('generation for extension bound functions with entity type parameters and entity type returns', function () {
+        var entityType = {
+            name: 'person',
+            properties: [
+                {
+                    name: 'myFunction3',
+                    type: 'Function',
+                    operationType: 'Bound',
+                    params: [
+                      {
+                          name: 'trip',
+                          type: 'trip'
+                      }
+                    ],
+                    returns: {
+                        type: 'person'
+                    }
+                }
+            ]
+        };
+
+        var expected = '\
         /// <summary>\n\
         /// There are no comments for MyFunction3 in the schema.\n\
         /// </summary>\n\
@@ -1848,34 +1524,34 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
         }\n\
 \n';
 
-    var actual = genExBoundOperations(entityType, namespaceName);
-    expect(actual).toEqual(expected);
-  });
+        var actual = genExBoundOperations(entityType, namespaceName);
+        expect(actual).toEqual(expected);
+    });
 
-  it('generation for extension bound functions with collection of entity type parameters and collection of entity type returns', function(){
-    var entityType = {
-      name: 'person',
-      properties: [
-          {
-            name: 'myFunction4',
-            type: 'Function',
-            operationType: 'Bound',
-            params: [
-              {
-                name: 'trips',
-                type: 'trip',
-                isCollection: true
-              }
-            ],
-            returns: {
-              type: 'person',
-              isCollection: true
-            }
-          }
-        ]
-    }; 
+    it('generation for extension bound functions with collection of entity type parameters and collection of entity type returns', function () {
+        var entityType = {
+            name: 'person',
+            properties: [
+                {
+                    name: 'myFunction4',
+                    type: 'Function',
+                    operationType: 'Bound',
+                    params: [
+                      {
+                          name: 'trips',
+                          type: 'trip',
+                          isCollection: true
+                      }
+                    ],
+                    returns: {
+                        type: 'person',
+                        isCollection: true
+                    }
+                }
+            ]
+        };
 
-    var expected = '\
+        var expected = '\
         /// <summary>\n\
         /// There are no comments for MyFunction4 in the schema.\n\
         /// </summary>\n\
@@ -1890,29 +1566,29 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
             return source.CreateFunctionQuery<global::' + namespaceName + '.Person>("' + constants.Code.DefaultNamespace + '.MyFunction4", true, new global::Microsoft.OData.Client.UriEntityOperationParameter("trips", trips, useEntityReference));\n\
         }\n\
 \n';
-    var actual = genExBoundOperations(entityType, namespaceName);
-    expect(actual).toEqual(expected);
-  });
+        var actual = genExBoundOperations(entityType, namespaceName);
+        expect(actual).toEqual(expected);
+    });
 
-  it('generation for extension bound actions with primitive type parameters', function(){
-    var entityType = {
-      name: 'person',
-      properties: [
-          {
-            name: 'myAction1',
-            type: 'Action',
-            operationType: 'Bound',
-            params: [
-              {
-                name: 'tripId',
-                type: 'edm.int32'
-              }
+    it('generation for extension bound actions with primitive type parameters', function () {
+        var entityType = {
+            name: 'person',
+            properties: [
+                {
+                    name: 'myAction1',
+                    type: 'Action',
+                    operationType: 'Bound',
+                    params: [
+                      {
+                          name: 'tripId',
+                          type: 'edm.int32'
+                      }
+                    ]
+                }
             ]
-          }
-        ]
-    }; 
+        };
 
-    var expected = '\
+        var expected = '\
         /// <summary>\n\
         /// There are no comments for MyAction1 in the schema.\n\
         /// </summary>\n\
@@ -1930,30 +1606,30 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
                 new global::Microsoft.OData.Client.BodyOperationParameter("tripId", tripId));\n\
         }\n\
 \n';
-    var actual = genExBoundOperations(entityType, namespaceName);
-    expect(actual).toEqual(expected);
-  });
+        var actual = genExBoundOperations(entityType, namespaceName);
+        expect(actual).toEqual(expected);
+    });
 
-  it('generation for extension bound actions with collection of primitive type parameters', function(){
-    var entityType = {
-      name: 'person',
-      properties: [
-          {
-            name: 'myAction2',
-            type: 'Action',
-            operationType: 'Bound',
-            params: [
-              {
-                name: 'tripIds',
-                type: 'edm.int32',
-                isCollection: true
-              }
+    it('generation for extension bound actions with collection of primitive type parameters', function () {
+        var entityType = {
+            name: 'person',
+            properties: [
+                {
+                    name: 'myAction2',
+                    type: 'Action',
+                    operationType: 'Bound',
+                    params: [
+                      {
+                          name: 'tripIds',
+                          type: 'edm.int32',
+                          isCollection: true
+                      }
+                    ]
+                }
             ]
-          }
-        ]
-    }; 
+        };
 
-    var expected = '\
+        var expected = '\
         /// <summary>\n\
         /// There are no comments for MyAction2 in the schema.\n\
         /// </summary>\n\
@@ -1971,29 +1647,29 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
                 new global::Microsoft.OData.Client.BodyOperationParameter("tripIds", tripIds));\n\
         }\n\
 \n';
-    var actual = genExBoundOperations(entityType, namespaceName);
-    expect(actual).toEqual(expected);
-  });
+        var actual = genExBoundOperations(entityType, namespaceName);
+        expect(actual).toEqual(expected);
+    });
 
-  it('generation for extension bound actions with entity type parameters', function(){
-    var entityType = {
-      name: 'person',
-      properties: [
-          {
-            name: 'myAction3',
-            type: 'Action',
-            operationType: 'Bound',
-            params: [
-              {
-                name: 'trip',
-                type: 'trip'
-              }
+    it('generation for extension bound actions with entity type parameters', function () {
+        var entityType = {
+            name: 'person',
+            properties: [
+                {
+                    name: 'myAction3',
+                    type: 'Action',
+                    operationType: 'Bound',
+                    params: [
+                      {
+                          name: 'trip',
+                          type: 'trip'
+                      }
+                    ]
+                }
             ]
-          }
-        ]
-    }; 
+        };
 
-    var expected = '\
+        var expected = '\
         /// <summary>\n\
         /// There are no comments for MyAction3 in the schema.\n\
         /// </summary>\n\
@@ -2011,29 +1687,29 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
                 new global::Microsoft.OData.Client.BodyOperationParameter("trip", trip));\n\
         }\n\
 \n';
-      var actual = genExBoundOperations(entityType, namespaceName);
-    expect(actual).toEqual(expected);
-  });
+        var actual = genExBoundOperations(entityType, namespaceName);
+        expect(actual).toEqual(expected);
+    });
 
-  it('generation for extension bound actions with collection of entity type parameters', function(){
-    var entityType = {
-      name: 'person',
-      properties: [
-          {
-            name: 'myAction4',
-            type: 'Action',
-            operationType: 'Bound',
-            params: [
-              {
-                name: 'trips',
-                type: 'trip',
-                isCollection: true
-              }
+    it('generation for extension bound actions with collection of entity type parameters', function () {
+        var entityType = {
+            name: 'person',
+            properties: [
+                {
+                    name: 'myAction4',
+                    type: 'Action',
+                    operationType: 'Bound',
+                    params: [
+                      {
+                          name: 'trips',
+                          type: 'trip',
+                          isCollection: true
+                      }
+                    ]
+                }
             ]
-          }
-        ]
-    }; 
-    var expected = '\
+        };
+        var expected = '\
         /// <summary>\n\
         /// There are no comments for MyAction4 in the schema.\n\
         /// </summary>\n\
@@ -2051,7 +1727,445 @@ describe('[OData Service Client Codegen: CSharp] Test', function(){
                 new global::Microsoft.OData.Client.BodyOperationParameter("trips", trips));\n\
         }\n\
 \n';
-    var actual = genExBoundOperations(entityType, namespaceName);
-    expect(actual).toEqual(expected);
-  });
+        var actual = genExBoundOperations(entityType, namespaceName);
+        expect(actual).toEqual(expected);
+    });
+
+    it('generation for extension bound functions with primitive type parameters and primitive type returns.', function () {
+        var entityType = {
+            name: 'person',
+            properties: [
+                {
+                    name: 'myFunction1',
+                    type: 'Function',
+                    operationType: 'Bound',
+                    params: [
+                      {
+                          name: 'tripId',
+                          type: 'edm.int32'
+                      }
+                    ],
+                    returns: {
+                        type: 'edm.string'
+                    }
+                }
+            ]
+        };
+
+        var expected = '\
+        /// <summary>\n\
+        /// There are no comments for MyFunction1 in the schema.\n\
+        /// </summary>\n\
+        [global::Microsoft.OData.Client.OriginalNameAttribute("MyFunction1")]\n\
+        public static global::Microsoft.OData.Client.DataServiceQuerySingle<string> MyFunction1(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, int tripId)\n\
+        {\n\
+            if (!source.IsComposable)\n\
+            {\n\
+                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
+            }\n\
+\n\
+            return source.CreateFunctionQuerySingle<string>("' + constants.Code.DefaultNamespace + '.MyFunction1", true, new global::Microsoft.OData.Client.UriOperationParameter("tripId", tripId));\n\
+        }\n\
+\n';
+
+        var actual = genExBoundOperations(entityType, namespaceName);
+
+        expect(actual).toEqual(expected);
+    });
+
+    it('generation for extension bound functions with collection of primitive type parameters and collection of primitive type returns', function () {
+        var entityType = {
+            name: 'person',
+            properties: [
+                {
+                    name: 'myFunction2',
+                    type: 'Function',
+                    operationType: 'Bound',
+                    params: [
+                      {
+                          name: 'tripIds',
+                          type: 'edm.int32',
+                          isCollection: true
+                      }
+                    ],
+                    returns: {
+                        type: 'edm.string',
+                        isCollection: true
+                    }
+                }
+            ]
+        };
+
+        var expected = '\
+        /// <summary>\n\
+        /// There are no comments for MyFunction2 in the schema.\n\
+        /// </summary>\n\
+        [global::Microsoft.OData.Client.OriginalNameAttribute("MyFunction2")]\n\
+        public static global::Microsoft.OData.Client.DataServiceQuery<string> MyFunction2(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, global::System.Collections.Generic.ICollection<int> tripIds)\n\
+        {\n\
+            if (!source.IsComposable)\n\
+            {\n\
+                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
+            }\n\
+\n\
+            return source.CreateFunctionQuery<string>("' + constants.Code.DefaultNamespace + '.MyFunction2", true, new global::Microsoft.OData.Client.UriOperationParameter("tripIds", tripIds));\n\
+        }\n\
+\n';
+
+        var actual = genExBoundOperations(entityType, namespaceName);
+        expect(actual).toEqual(expected);
+    });
+
+    it('generation for extension bound functions with entity type parameters and entity type returns', function () {
+        var entityType = {
+            name: 'person',
+            properties: [
+                {
+                    name: 'myFunction3',
+                    type: 'Function',
+                    operationType: 'Bound',
+                    params: [
+                      {
+                          name: 'trip',
+                          type: 'trip'
+                      }
+                    ],
+                    returns: {
+                        type: 'person'
+                    }
+                }
+            ]
+        };
+
+        var expected = '\
+        /// <summary>\n\
+        /// There are no comments for MyFunction3 in the schema.\n\
+        /// </summary>\n\
+        [global::Microsoft.OData.Client.OriginalNameAttribute("MyFunction3")]\n\
+        public static global::' + namespaceName + '.PersonSingle MyFunction3(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, global::' + namespaceName + '.Trip trip, bool useEntityReference = false)\n\
+        {\n\
+            if (!source.IsComposable)\n\
+            {\n\
+                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
+            }\n\
+\n\
+            return new global::' + namespaceName + '.PersonSingle(source.CreateFunctionQuerySingle<global::' + namespaceName + '.Person>("' + constants.Code.DefaultNamespace + '.MyFunction3", true, new global::Microsoft.OData.Client.UriEntityOperationParameter("trip", trip, useEntityReference)));\n\
+        }\n\
+\n';
+
+        var actual = genExBoundOperations(entityType, namespaceName);
+        expect(actual).toEqual(expected);
+    });
+
+    it('generation for extension bound functions with collection of entity type parameters and collection of entity type returns', function () {
+        var entityType = {
+            name: 'person',
+            properties: [
+                {
+                    name: 'myFunction4',
+                    type: 'Function',
+                    operationType: 'Bound',
+                    params: [
+                      {
+                          name: 'trips',
+                          type: 'trip',
+                          isCollection: true
+                      }
+                    ],
+                    returns: {
+                        type: 'person',
+                        isCollection: true
+                    }
+                }
+            ]
+        };
+
+        var expected = '\
+        /// <summary>\n\
+        /// There are no comments for MyFunction4 in the schema.\n\
+        /// </summary>\n\
+        [global::Microsoft.OData.Client.OriginalNameAttribute("MyFunction4")]\n\
+        public static global::Microsoft.OData.Client.DataServiceQuery<global::' + namespaceName + '.Person> MyFunction4(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, global::System.Collections.Generic.ICollection<global::' + namespaceName + '.Trip> trips, bool useEntityReference = true)\n\
+        {\n\
+            if (!source.IsComposable)\n\
+            {\n\
+                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
+            }\n\
+\n\
+            return source.CreateFunctionQuery<global::' + namespaceName + '.Person>("' + constants.Code.DefaultNamespace + '.MyFunction4", true, new global::Microsoft.OData.Client.UriEntityOperationParameter("trips", trips, useEntityReference));\n\
+        }\n\
+\n';
+        var actual = genExBoundOperations(entityType, namespaceName);
+        expect(actual).toEqual(expected);
+    });
+
+    it('generation for extension bound actions with primitive type parameters', function () {
+        var entityType = {
+            name: 'person',
+            properties: [
+                {
+                    name: 'myAction1',
+                    type: 'Action',
+                    operationType: 'Bound',
+                    params: [
+                      {
+                          name: 'tripId',
+                          type: 'edm.int32'
+                      }
+                    ]
+                }
+            ]
+        };
+
+        var expected = '\
+        /// <summary>\n\
+        /// There are no comments for MyAction1 in the schema.\n\
+        /// </summary>\n\
+        [global::Microsoft.OData.Client.OriginalNameAttribute("MyAction1")]\n\
+        public static global::Microsoft.OData.Client.DataServiceActionQuery MyAction1(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, int tripId)\n\
+        {\n\
+            if (!source.IsComposable)\n\
+            {\n\
+                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
+            }\n\
+\n\
+            return new global::Microsoft.OData.Client.DataServiceActionQuery(\n\
+                source.Context,\n\
+                source.AppendRequestUri("' + constants.Code.DefaultNamespace + '.MyAction1"),\n\
+                new global::Microsoft.OData.Client.BodyOperationParameter("tripId", tripId));\n\
+        }\n\
+\n';
+        var actual = genExBoundOperations(entityType, namespaceName);
+        expect(actual).toEqual(expected);
+    });
+
+    it('generation for extension bound actions with collection of primitive type parameters', function () {
+        var entityType = {
+            name: 'person',
+            properties: [
+                {
+                    name: 'myAction2',
+                    type: 'Action',
+                    operationType: 'Bound',
+                    params: [
+                      {
+                          name: 'tripIds',
+                          type: 'edm.int32',
+                          isCollection: true
+                      }
+                    ]
+                }
+            ]
+        };
+
+        var expected = '\
+        /// <summary>\n\
+        /// There are no comments for MyAction2 in the schema.\n\
+        /// </summary>\n\
+        [global::Microsoft.OData.Client.OriginalNameAttribute("MyAction2")]\n\
+        public static global::Microsoft.OData.Client.DataServiceActionQuery MyAction2(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, global::System.Collections.Generic.ICollection<int> tripIds)\n\
+        {\n\
+            if (!source.IsComposable)\n\
+            {\n\
+                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
+            }\n\
+\n\
+            return new global::Microsoft.OData.Client.DataServiceActionQuery(\n\
+                source.Context,\n\
+                source.AppendRequestUri("' + constants.Code.DefaultNamespace + '.MyAction2"),\n\
+                new global::Microsoft.OData.Client.BodyOperationParameter("tripIds", tripIds));\n\
+        }\n\
+\n';
+        var actual = genExBoundOperations(entityType, namespaceName);
+        expect(actual).toEqual(expected);
+    });
+
+    it('generation for extension bound actions with entity type parameters', function () {
+        var entityType = {
+            name: 'person',
+            properties: [
+                {
+                    name: 'myAction3',
+                    type: 'Action',
+                    operationType: 'Bound',
+                    params: [
+                      {
+                          name: 'trip',
+                          type: 'trip'
+                      }
+                    ]
+                }
+            ]
+        };
+
+        var expected = '\
+        /// <summary>\n\
+        /// There are no comments for MyAction3 in the schema.\n\
+        /// </summary>\n\
+        [global::Microsoft.OData.Client.OriginalNameAttribute("MyAction3")]\n\
+        public static global::Microsoft.OData.Client.DataServiceActionQuery MyAction3(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, global::' + namespaceName + '.Trip trip)\n\
+        {\n\
+            if (!source.IsComposable)\n\
+            {\n\
+                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
+            }\n\
+\n\
+            return new global::Microsoft.OData.Client.DataServiceActionQuery(\n\
+                source.Context,\n\
+                source.AppendRequestUri("' + constants.Code.DefaultNamespace + '.MyAction3"),\n\
+                new global::Microsoft.OData.Client.BodyOperationParameter("trip", trip));\n\
+        }\n\
+\n';
+        var actual = genExBoundOperations(entityType, namespaceName);
+        expect(actual).toEqual(expected);
+    });
+
+    it('generation for extension bound actions with collection of entity type parameters', function () {
+        var entityType = {
+            name: 'person',
+            properties: [
+                {
+                    name: 'myAction4',
+                    type: 'Action',
+                    operationType: 'Bound',
+                    params: [
+                      {
+                          name: 'trips',
+                          type: 'trip',
+                          isCollection: true
+                      }
+                    ]
+                }
+            ]
+        };
+        var expected = '\
+        /// <summary>\n\
+        /// There are no comments for MyAction4 in the schema.\n\
+        /// </summary>\n\
+        [global::Microsoft.OData.Client.OriginalNameAttribute("MyAction4")]\n\
+        public static global::Microsoft.OData.Client.DataServiceActionQuery MyAction4(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, global::System.Collections.Generic.ICollection<global::' + namespaceName + '.Trip> trips)\n\
+        {\n\
+            if (!source.IsComposable)\n\
+            {\n\
+                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
+            }\n\
+\n\
+            return new global::Microsoft.OData.Client.DataServiceActionQuery(\n\
+                source.Context,\n\
+                source.AppendRequestUri("' + constants.Code.DefaultNamespace + '.MyAction4"),\n\
+                new global::Microsoft.OData.Client.BodyOperationParameter("trips", trips));\n\
+        }\n\
+\n';
+        var actual = genExBoundOperations(entityType, namespaceName);
+        expect(actual).toEqual(expected);
+    });
+
+    it('generation for ByKey funtions for each entity type.', function () {
+        var typesObj = {
+            'types': [
+                {
+                    'properties': [
+                      {
+                          'name': 'planItemId',
+                          'isKey': true,
+                          'type': 'edm.int32'
+                      },
+                      {
+                          'name': 'confirmationCode',
+                          'isKey': true,
+                          'type': 'edm.string'
+                      },
+                      {
+                          'name': 'startsAt',
+                          'type': 'edm.datetimeoffset',
+                          'isNullable': true
+                      },
+                      {
+                          'name': 'endsAt',
+                          'type': 'edm.datetimeoffset',
+                          'isNullable': true
+                      },
+                      {
+                          'name': 'duration',
+                          'type': 'edm.duration',
+                          'isNullable': true
+                      }
+                    ],
+                    'name': 'planItem'
+                },
+                {
+                    'properties': [
+                      {
+                          'name': 'description',
+                          'isNullable': true,
+                          'type': 'edm.string'
+                      },
+                      {
+                          'name': 'occursAt',
+                          'type': 'eventLocation',
+                          'isNullable': true
+                      }
+                    ],
+                    'name': 'event',
+                    'baseType': 'planItem'
+                }
+            ]
+        };
+
+        var expected =
+                '\
+        /// <summary>\n\
+        /// Get an entity of type global::' + namespaceName + '.PlanItem as global::' + namespaceName + '.PlanItemSingle specified by key from an entity set\n\
+        /// </summary>\n\
+        /// <param name="source">source entity set</param>\n\
+        /// <param name="keys">dictionary with the names and values of keys</param>\n\
+        public static global::' + namespaceName + '.PlanItemSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::' + namespaceName + '.PlanItem> source, global::System.Collections.Generic.Dictionary<string, object> keys)\n\
+        {\n\
+            return new global::' + namespaceName + '.PlanItemSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));\n\
+        }\n\
+        /// <summary>\n\
+        /// Get an entity of type global::' + namespaceName + '.PlanItem as global::' + namespaceName + '.PlanItemSingle specified by key from an entity set\n\
+        /// </summary>\n\
+        /// <param name="source">source entity set</param>\n\
+        /// <param name="planItemId">The value of planItemId</param>\n\
+        /// <param name="confirmationCode">The value of confirmationCode</param>\n\
+        public static global::' + namespaceName + '.PlanItemSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::' + namespaceName + '.PlanItem> source,\n\
+            int planItemId, string confirmationCode)\n\
+        {\n\
+            global::System.Collections.Generic.Dictionary<string, object> keys = new global::System.Collections.Generic.Dictionary<string, object>\n\
+            {\n\
+                { "PlanItemId", planItemId },\n\
+                { "ConfirmationCode", confirmationCode }\n\
+            };\n\
+            return new global::'+ namespaceName + '.PlanItemSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));\n\
+        }\n\
+        /// <summary>\n\
+        /// Get an entity of type global::'+ namespaceName + '.Event as global::' + namespaceName + '.EventSingle specified by key from an entity set\n\
+        /// </summary>\n\
+        /// <param name="source">source entity set</param>\n\
+        /// <param name="keys">dictionary with the names and values of keys</param>\n\
+        public static global::'+ namespaceName + '.EventSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::' + namespaceName + '.Event> source, global::System.Collections.Generic.Dictionary<string, object> keys)\n\
+        {\n\
+            return new global::'+ namespaceName + '.EventSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));\n\
+        }\n\
+        /// <summary>\n\
+        /// Get an entity of type global::'+ namespaceName + '.Event as global::' + namespaceName + '.EventSingle specified by key from an entity set\n\
+        /// </summary>\n\
+        /// <param name="source">source entity set</param>\n\
+        /// <param name="planItemId">The value of planItemId</param>\n\
+        /// <param name="confirmationCode">The value of confirmationCode</param>\n\
+        public static global::'+ namespaceName + '.EventSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::' + namespaceName + '.Event> source,\n\
+            int planItemId, string confirmationCode)\n\
+        {\n\
+            global::System.Collections.Generic.Dictionary<string, object> keys = new global::System.Collections.Generic.Dictionary<string, object>\n\
+            {\n\
+                { "PlanItemId", planItemId },\n\
+                { "ConfirmationCode", confirmationCode }\n\
+            };\n\
+            return new global::'+ namespaceName + '.EventSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));\n\
+        }\n';
+        var actual = genByKey(typesObj.types, namespaceName);
+
+        expect(actual).toEqual(expected);
+    });
 });
