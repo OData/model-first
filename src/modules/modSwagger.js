@@ -465,7 +465,7 @@
             'swagger': '2.0',
             'info': {
                 'title': 'Demo',
-                'version': '0.1'
+                'version': '0.0.0.0'
             },
             'paths': {}
         };
