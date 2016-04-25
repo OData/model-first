@@ -1223,7 +1223,11 @@ namespace %s\n{\n', namespaceName);
 				// Generate extension bound operations.
 				exBoundOps += genExBoundOperations(type, namespaceName);
 			}
-
+            
+            // Generate extension methods.
+			// Generate extension bound operations.
+			exBoundOps += genByKey(jObj.types, namespaceName);
+            
 			if(!type.members && hasKeyProperty(type, jObj.types)){
 				// Generate extension methods.
 				// Generate extension bound operations.
