@@ -46,6 +46,14 @@
         'edm.geometrycollection': 'geometryCollection'
     };
 
+    function isPrimitiveType(type){
+        if(SwaggerTypes[type] || typeMap[type]){
+            return true;
+        }
+
+        return false;
+    }
+
     function getSwaggerType(type, isCollection) {
         var swgrType;
         if (SwaggerTypes[type]) {
@@ -125,6 +133,8 @@
             if (temp.success) {
                 path = '/' + temp.entitySet + '/{' + swKey.name + '}/' + name;
             } else {
+                // Should not enter this region.
+                // If the code enter this region, there will be some errors in user's template.
                 path = '/' + parentType + '/' + name;
             }
         } else if ('Unbound' === operationType) {
@@ -555,6 +565,14 @@
 
                     if (item.properties) {
                         visitor.visitArr(item.properties, function (item) {
+                            if(item.type !== 'Function' || item.type !== 'Action'){
+                                if(!isPrimitiveType(item.type)){
+                                    // Add navigation property name as contains target.
+                                    // Need add the containstarget property on navigation property in simple-YAML and Json model.
+                                    entitySetMappings[item.type] = item.name;
+                                }
+                            }
+
                             if (!item.operationType) {
                                 var swType = getSwaggerType(item.type, item.isCollection);
                                 var propertyType;

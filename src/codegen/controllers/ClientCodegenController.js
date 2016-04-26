@@ -13,7 +13,7 @@ exports.get = function(req, res){
     var query = req.query;
     if(query){
         if(query.name == 'csharp'){
-            logger.logInfo('Processing TripPin Sample metadata...')
+            logger.logInfo('Processing TripPin Sample metadata...');
             ctrlhelper.processSample(constants.Paths.TripPinMetadataSample, function(err, result){
                 if(err){
                     logger.logErr(err);
