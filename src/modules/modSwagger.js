@@ -192,6 +192,7 @@
             }
             parameters.push(param);
         }
+
         var path;
         if ('Bound' === operationType) {
             var temp = getEntitySet(parentType);
@@ -248,13 +249,103 @@
         }
 
         function routeGet(name, type, isCollection, swKey) {
+            var queryDescriptionStr = 'Or query a specific info from ' + name + ', by input parameters as following.';//' Please use \'%20\' instead of space when input string type parameters.';
             var route = {
                 'tags': [type],
                 'description': isCollection ?
-                        'Returns all items from ' + name + '.' :
+                        ('Returns all items from ' + name + ' without parameters. \n\r' + queryDescriptionStr) :
                         swKey ?
                         'Returns a single item from ' + name + '.' :
-                        'Returns ' + name + '.',
+                        'Returns ' + name + ' without parameters. \n\r' + queryDescriptionStr ,
+                'parameters': isCollection ?
+                    [
+                        {
+                            'name': '$filter',
+                            'in': 'query',
+                            'description': 'system query option $filter, one or a set of built-in filter operations and functions',
+                            'required': false,
+                            'type': 'string'
+                        },
+                        {
+                            'name': '$expand',
+                            'in': 'query',
+                            'description': 'system query option $expand, a comma-separated list of navigation property names',
+                            'required': false,
+                            'type': 'string'
+                        },
+                        {
+                            'name': '$select',
+                            'in': 'query',
+                            'description': 'system query option $select, is a comma-separated list of properties, qualified action names, qualified function names, the star operator (*), or the star operator prefixed with the namespace or alias of the schema in order to specify all operations defined in the schema',
+                            'required': false,
+                            'type': 'string'
+                        },
+                        {
+                            'name': '$orderby',
+                            'in': 'query',
+                            'description': 'system query option $orderby, The expression can include the suffix asc for ascending or desc for descending, separated from the  property name by one or more spaces.',
+                            'required': false,
+                            'type': 'string'
+                        },
+                        {
+                            'name': '$top',
+                            'in': 'query',
+                            'description': 'system query option $top, number of items returned from a collection',
+                            'required': false,
+                            'type': 'number'
+                        },
+                        {
+                            'name': '$skip',
+                            'in': 'query',
+                            'description': 'system query option $skip, the service returns items starting at position n+1',
+                            'required': false,
+                            'type': 'number'
+                        },
+                        {
+                            'name': '$count',
+                            'in': 'query',
+                            'description': 'system query option $count, with a value of true specifies that the total count of items within the collection, false (or not specified) means not reutrn a count',
+                            'required': false,
+                            'type': 'boolean'
+                        },  
+                        {
+                            'name': '$search',
+                            'in': 'query',
+                            'description': 'system query option $search, restricts the result to include only those entities matching the specified search expression',
+                            'required': false,
+                            'type': 'string'
+                        }, 
+                        {
+                            'name': '$format',
+                            'in': 'query',
+                            'description': 'system query option $format such as json, application/json, application/json;odata.metadata=full',
+                            'required': false,
+                            'type': 'string'
+                        }                                       
+                    ] :
+                    [
+                        {
+                            'name': '$expand',
+                            'in': 'query',
+                            'description': 'system query option $expand, a comma-separated list of navigation property names',
+                            'required': false,
+                            'type': 'string'
+                        },
+                        {
+                            'name': '$select',
+                            'in': 'query',
+                            'description': 'system query option $select, is a comma-separated list of properties, qualified action names, qualified function names, the star operator (*), or the star operator prefixed with the namespace or alias of the schema in order to specify all operations defined in the schema',
+                            'required': false,
+                            'type': 'string'
+                        }, 
+                        {
+                            'name': '$format',
+                            'in': 'query',
+                            'description': 'system query option $format such as json, application/json, application/json;odata.metadata=full',
+                            'required': false,
+                            'type': 'string'
+                        }                                       
+                    ],                        
                 'responses': {
                     '200': {
                         'description': isCollection ?
@@ -399,6 +490,7 @@
 
         var paths = {};
         var visitor = new Visitor();
+        var routesQ = {};
 
         visitor.visitObj(model.container, {
             'entitysets': function (arr) {
@@ -407,6 +499,7 @@
                     var routes = {};
                     if (allows.read)
                         routes.get = routeGet(item.name, item.type, true);
+
                     if (allows.create)
                         routes.post = routePost(item.name, item.type);
                     paths['/' + item.name] = routes;
