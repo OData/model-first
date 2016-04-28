@@ -475,8 +475,8 @@ Example:
                         "description": "system query option $format such as json, application/json, application/json;odata.metadata=full",
                         "in": "query",
                         "type": "string",
-                      **  "required": "false" 
-                    }**
+                        "required": "false" 
+                    }
                 ],
      
                 "responses": {
@@ -1059,8 +1059,8 @@ Example:
                         "description": "system query option $format such as json, application/json, application/json;odata.metadata=full",
                         "in": "query",
                         "type": "string",
-                      **  "required": "false" 
-                    }**
+                        "required": "false" 
+                    }
                 ],
      
                 "responses": {
