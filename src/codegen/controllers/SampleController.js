@@ -16,7 +16,7 @@ exports.get = function(req, res){
 				req.flash('title', 'Model-first CodeGen');
 				req.flash('metadata', result.metadata.toString());
 				req.flash('csharpCode', result.csharpCode);
-				return res.redirect('/');
+				return res.redirect('/gen-client');
 			});
 		}
 		else if(query.name === 'trippin'){
@@ -28,7 +28,7 @@ exports.get = function(req, res){
 				req.flash('title', 'Model-first CodeGen');
 				req.flash('metadata', result.metadata.toString());
 				req.flash('csharpCode', result.csharpCode);
-				return res.redirect('/');
+				return res.redirect('/gen-client');
 			});
 		}
 		else{
@@ -58,6 +58,53 @@ exports.post = function(req, res){
 	}
 
 	
+};
+
+exports.getServer = function(req, res){
+	var query = req.query;
+	if(query){
+		if(query.name === 'todo'){
+			ctrlhelper.processSampleForServer(constants.Paths.ToDoMetadataSample, function(err, result){
+				if(err){
+					return console.error(err);
+				}
+				
+				res.send({ 'metadata': result.metadata.toString(), 'files': result.files });
+			});
+		}
+		else if(query.name === 'trippin'){
+			ctrlhelper.processSampleForServer(constants.Paths.TripPinMetadataSample, function(err, result){
+				if(err){
+					return console.error(err);
+				}
+				
+				res.send({ 'metadata': result.metadata.toString(), 'files': result.files });
+			});
+		}
+		else{
+			res.send('Error: Cannot load the ' + query.name + ' sample!');
+		}
+	}
+};
+
+exports.postServer = function(req, res){
+	var query = req.query;
+	if(!query){
+		return res.sendStatus(404);
+	}
+
+	if(query.code === 'csharp'){
+		if(!req.body){
+			return res.sendStatus(400);
+		}
+		
+		var data = removeBackslash(JSON.stringify(req.body));
+		var files = ctrlhelper.processInputForServer(data).files;
+		res.send(files);
+	}
+	else{
+		return res.sendStatus(404);
+	}
 };
 
 function removeBackslash(str){

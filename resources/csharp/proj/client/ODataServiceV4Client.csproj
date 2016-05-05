@@ -7,8 +7,8 @@
     <ProjectGuid>{%s}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ODataV4ClientLatest</RootNamespace>
-    <AssemblyName>ODataV4ClientLatest</AssemblyName>
+    <RootNamespace>%s</RootNamespace>
+    <AssemblyName>%s</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

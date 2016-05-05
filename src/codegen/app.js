@@ -9,13 +9,15 @@ var config = require('./config');
 var Logger = require('./utilities/logger');
 var constants = config.Constants;
 
-Logger.getInstance(constants.Logs.Suc, constants.Logs.Info, constants.Logs.Err);
+var logger = Logger.getInstance(constants.Logs.Suc, constants.Logs.Info, constants.Logs.Err);
 
 var DirectoryManager = require('./utilities/directoryMgr');
 var dmgr = new DirectoryManager();
 var paths = [
     constants.Paths.CSharpPackage,
-    constants.Paths.CSharpZipPackage
+    constants.Paths.CSharpZipPackage,
+    constants.Paths.ServerCSharpPackage,
+    constants.Paths.ServerCSharpZipPackage
 ];
 dmgr.create(paths);
 
@@ -66,6 +68,11 @@ app.use(function (req, res, next) {
 app.use('/', routes);
 
 var server = app.listen(constants.Port, function () {
-    console.log('Started connect codegen web service on http://localhost:' + constants.Port + '/');
-    console.log('HTTP GET or POST: Download OData client C# code on http://localhost:' + constants.Port + '/client/codegen/?name=csharp');
+    logger.logSuc('Started connect codegen web service on http://localhost:' + constants.Port + '/');
+    logger.logInfo('Download OData client C# code on:');
+    logger.logInfo('-- HTTP GET / POST: http://localhost:' + constants.Port + '/client/codegen/?name=csharp');
+    logger.logInfo('Download OData server C# code on:');
+    logger.logInfo('-- HTTP GET / POST: http://localhost:' + constants.Port + '/server/codegen/?name=csharp');
+    logger.logInfo('OData client CodeGen Testing Entry: http://localhost:' + constants.Port + '/gen-client/');
+    logger.logInfo('OData server CodeGen Testing Entry: http://localhost:' + constants.Port + '/gen-server/');
 });
