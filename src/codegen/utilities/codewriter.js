@@ -7,6 +7,106 @@ var config = require('../config');
 var constants = config.Constants;
 
 /*
+** Create a csharp server project's directory structure and necessary files on './public/server/csharp/packages/' folder.
+** params: 
+**     projName: The project name (user definition).
+**     callback: The callback function.
+*/
+exports.createServerCSharpProject = function(projName, files, callback){
+	var folderName = genPackageName(projName, constants.FileNames.RandomStringLen);
+	try{
+		var folderPathes = [
+			constants.Paths.ServerCSharpPackage + folderName,
+			constants.Paths.ServerCSharpPackage + folderName + '/packages',
+			constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder,
+			constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/App_Data',
+			constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/App_Start',
+			constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/Controllers',
+			constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/Models',
+			constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/Properties'
+		];
+
+		createFolders(folderPathes, function(err){
+			if(err){
+				return callback(err);
+			}
+
+			var filePathes = [
+				constants.Paths.ServerCSharpProj + 'Global.asax',
+				constants.Paths.ServerCSharpProj + 'Global.asax.cs',
+				constants.Paths.ServerCSharpProj + 'packages.config',
+				constants.Paths.ServerCSharpProj + 'Web.config',
+				constants.Paths.ServerCSharpProj + 'Web.Debug.config',
+				constants.Paths.ServerCSharpProj + 'Web.Release.config'
+			];
+			copyFiles(filePathes, constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder, function(err){
+				if(err){
+					return callback(err);
+				}
+
+				filePathes = [
+					constants.Paths.ServerCSharpProj + 'App_Start/WebApiConfig.cs'
+				];
+
+				copyFiles(filePathes, constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/App_Start/', function(err){
+					if(err){
+						return callback(err);
+					}
+
+					var compileInfos = insertServerCSharpModelFiles(files, folderName);
+					var projFileSrcPath = constants.Paths.ServerCSharpProj + constants.FileNames.ServerCSharpProjFile;
+					var projFileTargetPath = constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/' + constants.FileNames.ServerCSharpProjFile;
+					insertCSharpProjFile(folderName, constants.Code.ServerDefaultNamespace, compileInfos, projFileSrcPath, projFileTargetPath, function(err){
+						if(err){
+							return callback(err);
+						}
+
+						var assmFileSrcPath = constants.Paths.ServerCSharpProj + 'Properties/' + constants.FileNames.CSharpAssemblyFile;
+						var assmFileTargetPath = constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/Properties/' + constants.FileNames.CSharpAssemblyFile;
+						insertCSharpAssmFile(folderName, constants.Code.ServerDefaultNamespace, assmFileSrcPath, assmFileTargetPath, function(err){
+							if(err){
+								return callback(err);
+							}
+
+							return callback(null, folderName);
+						});
+					});
+				});
+			});
+		});			
+	}
+	catch(err){
+		return callback(err);
+	}
+};
+
+/*
+** Insert model files to the csharp server project folder.
+** params: 
+**     files: The model files information for OData v4 service server.
+**     folderName: The project folder name.
+**     callback: The callback function.
+*/
+function insertServerCSharpModelFiles(files, folderName){
+	try{
+		var compileInfos = '';
+		var filePath = constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/Models/';
+		for(var i = 0; i < files.length; i++){
+			fs.writeFileSync(filePath + files[i].fileName, files[i].content);
+			compileInfos += '        ' + files[i].compileInfo;
+			if(i !== files.length - 1){
+				compileInfos += '\n';
+			}
+		}
+
+		return compileInfos;
+	}
+	catch(err){
+		throw new Error(err);
+	}
+}
+
+/*
 ** Create a csharp project's directory structure and necessary files on './public/client/csharp/packages/' folder.
 ** params: 
 **     projName: The project name (user definition).
@@ -28,21 +128,25 @@ exports.createCSharpProject = function(projName, coreContent, callback){
 			}
 
 			var filePathes = [
-					constants.Paths.CSharpProj + 'App.config',
-					constants.Paths.CSharpProj + 'packages.config',
-					constants.Paths.CSharpProj + 'Program.cs'
+				constants.Paths.CSharpProj + 'App.config',
+				constants.Paths.CSharpProj + 'packages.config',
+				constants.Paths.CSharpProj + 'Program.cs'
 			];
 			copyFiles(filePathes, constants.Paths.CSharpPackage + folderName + '/' + constants.FileNames.CSharpProjFolder, function(err){
 				if(err){
 					return callback(err);
 				}
 				
-				insertCSharpProjFile(folderName, function(err){
+				var projFileSrcPath = constants.Paths.CSharpProj + constants.FileNames.CSharpProjFile;
+				var projFileTargetPath = constants.Paths.CSharpPackage + folderName + '/' + constants.FileNames.CSharpProjFolder + '/' + constants.FileNames.CSharpProjFile;
+				insertCSharpProjFile(folderName, constants.Code.DefaultNamespace, null, projFileSrcPath, projFileTargetPath, function(err){
 					if(err){
 						return callback(err);
 					}
 
-					insertCSharpAssmFile(folderName, function(err){
+					var assmFileSrcPath = constants.Paths.CSharpProj + 'Properties/' + constants.FileNames.CSharpAssemblyFile;
+					var assmFileTargetPath = constants.Paths.CSharpPackage + folderName + '/' + constants.FileNames.CSharpProjFolder + '/Properties/' + constants.FileNames.CSharpAssemblyFile;
+					insertCSharpAssmFile(folderName, constants.Code.DefaultNamespace, assmFileSrcPath, assmFileTargetPath, function(err){
 						if(err){
 							return callback(err);
 						}
@@ -91,16 +195,18 @@ function insertCSharpCoreFile(coreContent, folderName, callback){
 ** Insert project file to the project folder.
 ** params: 
 **     folderName: The project folder name.
+**     namespaceName: The namespace name.
+**     compileInfos: The compile information will be added to project file.
+**     projFileSrcPath: The source path of project file.
+**     projFileTargetPath: The target path of project file.
 **     callback: The callback function.
 */
-function insertCSharpProjFile(folderName, callback){
-	var projFileSrcPath = constants.Paths.CSharpProj + constants.FileNames.CSharpProjFile;
-	updateCSharpProjContent(projFileSrcPath, function(err, data){
+function insertCSharpProjFile(folderName, namespaceName, compileInfos, projFileSrcPath, projFileTargetPath, callback){
+	updateCSharpProjContent(projFileSrcPath, namespaceName, compileInfos, function(err, data){
 		if(err){
 			return callback(err);
 		}
 
-		var projFileTargetPath = constants.Paths.CSharpPackage + folderName + '/' + constants.FileNames.CSharpProjFolder + '/' + constants.FileNames.CSharpProjFile;
 		try{
 			fs.writeFile(projFileTargetPath, data, constants.Code.Encoding, function(err){
 				if(err){
@@ -120,16 +226,17 @@ function insertCSharpProjFile(folderName, callback){
 ** Insert assembly file to the project folder.
 ** params: 
 **     folderName: The project folder name.
+**     namespaceName: The namespace name.
+**     assmFileSrcPath: The source path of assembly file.
+**     assmFileTargetPath: The target path of assembly file.
 **     callback: The callback function.
 */
-function insertCSharpAssmFile(folderName, callback){
-	var assmFileSrcPath = constants.Paths.CSharpProj + 'Properties/' + constants.FileNames.CSharpAssemblyFile;
-	updateCSharpAssmContent(assmFileSrcPath, function(err, data){
+function insertCSharpAssmFile(folderName, namespaceName, assmFileSrcPath, assmFileTargetPath, callback){
+	updateCSharpAssmContent(assmFileSrcPath, namespaceName, function(err, data){
 		if(err){
 			return callback(err);
 		}
 
-		var assmFileTargetPath = constants.Paths.CSharpPackage + folderName + '/' + constants.FileNames.CSharpProjFolder + '/Properties/' + constants.FileNames.CSharpAssemblyFile;
 		try{
 			fs.writeFile(assmFileTargetPath, data, constants.Code.Encoding, function(err){
 				if(err){
@@ -149,9 +256,11 @@ function insertCSharpAssmFile(folderName, callback){
 ** Update GUID to project file.
 ** params: 
 **     filePath: The path of 'ODataServiceV4Client.csproj' file which will be updated.
+**     projName: The name of csharp project.
+**     compileInfos: The compile information will be added to project file.
 **     callback: The callback function.
 */
-function updateCSharpProjContent(filePath, callback){
+function updateCSharpProjContent(filePath, namespaceName, compileInfos, callback){
 	var guid = Guid.NewGuid();
 	try{
 		fs.readFile(filePath, constants.Code.Encoding, function(err, data){
@@ -159,7 +268,13 @@ function updateCSharpProjContent(filePath, callback){
 				return callback(err);
 			}
 
-			return callback(null, util.format(data, guid));
+			if(compileInfos){
+				return callback(null, util.format(data, guid, namespaceName, namespaceName, compileInfos));
+			}
+			else{
+				return callback(null, util.format(data, guid, namespaceName, namespaceName));
+			}
+			
 		});
 	}
 	catch(err){
@@ -171,9 +286,10 @@ function updateCSharpProjContent(filePath, callback){
 ** Update namespace information and GUID to assembly file.
 ** params: 
 **     filePath: The path of 'AssemblyInfo.cs' file which will be updated.
+**     namespaceName: The namespace name.
 **     callback: The callback function.
 */
-function updateCSharpAssmContent(filePath, callback){
+function updateCSharpAssmContent(filePath, namespaceName, callback){
 	var guid = Guid.NewGuid();
 	try{
 		fs.readFile(filePath, constants.Code.Encoding, function(err, data){
@@ -181,7 +297,7 @@ function updateCSharpAssmContent(filePath, callback){
 				return callback(err);
 			}
 
-			return callback(null, util.format(data, constants.Code.DefaultNamespace, constants.Code.DefaultNamespace, guid));
+			return callback(null, util.format(data, namespaceName, namespaceName, guid));
 		});
 	}
 	catch(err){
@@ -216,6 +332,36 @@ function copyFiles(filePathes, destFolder, callback){
 		catch(err){
 			return callback(err);
 		}
+	});
+}
+
+/*
+** Copy file to a target folder.
+** params: 
+**     filePath: The path of the file which will be copied.
+**     destFolder: The target folder path.
+**     callback: The callback function.
+*/
+// This method can be removed in this submit (2016/4/11).
+function copy(filePath, destFolder, callback){
+	fs.stat(filePath, function (err, stats){
+		if(err){
+			return callback(err);
+		}
+
+	    if(stats.isFile()){
+	    	try{
+	    		var readStream = fs.createReadStream(filePath);
+		    	var dest = StringHelper.addSlash(destFolder) + StringHelper.getLastSegment(filePath);
+		    	var writeStream = fs.createWriteStream(dest);
+		    	readStream.pipe(writeStream);
+
+		    	return callback();
+	    	}
+	    	catch(err){
+	    		return callback(err);
+	    	}
+	    }
 	});
 }
 
@@ -275,6 +421,7 @@ function createFolders(folderPathes, callback){
 **     folderPath: The folder path which will be created.
 **     callback: The callback function.
 */
+// This method can be removed in this submit (2016/4/11).
 function createFolder(folderPath, callback){
 	fs.exists(folderPath, function(exists){
 		if(exists){

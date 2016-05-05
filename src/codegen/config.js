@@ -4,22 +4,37 @@ exports.Constants = {
         Static: '../../',
 		ToDoMetadataSample: './public/samples/todo_metadata.json',
         TripPinMetadataSample: './public/samples/trippin_metadata.json',
-        CSharpCode: './public/client/csharp/code/',
-        CSharpProj: './public/client/csharp/proj/',
+
+        // CSharp client code files' path.
+        CSharpProj: './resources/client/csharp/proj/',
         CSharpPackage: './public/client/csharp/packages/',
         CSharpZipPackage: './public/client/csharp/zips/',
+
+        // CSharp server code files' path.
+        ServerCSharpProj: './resources/csharp/proj/server/',
+        ServerCSharpPackage: './public/server/csharp/packages/',
+        ServerCSharpZipPackage: './public/server/csharp/zips/',
+
 		Views: './views'
     },
     FileNames: {
+        // CSharp client code files' name.
         CSharpCode: 'ODataClient.cs',
         CSharpZipPackage: 'ODataClientProject.zip',
         CSharpProjFolder: 'odatav4client',
         CSharpProjFile: 'ODataServiceV4Client.csproj',
+
+        // CSharp server code files' name.
+        ServerCSharpZipPackage: 'odatav4server', // new added.
+        ServerCSharpProjFolder: 'odatav4server', // new added.
+        ServerCSharpProjFile: 'ODataServiceV4Server.csproj', // new added.
+
         CSharpAssemblyFile: 'AssemblyInfo.cs',
         RandomStringLen: 5
     },
     Code: {
         DefaultNamespace: 'OData.Service.V4.Client',
+        ServerDefaultNamespace: 'OData.Service.V4.Server',
         EntityContainer: 'DefaultContainer',
         Encoding: 'utf8'
     },

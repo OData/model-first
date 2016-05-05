@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/public/stylesheets/bootstrap.min.css" />
+    <link rel="stylesheet" href="/public/stylesheets/bootstrap-theme.min.css" />
+    <link rel="stylesheet" href="/public/stylesheets/codemirror.css" />
+  </head>
+  <body>
+
+    <!-- Navigation bar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">Model-first CodeGen For Server Point (Only For Testing)</a>
+      </div>
+      <div>
+        <ul class="nav navbar-nav">
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              Load
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a id="todo" name="todo" href="#">ToDo Metadata</a></li>
+              <li><a id="trippin" name="trippin" href="#">TripPin Metadata</a></li>
+              <li><a id="odatademo" name="odatademo" href="#">ODataDemo Metadata</a></li>
+              <li><a id="northwind" name="northwind" href="#">Northwind Metadata</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- From the top 50 px. -->
+    <div style="margin-top: 50px;"></div>
+
+    <div id="mainContent" name="mainContent" class="row">
+      <div class="col-md-6">
+        <!-- JS will add the content to the textarea. -->
+        <textarea id="inputareaSvr" name="inputareaSvr">
+Load A Sample First!
+        </textarea>
+      </div>
+      <div class="col-md-6" style="background: lightblue">
+        <div class="form-inline">
+          <div class="col-md-1">
+            <h4 style="border: 0px;background: lightblue;margin-top: 15px;margin-bottom: 5px;">C#</h4>
+          </div>
+          <div class="col-md-6">
+            <select class="form-control" id="filesSelector" name="filesSelector" style="margin-top: 5px;margin-bottom: 5px;">
+              <option value="0">HelloWorld1.cs</option>
+              <option value="1">HelloWorld2.cs</option>
+              <option value="2">HelloWorld3.cs</option>
+              <option value="3">HelloWorld4.cs</option>
+            </select>
+          </div>
+          <div class="col-md-4 col-md-offset-1">
+            <button class="form-control btn btn-primary" id="downloadBtn" name="downloadBtn" style="margin-left: 35%;margin-top: 5px;margin-bottom: 5px;"><span class="glyphicon glyphicon-download-alt"></span> Download</button>
+          </div>
+        </div>
+        <!-- JS will add the content to the textarea. -->
+        <textarea id="outputareaSvr" name="outputareaSvr">
+No Results!
+        </textarea>
+      </div>
+    </div>
+  </body>
+  <script src="/public/javascripts/jquery-2.2.0.min.js"></script>
+  <script src="/public/javascripts/bootstrap.min.js"></script>
+  <script src="/public/javascripts/codemirror.js"></script>
+  <script src="/public/javascripts/mode/javascript.js"></script>
+  <script src="/public/javascripts/mode/clike.js"></script>
+  <script src="/public/javascripts/codeeditor.js"></script>
+</html>
