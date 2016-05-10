@@ -1,4 +1,4 @@
-var config = require('../../src/codegen/config');
+var config = require('./config');
 
 var fullNamespace='Microsoft.OData.SampleService.Models.TripPin';
 var castToMethodGenerator = require('../../src/codegen/modules/castToMethod');
@@ -155,7 +155,7 @@ describe('[Client CodeGen] CastTo Method', function () {
             return new global::OData.Service.V4.Client.EventSingle(source.Context, query.GetPath(null));\n\
         }\n';
 
-        var actual = castToMethodGenerator.generateCastTo(model);
+        var actual = castToMethodGenerator.generateCastTo(model, languageDependentNamespace);
         expect(actual).toEqual(expected);
     });    
 });

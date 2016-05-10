@@ -81,8 +81,18 @@ api:\n\
     });
 
     it ('Api default namespace should match', function() {
-       var model = Morpho.convertFrom.yaml.call(Morpho, inputForDefaultVersionAndNamespace, {}, {});
-       expect(model.api.namespace).toEqual('Default.Namespace');
+      var model = Morpho.convertFrom.yaml.call(Morpho, inputForDefaultVersionAndNamespace, {}, {});
+
+      var namesplits = model.api.name.split(' ');
+      var namespace = namesplits[0];
+      for(var i=1;i<namesplits.length;i++)
+      {
+          if(namesplits[i]!=='')
+          {
+              namespace +='.' + namesplits[i];
+          }
+      }
+      expect(model.api.namespace).toEqual(namespace);
     });
     
 });

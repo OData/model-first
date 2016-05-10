@@ -55,7 +55,7 @@ exports.post = function (req, res) {
         if(query.name == 'csharp'){
             if(req.body){
                 logger.logInfo('Processing request\'s metadata...');
-                var csharpCode = codegen.CodegenByObj(req.body, constants.Code.DefaultNamespace);
+                var csharpCode = codegen.CodegenByObj(req.body);
                 logger.logInfo('Generating the CSharp code for OData v4 service...');
                 codewriter.createCSharpProject(constants.FileNames.CSharpZipPackage, csharpCode, function(err, folderName){
                     if(err){

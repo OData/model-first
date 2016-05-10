@@ -2287,6 +2287,11 @@ module.exports={
           "pattern": "^/",
           "description": "The base path to the API. Example: '/api'."
         },
+        "namespace":{
+          "type": "string",
+          "pattern": "^[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z_][A-Za-z0-9_]*)*",
+          "description": "The namespace mustbe identifiers delimited by dot. Example: 'TripPin.OData.Reference.Servic'."
+        },
         "termsOfService": {
           "type": "string",
           "description": "The terms of service for the API."
@@ -3556,11 +3561,35 @@ function validateSimpleYamlTypereferences(api)
   return response;
 }
 
+function validateSimpleYamlnamespace(api)
+{
+  var response = {
+    errors: [],
+    warnings: []
+  };
+
+  if(!api.resolved.api.namespace)
+    {return response;}
+  switch(api.resolved.api.namespace)
+  {
+    case 'Edm':
+    case 'odata':
+    case 'Synstem':
+    case 'Transient':
+        response.errors.push({
+          code: 'UNALLOWED_VALUE',
+          message:  'The namespace must not use the reserved values Edm, odata, System, or Transient.',
+          path: ['api', 'namespace']
+        });
+  }
+  return response;
+}
 
 module.exports = {
   jsonSchemaValidator: validateStructure,
   semanticValidators: [
-  validateSimpleYamlTypereferences
+  validateSimpleYamlTypereferences,
+  validateSimpleYamlnamespace
   ]
 };
 

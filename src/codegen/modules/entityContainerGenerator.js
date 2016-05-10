@@ -26,7 +26,7 @@ var EntityContainer=config.Constants.Code.EntityContainer;
 var fullNamespace='Microsoft.OData.SampleService.Models.TripPin';
 
 // Need user configure or we got from the ymal?
-var languageDependentNamespace= CustomizeNaming(config.Constants.Code.DefaultNamespace);
+var languageDependentNamespace= '';
 
 var ModelHasInheritance = true;
 
@@ -204,7 +204,8 @@ var ClassEndForEntityContainer='\
 var TypeofFormatter='typeof({0})';
 
 exports.generate = generateEntityContainer;
-function generateEntityContainer(model){
+function generateEntityContainer(model, namespaceName){
+    languageDependentNamespace=namespaceName;
     if(!!model.api.namespace)
     {
         fullNamespace = model.api.namespace;

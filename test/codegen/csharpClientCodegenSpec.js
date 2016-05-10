@@ -1,6 +1,6 @@
 describe('[OData Service Client Codegen: CSharp] Test', function () {
     var codegen = require('../../src/codegen/modules/csharpClientCodegen');
-    var constants = require('../../src/codegen/config').Constants;
+    var constants = require('./config').Constants;
     var genEnumType;
     var genComplexType;
     var genEntityType;

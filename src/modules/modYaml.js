@@ -262,7 +262,15 @@ function fromYaml(str, errors, config, callback) {
             
             if(!obj.namespace)
             {
-                obj.namespace = 'Default.Namespace';
+                var namesplits = obj.name.split(' ');
+                obj.namespace = namesplits[0];
+                for(var i=1;i<namesplits.length;i++)
+                {
+                    if(namesplits[i]!=='')
+                    {
+                        obj.namespace +='.' + namesplits[i];
+                    }
+                }
             }
             
             state.api = obj;
