@@ -6,6 +6,7 @@ var TypesHelper = require('../helpers/typeshelper');
 MetadataNamespace = 'Microsoft.OData.SampleService.Models.TripPin';
 
 var container = require('./entityContainerGenerator');
+var castTo = require('./castToMethod');
 
 function hasKeyProperty(type, types){
 	for(var i in type.properties){
@@ -998,7 +999,7 @@ function codegen(jObj, namespaceName) {
     var exBoundOps = '';
     result += util.format('\
 namespace %s\n{\n', namespaceName);
-    result += container.generate(jObj);
+    result += container.generate(jObj, namespaceName);
     if (jObj.types) {
     	
         for (var j in jObj.types) {
@@ -1017,16 +1018,12 @@ namespace %s\n{\n', namespaceName);
                     result += genComplexType(type, jObj.types, namespaceName);
                 }
             }
-			if(!type.members && hasKeyProperty(type, jObj.types)){
-				// Generate extension methods.
-				// Generate extension bound operations.
-				exBoundOps += genExBoundOperations(type, namespaceName);
-			}
-            
             // Generate extension methods.
 			// Generate extension bound operations.
 			exBoundOps += genByKey(jObj.types, namespaceName);
             
+            exBoundOps += castTo.generateCastTo(jObj, namespaceName);
+
 			if(!type.members && hasKeyProperty(type, jObj.types)){
 				// Generate extension methods.
 				// Generate extension bound operations.
@@ -1043,12 +1040,12 @@ namespace %s\n{\n', namespaceName);
     return result;
 }
 
-exports.CodegenByObj = function (jObj, namespaceName) {
-    return codegen(jObj, namespaceName);
+exports.CodegenByObj = function (jObj) {
+    return codegen(jObj, jObj.api.namespace);
 };
 
-exports.Codegen = function (jsonMetadata, namespaceName) {
+exports.Codegen = function (jsonMetadata) {
     var jObj = JSON.parse(jsonMetadata);
 
-    return codegen(jObj, namespaceName);
+    return codegen(jObj);
 };

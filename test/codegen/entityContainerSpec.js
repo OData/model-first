@@ -1,4 +1,4 @@
-var config = require('../../src/codegen/config');
+var config = require('./config');
 
 var EntityContainer = config.Constants.Code.EntityContainer;
 var fullNamespace='Microsoft.OData.SampleService.Models.TripPin';
@@ -490,7 +490,7 @@ describe('[Client CodeGen] Entity Container', function () {
     }\n'.format(entityContainerGenerator.CustomizeNaming(EntityContainer), EntityContainer, fullNamespace,
     entityContainerGenerator.CustomizeNaming(languageDependentNamespace), expected);
 
-    var actual = entityContainerGenerator.generate(model);
+    var actual = entityContainerGenerator.generate(model, languageDependentNamespace);
     expect(actual).toEqual(output);
     }
 });

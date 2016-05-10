@@ -1,4 +1,4 @@
-
+var _ = require('lodash');
 var config = require('../config');
 
 var CastToMethod='\
@@ -13,7 +13,7 @@ var CastToMethod='\
         }\n';
 
 exports.generateCastTo = gnerate;
-function gnerate(model)
+function gnerate(model, namespaceName)
 { 
     var result='';
     for(var i=0;i<model.types.length;i++)
@@ -23,9 +23,9 @@ function gnerate(model)
         while (current !== undefined && current !== '' && isEntityType(model, current))
         {
             var baseTypeName = current;
-            baseTypeName = GetPrefixedFullName(config.Constants.Code.DefaultNamespace, GetFixedName(CustomizeNaming(baseTypeName)));
-            var entityTypeFullName = GetPrefixedFullName(config.Constants.Code.DefaultNamespace, GetFixedName(CustomizeNaming(entityType.name)));
-            var returnTypeName = GetPrefixedFullName(config.Constants.Code.DefaultNamespace, GetFixedName(CustomizeNaming(entityType.name) + 'Single'));
+            baseTypeName = GetPrefixedFullName(namespaceName, GetFixedName(CustomizeNaming(baseTypeName)));
+            var entityTypeFullName = GetPrefixedFullName(namespaceName, GetFixedName(CustomizeNaming(entityType.name)));
+            var returnTypeName = GetPrefixedFullName(namespaceName, GetFixedName(CustomizeNaming(entityType.name) + 'Single'));
             result+=CastToMethod.format(baseTypeName, CustomizeNaming(entityType.name), entityTypeFullName, returnTypeName);
             
             baseTypeName = current;
