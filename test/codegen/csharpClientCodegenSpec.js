@@ -1435,7 +1435,7 @@ describe('[OData Service Client Codegen: CSharp] Test', function () {
                 throw new global::System.NotSupportedException("The previous function is not composable.");\n\
             }\n\
 \n\
-            return source.CreateFunctionQuerySingle<string>("' + constants.Code.DefaultNamespace + '.MyFunction1", true, new global::Microsoft.OData.Client.UriOperationParameter("tripId", tripId));\n\
+            return source.CreateFunctionQuerySingle<string>("Microsoft.OData.SampleService.Models.TripPin.MyFunction1", true, new global::Microsoft.OData.Client.UriOperationParameter("tripId", tripId));\n\
         }\n\
 \n';
 
@@ -1479,7 +1479,7 @@ describe('[OData Service Client Codegen: CSharp] Test', function () {
                 throw new global::System.NotSupportedException("The previous function is not composable.");\n\
             }\n\
 \n\
-            return source.CreateFunctionQuery<string>("' + constants.Code.DefaultNamespace + '.MyFunction2", true, new global::Microsoft.OData.Client.UriOperationParameter("tripIds", tripIds));\n\
+            return source.CreateFunctionQuery<string>("Microsoft.OData.SampleService.Models.TripPin.MyFunction2", true, new global::Microsoft.OData.Client.UriOperationParameter("tripIds", tripIds));\n\
         }\n\
 \n';
 
@@ -1520,7 +1520,7 @@ describe('[OData Service Client Codegen: CSharp] Test', function () {
                 throw new global::System.NotSupportedException("The previous function is not composable.");\n\
             }\n\
 \n\
-            return new global::' + namespaceName + '.PersonSingle(source.CreateFunctionQuerySingle<global::' + namespaceName + '.Person>("' + constants.Code.DefaultNamespace + '.MyFunction3", true, new global::Microsoft.OData.Client.UriEntityOperationParameter("trip", trip, useEntityReference)));\n\
+            return new global::' + namespaceName + '.PersonSingle(source.CreateFunctionQuerySingle<global::' + namespaceName + '.Person>("Microsoft.OData.SampleService.Models.TripPin.MyFunction3", true, new global::Microsoft.OData.Client.UriEntityOperationParameter("trip", trip, useEntityReference)));\n\
         }\n\
 \n';
 
@@ -1563,7 +1563,7 @@ describe('[OData Service Client Codegen: CSharp] Test', function () {
                 throw new global::System.NotSupportedException("The previous function is not composable.");\n\
             }\n\
 \n\
-            return source.CreateFunctionQuery<global::' + namespaceName + '.Person>("' + constants.Code.DefaultNamespace + '.MyFunction4", true, new global::Microsoft.OData.Client.UriEntityOperationParameter("trips", trips, useEntityReference));\n\
+            return source.CreateFunctionQuery<global::' + namespaceName + '.Person>("Microsoft.OData.SampleService.Models.TripPin.MyFunction4", true, new global::Microsoft.OData.Client.UriEntityOperationParameter("trips", trips, useEntityReference));\n\
         }\n\
 \n';
         var actual = genExBoundOperations(entityType, namespaceName);
@@ -1602,7 +1602,7 @@ describe('[OData Service Client Codegen: CSharp] Test', function () {
 \n\
             return new global::Microsoft.OData.Client.DataServiceActionQuery(\n\
                 source.Context,\n\
-                source.AppendRequestUri("' + constants.Code.DefaultNamespace + '.MyAction1"),\n\
+                source.AppendRequestUri("Microsoft.OData.SampleService.Models.TripPin.MyAction1"),\n\
                 new global::Microsoft.OData.Client.BodyOperationParameter("tripId", tripId));\n\
         }\n\
 \n';
@@ -1643,7 +1643,7 @@ describe('[OData Service Client Codegen: CSharp] Test', function () {
 \n\
             return new global::Microsoft.OData.Client.DataServiceActionQuery(\n\
                 source.Context,\n\
-                source.AppendRequestUri("' + constants.Code.DefaultNamespace + '.MyAction2"),\n\
+                source.AppendRequestUri("Microsoft.OData.SampleService.Models.TripPin.MyAction2"),\n\
                 new global::Microsoft.OData.Client.BodyOperationParameter("tripIds", tripIds));\n\
         }\n\
 \n';
@@ -1683,7 +1683,7 @@ describe('[OData Service Client Codegen: CSharp] Test', function () {
 \n\
             return new global::Microsoft.OData.Client.DataServiceActionQuery(\n\
                 source.Context,\n\
-                source.AppendRequestUri("' + constants.Code.DefaultNamespace + '.MyAction3"),\n\
+                source.AppendRequestUri("Microsoft.OData.SampleService.Models.TripPin.MyAction3"),\n\
                 new global::Microsoft.OData.Client.BodyOperationParameter("trip", trip));\n\
         }\n\
 \n';
@@ -1723,336 +1723,7 @@ describe('[OData Service Client Codegen: CSharp] Test', function () {
 \n\
             return new global::Microsoft.OData.Client.DataServiceActionQuery(\n\
                 source.Context,\n\
-                source.AppendRequestUri("' + constants.Code.DefaultNamespace + '.MyAction4"),\n\
-                new global::Microsoft.OData.Client.BodyOperationParameter("trips", trips));\n\
-        }\n\
-\n';
-        var actual = genExBoundOperations(entityType, namespaceName);
-        expect(actual).toEqual(expected);
-    });
-
-    it('generation for extension bound functions with primitive type parameters and primitive type returns.', function () {
-        var entityType = {
-            name: 'person',
-            properties: [
-                {
-                    name: 'myFunction1',
-                    type: 'Function',
-                    operationType: 'Bound',
-                    params: [
-                      {
-                          name: 'tripId',
-                          type: 'edm.int32'
-                      }
-                    ],
-                    returns: {
-                        type: 'edm.string'
-                    }
-                }
-            ]
-        };
-
-        var expected = '\
-        /// <summary>\n\
-        /// There are no comments for MyFunction1 in the schema.\n\
-        /// </summary>\n\
-        [global::Microsoft.OData.Client.OriginalNameAttribute("MyFunction1")]\n\
-        public static global::Microsoft.OData.Client.DataServiceQuerySingle<string> MyFunction1(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, int tripId)\n\
-        {\n\
-            if (!source.IsComposable)\n\
-            {\n\
-                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
-            }\n\
-\n\
-            return source.CreateFunctionQuerySingle<string>("' + constants.Code.DefaultNamespace + '.MyFunction1", true, new global::Microsoft.OData.Client.UriOperationParameter("tripId", tripId));\n\
-        }\n\
-\n';
-
-        var actual = genExBoundOperations(entityType, namespaceName);
-
-        expect(actual).toEqual(expected);
-    });
-
-    it('generation for extension bound functions with collection of primitive type parameters and collection of primitive type returns', function () {
-        var entityType = {
-            name: 'person',
-            properties: [
-                {
-                    name: 'myFunction2',
-                    type: 'Function',
-                    operationType: 'Bound',
-                    params: [
-                      {
-                          name: 'tripIds',
-                          type: 'edm.int32',
-                          isCollection: true
-                      }
-                    ],
-                    returns: {
-                        type: 'edm.string',
-                        isCollection: true
-                    }
-                }
-            ]
-        };
-
-        var expected = '\
-        /// <summary>\n\
-        /// There are no comments for MyFunction2 in the schema.\n\
-        /// </summary>\n\
-        [global::Microsoft.OData.Client.OriginalNameAttribute("MyFunction2")]\n\
-        public static global::Microsoft.OData.Client.DataServiceQuery<string> MyFunction2(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, global::System.Collections.Generic.ICollection<int> tripIds)\n\
-        {\n\
-            if (!source.IsComposable)\n\
-            {\n\
-                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
-            }\n\
-\n\
-            return source.CreateFunctionQuery<string>("' + constants.Code.DefaultNamespace + '.MyFunction2", true, new global::Microsoft.OData.Client.UriOperationParameter("tripIds", tripIds));\n\
-        }\n\
-\n';
-
-        var actual = genExBoundOperations(entityType, namespaceName);
-        expect(actual).toEqual(expected);
-    });
-
-    it('generation for extension bound functions with entity type parameters and entity type returns', function () {
-        var entityType = {
-            name: 'person',
-            properties: [
-                {
-                    name: 'myFunction3',
-                    type: 'Function',
-                    operationType: 'Bound',
-                    params: [
-                      {
-                          name: 'trip',
-                          type: 'trip'
-                      }
-                    ],
-                    returns: {
-                        type: 'person'
-                    }
-                }
-            ]
-        };
-
-        var expected = '\
-        /// <summary>\n\
-        /// There are no comments for MyFunction3 in the schema.\n\
-        /// </summary>\n\
-        [global::Microsoft.OData.Client.OriginalNameAttribute("MyFunction3")]\n\
-        public static global::' + namespaceName + '.PersonSingle MyFunction3(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, global::' + namespaceName + '.Trip trip, bool useEntityReference = false)\n\
-        {\n\
-            if (!source.IsComposable)\n\
-            {\n\
-                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
-            }\n\
-\n\
-            return new global::' + namespaceName + '.PersonSingle(source.CreateFunctionQuerySingle<global::' + namespaceName + '.Person>("' + constants.Code.DefaultNamespace + '.MyFunction3", true, new global::Microsoft.OData.Client.UriEntityOperationParameter("trip", trip, useEntityReference)));\n\
-        }\n\
-\n';
-
-        var actual = genExBoundOperations(entityType, namespaceName);
-        expect(actual).toEqual(expected);
-    });
-
-    it('generation for extension bound functions with collection of entity type parameters and collection of entity type returns', function () {
-        var entityType = {
-            name: 'person',
-            properties: [
-                {
-                    name: 'myFunction4',
-                    type: 'Function',
-                    operationType: 'Bound',
-                    params: [
-                      {
-                          name: 'trips',
-                          type: 'trip',
-                          isCollection: true
-                      }
-                    ],
-                    returns: {
-                        type: 'person',
-                        isCollection: true
-                    }
-                }
-            ]
-        };
-
-        var expected = '\
-        /// <summary>\n\
-        /// There are no comments for MyFunction4 in the schema.\n\
-        /// </summary>\n\
-        [global::Microsoft.OData.Client.OriginalNameAttribute("MyFunction4")]\n\
-        public static global::Microsoft.OData.Client.DataServiceQuery<global::' + namespaceName + '.Person> MyFunction4(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, global::System.Collections.Generic.ICollection<global::' + namespaceName + '.Trip> trips, bool useEntityReference = true)\n\
-        {\n\
-            if (!source.IsComposable)\n\
-            {\n\
-                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
-            }\n\
-\n\
-            return source.CreateFunctionQuery<global::' + namespaceName + '.Person>("' + constants.Code.DefaultNamespace + '.MyFunction4", true, new global::Microsoft.OData.Client.UriEntityOperationParameter("trips", trips, useEntityReference));\n\
-        }\n\
-\n';
-        var actual = genExBoundOperations(entityType, namespaceName);
-        expect(actual).toEqual(expected);
-    });
-
-    it('generation for extension bound actions with primitive type parameters', function () {
-        var entityType = {
-            name: 'person',
-            properties: [
-                {
-                    name: 'myAction1',
-                    type: 'Action',
-                    operationType: 'Bound',
-                    params: [
-                      {
-                          name: 'tripId',
-                          type: 'edm.int32'
-                      }
-                    ]
-                }
-            ]
-        };
-
-        var expected = '\
-        /// <summary>\n\
-        /// There are no comments for MyAction1 in the schema.\n\
-        /// </summary>\n\
-        [global::Microsoft.OData.Client.OriginalNameAttribute("MyAction1")]\n\
-        public static global::Microsoft.OData.Client.DataServiceActionQuery MyAction1(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, int tripId)\n\
-        {\n\
-            if (!source.IsComposable)\n\
-            {\n\
-                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
-            }\n\
-\n\
-            return new global::Microsoft.OData.Client.DataServiceActionQuery(\n\
-                source.Context,\n\
-                source.AppendRequestUri("' + constants.Code.DefaultNamespace + '.MyAction1"),\n\
-                new global::Microsoft.OData.Client.BodyOperationParameter("tripId", tripId));\n\
-        }\n\
-\n';
-        var actual = genExBoundOperations(entityType, namespaceName);
-        expect(actual).toEqual(expected);
-    });
-
-    it('generation for extension bound actions with collection of primitive type parameters', function () {
-        var entityType = {
-            name: 'person',
-            properties: [
-                {
-                    name: 'myAction2',
-                    type: 'Action',
-                    operationType: 'Bound',
-                    params: [
-                      {
-                          name: 'tripIds',
-                          type: 'edm.int32',
-                          isCollection: true
-                      }
-                    ]
-                }
-            ]
-        };
-
-        var expected = '\
-        /// <summary>\n\
-        /// There are no comments for MyAction2 in the schema.\n\
-        /// </summary>\n\
-        [global::Microsoft.OData.Client.OriginalNameAttribute("MyAction2")]\n\
-        public static global::Microsoft.OData.Client.DataServiceActionQuery MyAction2(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, global::System.Collections.Generic.ICollection<int> tripIds)\n\
-        {\n\
-            if (!source.IsComposable)\n\
-            {\n\
-                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
-            }\n\
-\n\
-            return new global::Microsoft.OData.Client.DataServiceActionQuery(\n\
-                source.Context,\n\
-                source.AppendRequestUri("' + constants.Code.DefaultNamespace + '.MyAction2"),\n\
-                new global::Microsoft.OData.Client.BodyOperationParameter("tripIds", tripIds));\n\
-        }\n\
-\n';
-        var actual = genExBoundOperations(entityType, namespaceName);
-        expect(actual).toEqual(expected);
-    });
-
-    it('generation for extension bound actions with entity type parameters', function () {
-        var entityType = {
-            name: 'person',
-            properties: [
-                {
-                    name: 'myAction3',
-                    type: 'Action',
-                    operationType: 'Bound',
-                    params: [
-                      {
-                          name: 'trip',
-                          type: 'trip'
-                      }
-                    ]
-                }
-            ]
-        };
-
-        var expected = '\
-        /// <summary>\n\
-        /// There are no comments for MyAction3 in the schema.\n\
-        /// </summary>\n\
-        [global::Microsoft.OData.Client.OriginalNameAttribute("MyAction3")]\n\
-        public static global::Microsoft.OData.Client.DataServiceActionQuery MyAction3(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, global::' + namespaceName + '.Trip trip)\n\
-        {\n\
-            if (!source.IsComposable)\n\
-            {\n\
-                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
-            }\n\
-\n\
-            return new global::Microsoft.OData.Client.DataServiceActionQuery(\n\
-                source.Context,\n\
-                source.AppendRequestUri("' + constants.Code.DefaultNamespace + '.MyAction3"),\n\
-                new global::Microsoft.OData.Client.BodyOperationParameter("trip", trip));\n\
-        }\n\
-\n';
-        var actual = genExBoundOperations(entityType, namespaceName);
-        expect(actual).toEqual(expected);
-    });
-
-    it('generation for extension bound actions with collection of entity type parameters', function () {
-        var entityType = {
-            name: 'person',
-            properties: [
-                {
-                    name: 'myAction4',
-                    type: 'Action',
-                    operationType: 'Bound',
-                    params: [
-                      {
-                          name: 'trips',
-                          type: 'trip',
-                          isCollection: true
-                      }
-                    ]
-                }
-            ]
-        };
-        var expected = '\
-        /// <summary>\n\
-        /// There are no comments for MyAction4 in the schema.\n\
-        /// </summary>\n\
-        [global::Microsoft.OData.Client.OriginalNameAttribute("MyAction4")]\n\
-        public static global::Microsoft.OData.Client.DataServiceActionQuery MyAction4(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::' + namespaceName + '.Person> source, global::System.Collections.Generic.ICollection<global::' + namespaceName + '.Trip> trips)\n\
-        {\n\
-            if (!source.IsComposable)\n\
-            {\n\
-                throw new global::System.NotSupportedException("The previous function is not composable.");\n\
-            }\n\
-\n\
-            return new global::Microsoft.OData.Client.DataServiceActionQuery(\n\
-                source.Context,\n\
-                source.AppendRequestUri("' + constants.Code.DefaultNamespace + '.MyAction4"),\n\
+                source.AppendRequestUri("Microsoft.OData.SampleService.Models.TripPin.MyAction4"),\n\
                 new global::Microsoft.OData.Client.BodyOperationParameter("trips", trips));\n\
         }\n\
 \n';
