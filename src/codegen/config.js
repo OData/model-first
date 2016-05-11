@@ -6,7 +6,7 @@ exports.Constants = {
         TripPinMetadataSample: './public/samples/trippin_metadata.json',
 
         // CSharp client code files' path.
-        CSharpProj: './resources/client/csharp/proj/',
+        CSharpProj: './resources/csharp/proj/client/',
         CSharpPackage: './public/client/csharp/packages/',
         CSharpZipPackage: './public/client/csharp/zips/',
 
@@ -20,7 +20,7 @@ exports.Constants = {
     FileNames: {
         // CSharp client code files' name.
         CSharpCode: 'ODataClient.cs',
-        CSharpZipPackage: 'ODataClientProject.zip',
+        CSharpZipPackage: 'odatav4client',
         CSharpProjFolder: 'odatav4client',
         CSharpProjFile: 'ODataServiceV4Client.csproj',
 
