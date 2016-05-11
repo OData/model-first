@@ -1047,5 +1047,5 @@ exports.CodegenByObj = function (jObj) {
 exports.Codegen = function (jsonMetadata) {
     var jObj = JSON.parse(jsonMetadata);
 
-    return codegen(jObj);
+    return codegen(jObj, jObj.api.namespace);
 };

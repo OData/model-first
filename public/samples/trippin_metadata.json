@@ -4,6 +4,7 @@
     "version": {
       "current": "1.0.0"
     },
+    "namespace": "TripPin.OData.Reference.Service",
     "description": "TripPin is a fictional reference service demonstrating the capabilities of OData v4.",
     "termsOfService": "http://swagger.io/terms/",
     "contact": {

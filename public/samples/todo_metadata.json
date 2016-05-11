@@ -1,6 +1,7 @@
 {
   "api": {
-    "name": "todo"
+    "name": "todo",
+    "namespace": "todo"
   },
   "container": {
     "entitysets": [
