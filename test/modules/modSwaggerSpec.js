@@ -792,9 +792,9 @@ describe('[Swagger] To Swagger test', function () {
                     'description': 'Returns all items from books without parameters. \n\rOr query a specific info from books, by input parameters as following.',
                     'parameters': [
                         {
-                            'name': '$filter',
+                            'name': '$select',
                             'in': 'query',
-                            'description': 'system query option $filter, one or a set of built-in filter operations and functions',
+                            'description': 'system query option $select, is a comma-separated list of properties, qualified action names, qualified function names, the star operator (*), or the star operator prefixed with the namespace or alias of the schema in order to specify all operations defined in the schema',
                             'required': false,
                             'type': 'string'
                         },
@@ -806,9 +806,9 @@ describe('[Swagger] To Swagger test', function () {
                             'type': 'string'
                         },
                         {
-                            'name': '$select',
+                            'name': '$filter',
                             'in': 'query',
-                            'description': 'system query option $select, is a comma-separated list of properties, qualified action names, qualified function names, the star operator (*), or the star operator prefixed with the namespace or alias of the schema in order to specify all operations defined in the schema',
+                            'description': 'system query option $filter, one or a set of built-in filter operations and functions',
                             'required': false,
                             'type': 'string'
                         },
@@ -888,12 +888,33 @@ describe('[Swagger] To Swagger test', function () {
             '/books/{uid}': {
                 'get': {
                     'tags': ['book'],
-                    'description': 'Returns a single item from books.',
+                    'description': 'Returns a single item from books with parameter uid. \n\rAppend parameters prefixed with \'$\' to query specific info from this item.',
                     'parameters': [{
                             'name': 'uid',
                             'in': 'path',
                             'description': 'The key.',
                             'required': true,
+                            'type': 'string'
+                        },
+                        {
+                            'name': '$select',
+                            'in': 'query',
+                            'description': 'system query option $select, is a comma-separated list of properties, qualified action names, qualified function names, the star operator (*), or the star operator prefixed with the namespace or alias of the schema in order to specify all operations defined in the schema',
+                            'required': false,
+                            'type': 'string'
+                        },
+                        {
+                            'name': '$expand',
+                            'in': 'query',
+                            'description': 'system query option $expand, a comma-separated list of navigation property names',
+                            'required': false,
+                            'type': 'string'
+                        },
+                        {
+                            'name': '$format',
+                            'in': 'query',
+                            'description': 'system query option $format such as json, application/json, application/json;odata.metadata=full',
+                            'required': false,
                             'type': 'string'
                         }],                    
                     'responses': {
@@ -963,16 +984,16 @@ describe('[Swagger] To Swagger test', function () {
                     'description': 'Returns me without parameters. \n\rOr query a specific info from me, by input parameters as following.',
                     'parameters': [
                         {
-                            'name': '$expand',
+                            'name': '$select',
                             'in': 'query',
-                            'description': 'system query option $expand, a comma-separated list of navigation property names',
+                            'description': 'system query option $select, is a comma-separated list of properties, qualified action names, qualified function names, the star operator (*), or the star operator prefixed with the namespace or alias of the schema in order to specify all operations defined in the schema',
                             'required': false,
                             'type': 'string'
                         },
                         {
-                            'name': '$select',
+                            'name': '$expand',
                             'in': 'query',
-                            'description': 'system query option $select, is a comma-separated list of properties, qualified action names, qualified function names, the star operator (*), or the star operator prefixed with the namespace or alias of the schema in order to specify all operations defined in the schema',
+                            'description': 'system query option $expand, a comma-separated list of navigation property names',
                             'required': false,
                             'type': 'string'
                         },
@@ -1126,9 +1147,9 @@ describe('[Swagger] Actions test', function () {
                     'description': 'Returns all items from people without parameters. \n\rOr query a specific info from people, by input parameters as following.',
                     'parameters': [
                         {
-                            'name': '$filter',
+                            'name': '$select',
                             'in': 'query',
-                            'description': 'system query option $filter, one or a set of built-in filter operations and functions',
+                            'description': 'system query option $select, is a comma-separated list of properties, qualified action names, qualified function names, the star operator (*), or the star operator prefixed with the namespace or alias of the schema in order to specify all operations defined in the schema',
                             'required': false,
                             'type': 'string'
                         },
@@ -1140,9 +1161,9 @@ describe('[Swagger] Actions test', function () {
                             'type': 'string'
                         },
                         {
-                            'name': '$select',
+                            'name': '$filter',
                             'in': 'query',
-                            'description': 'system query option $select, is a comma-separated list of properties, qualified action names, qualified function names, the star operator (*), or the star operator prefixed with the namespace or alias of the schema in order to specify all operations defined in the schema',
+                            'description': 'system query option $filter, one or a set of built-in filter operations and functions',
                             'required': false,
                             'type': 'string'
                         },
@@ -1207,13 +1228,34 @@ describe('[Swagger] Actions test', function () {
                     'tags': [
                         'person'
                     ],
-                    'description': 'Returns a single item from people.',
+                    'description': 'Returns a single item from people with parameter userName. \n\rAppend parameters prefixed with \'$\' to query specific info from this item.',
                     'parameters': [
                         {
                             'name': 'userName',
                             'in': 'path',
                             'description': 'The key.',
                             'required': true,
+                            'type': 'string'
+                        },
+                        {
+                            'name': '$select',
+                            'in': 'query',
+                            'description': 'system query option $select, is a comma-separated list of properties, qualified action names, qualified function names, the star operator (*), or the star operator prefixed with the namespace or alias of the schema in order to specify all operations defined in the schema',
+                            'required': false,
+                            'type': 'string'
+                        },
+                        {
+                            'name': '$expand',
+                            'in': 'query',
+                            'description': 'system query option $expand, a comma-separated list of navigation property names',
+                            'required': false,
+                            'type': 'string'
+                        },
+                        {
+                            'name': '$format',
+                            'in': 'query',
+                            'description': 'system query option $format such as json, application/json, application/json;odata.metadata=full',
+                            'required': false,
                             'type': 'string'
                         }
                     ],                    
@@ -1372,9 +1414,9 @@ describe('[Swagger] Functions test', function () {
                     'description': 'Returns all items from people without parameters. \n\rOr query a specific info from people, by input parameters as following.',
                     'parameters': [
                         {
-                            'name': '$filter',
+                            'name': '$select',
                             'in': 'query',
-                            'description': 'system query option $filter, one or a set of built-in filter operations and functions',
+                            'description': 'system query option $select, is a comma-separated list of properties, qualified action names, qualified function names, the star operator (*), or the star operator prefixed with the namespace or alias of the schema in order to specify all operations defined in the schema',
                             'required': false,
                             'type': 'string'
                         },
@@ -1384,11 +1426,11 @@ describe('[Swagger] Functions test', function () {
                             'description': 'system query option $expand, a comma-separated list of navigation property names',
                             'required': false,
                             'type': 'string'
-                        },
+                        },                                           
                         {
-                            'name': '$select',
+                            'name': '$filter',
                             'in': 'query',
-                            'description': 'system query option $select, is a comma-separated list of properties, qualified action names, qualified function names, the star operator (*), or the star operator prefixed with the namespace or alias of the schema in order to specify all operations defined in the schema',
+                            'description': 'system query option $filter, one or a set of built-in filter operations and functions',
                             'required': false,
                             'type': 'string'
                         },
@@ -1453,13 +1495,34 @@ describe('[Swagger] Functions test', function () {
                     'tags': [
                         'person'
                     ],
-                    'description': 'Returns a single item from people.',
+                    'description': 'Returns a single item from people with parameter userName. \n\rAppend parameters prefixed with \'$\' to query specific info from this item.',
                     'parameters': [
                         {
                             'name': 'userName',
                             'in': 'path',
                             'description': 'The key.',
                             'required': true,
+                            'type': 'string'
+                        },
+                        {
+                            'name': '$select',
+                            'in': 'query',
+                            'description': 'system query option $select, is a comma-separated list of properties, qualified action names, qualified function names, the star operator (*), or the star operator prefixed with the namespace or alias of the schema in order to specify all operations defined in the schema',
+                            'required': false,
+                            'type': 'string'
+                        },
+                        {
+                            'name': '$expand',
+                            'in': 'query',
+                            'description': 'system query option $expand, a comma-separated list of navigation property names',
+                            'required': false,
+                            'type': 'string'
+                        },
+                        {
+                            'name': '$format',
+                            'in': 'query',
+                            'description': 'system query option $format such as json, application/json, application/json;odata.metadata=full',
+                            'required': false,
                             'type': 'string'
                         }
                     ],                   
@@ -1495,6 +1558,673 @@ describe('[Swagger] Functions test', function () {
                         },
                         '400': {
                             'description': 'A single entity function with a non-nullable return type has no result.'
+                        }
+                    }
+                }
+            }
+        };
+        assertPaths(input, expected);
+    });
+    it('System query options for functions should work.', function () {
+        var input =
+                {
+                    'container': {
+                        'entitysets': [
+                            {
+                                'name': 'people',
+                                'type': 'person',
+                                'allows': [
+                                    'read'
+                                ]
+                            }
+                        ]
+                    },
+                    'types': [
+                        {
+                            'name': 'personGender',
+                            'members': [
+                                {
+                                    'name': 'unknown',
+                                    'value': 0
+                                },
+                                {
+                                    'name': 'female',
+                                    'value': -1
+                                },
+                                {
+                                    'name': 'male',
+                                    'value': 2
+                                }
+                            ],
+                            'flags': false,
+                            'underlyingType': 'edm.int32'
+                        },
+                        {
+                            'properties': [
+                                {
+                                    'name': 'countryRegion',
+                                    'type': 'edm.string'
+                                },
+                                {
+                                    'name': 'region',
+                                    'type': 'edm.string'
+                                }
+                            ],
+                            'name': 'city'
+                        },
+                        {
+                            'properties': [
+                                {
+                                    'name': 'loc',
+                                    'type': 'edm.geographypoint'
+                                }
+                            ],
+                            'name': 'location',
+                            'baseType': 'city'
+                        },
+                    {
+                        'properties': [
+                            {
+                                'name': 'userName',
+                                'type': 'edm.string',
+                                'isKey': true
+                            },
+                            {
+                                'name': 'gender',
+                                'type': 'personGender'
+                            },
+                            {
+                                'name': 'home',
+                                'type': 'location'
+                            },
+                            {
+                                'name': 'getBestFriend',
+                                'type': 'Function',
+                                'params': [
+                                    {
+                                        'name': 'userName',
+                                        'type': 'edm.string'
+                                    }
+                                ],
+                                'returns': {
+                                    'type': 'person'
+                                },
+                                'operationType': 'Bound'
+                            },
+                            {
+                                'name': 'getInvolvedPeople',
+                                'type': 'Function',
+                                'returns': {
+                                    'type': 'person',
+                                    'isCollection': true
+                                },
+                                'operationType': 'Bound'
+                            },
+                            {
+                                'name': 'getHomeAddress',
+                                'type': 'Function',
+                                'params': [
+                                    {
+                                        'name': 'userName',
+                                        'type': 'edm.string'
+                                    }
+                                ],
+                                'returns': {
+                                    'type': 'location'
+                                },
+                                'operationType': 'Bound'
+                            },
+                            {
+                                'name': 'getEventLocation',
+                                'type': 'Function',
+                                'params': [
+                                    {
+                                        'name': 'userName',
+                                        'type': 'edm.string'
+                                    }
+                                ],
+                                'returns': {
+                                    'type': 'city',
+                                    'isCollection': true
+                                },
+                                'operationType': 'Bound'
+                            },
+                            {
+                                'name': 'getFriendNames',
+                                'type': 'Function',
+                                'returns': {
+                                    'type': 'edm.string',
+                                    'isCollection': true
+                                },
+                                'operationType': 'Bound'
+                            }
+                        ],
+                        'name': 'person'
+                    }
+                    ]
+                };
+
+        var expected = {
+            '/people': {
+                'get': {
+                    'tags': [
+                        'person'
+                    ],
+                    'description': 'Returns all items from people without parameters. \n\rOr query a specific info from people, by input parameters as following.',
+                    'parameters': [
+                        {
+                            'name': '$select',
+                            'in': 'query',
+                            'description': 'system query option $select, is a comma-separated list of properties, qualified action names, qualified function names, the star operator (*), or the star operator prefixed with the namespace or alias of the schema in order to specify all operations defined in the schema',
+                            'required': false,
+                            'type': 'string'
+                        }, 
+                        {
+                            'name': '$expand',
+                            'in': 'query',
+                            'description': 'system query option $expand, a comma-separated list of navigation property names',
+                            'required': false,
+                            'type': 'string'
+                        },                                           
+                        {
+                            'name': '$filter',
+                            'in': 'query',
+                            'description': 'system query option $filter, one or a set of built-in filter operations and functions',
+                            'required': false,
+                            'type': 'string'
+                        },
+                        {
+                            'name': '$orderby',
+                            'in': 'query',
+                            'description': 'system query option $orderby, The expression can include the suffix asc for ascending or desc for descending, separated from the  property name by one or more spaces.',
+                            'required': false,
+                            'type': 'string'
+                        },
+                        {
+                            'name': '$top',
+                            'in': 'query',
+                            'description': 'system query option $top, number of items returned from a collection',
+                            'required': false,
+                            'type': 'number'
+                        },
+                        {
+                            'name': '$skip',
+                            'in': 'query',
+                            'description': 'system query option $skip, the service returns items starting at position n+1',
+                            'required': false,
+                            'type': 'number'
+                        },
+                        {
+                            'name': '$count',
+                            'in': 'query',
+                            'description': 'system query option $count, with a value of true specifies that the total count of items within the collection, false (or not specified) means not reutrn a count',
+                            'required': false,
+                            'type': 'boolean'
+                        },  
+                        {
+                            'name': '$search',
+                            'in': 'query',
+                            'description': 'system query option $search, restricts the result to include only those entities matching the specified search expression',
+                            'required': false,
+                            'type': 'string'
+                        }, 
+                        {
+                            'name': '$format',
+                            'in': 'query',
+                            'description': 'system query option $format such as json, application/json, application/json;odata.metadata=full',
+                            'required': false,
+                            'type': 'string'
+                        }                                       
+                    ],                    
+                    'responses': {
+                        '200': {
+                            'description': 'An array of person items.',
+                            'schema': {
+                                'type': 'array',
+                                'items': {
+                                    '$ref': '#/definitions/person'
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            '/people/{userName}': {
+                'get': {
+                    'tags': [
+                        'person'
+                    ],
+                    'description': 'Returns a single item from people with parameter userName. \n\rAppend parameters prefixed with \'$\' to query specific info from this item.',
+                    'parameters': [
+                        {
+                            'name': 'userName',
+                            'in': 'path',
+                            'description': 'The key.',
+                            'required': true,
+                            'type': 'string'
+                        },
+                        {
+                            'name': '$select',
+                            'in': 'query',
+                            'description': 'system query option $select, is a comma-separated list of properties, qualified action names, qualified function names, the star operator (*), or the star operator prefixed with the namespace or alias of the schema in order to specify all operations defined in the schema',
+                            'required': false,
+                            'type': 'string'
+                        },
+                        {
+                            'name': '$expand',
+                            'in': 'query',
+                            'description': 'system query option $expand, a comma-separated list of navigation property names',
+                            'required': false,
+                            'type': 'string'
+                        },
+                        {
+                            'name': '$format',
+                            'in': 'query',
+                            'description': 'system query option $format such as json, application/json, application/json;odata.metadata=full',
+                            'required': false,
+                            'type': 'string'
+                        }                          
+                    ],                   
+                    'responses': {
+                        '200': {
+                            'description': 'A single person item.',
+                            'schema': {
+                                '$ref': '#/definitions/person'
+                            }
+                        }
+                    }
+                }
+            },
+            '/people/{userName}/getBestFriend': {
+                'get': {
+                    'tags': [
+                        'Function',
+                        'Bound'
+                    ],
+                    'description': 'Bound function: getBestFriend.',
+                    'parameters': [
+                        {
+                            'name': 'userName',
+                            'type': 'string',
+                            'in': 'path',
+                            'description': 'The key.',
+                            'required': true
+                        },
+                        {
+                            'name': 'userName',
+                            'type': 'string',
+                            'in': 'formData',
+                            'description': 'The parameter.',
+                            'required': true
+                        },
+                        {
+                            'name': '$select',
+                            'in': 'query',
+                            'description': 'system query option $select, is a comma-separated list of properties, qualified action names, qualified function names, the star operator (*), or the star operator prefixed with the namespace or alias of the schema in order to specify all operations defined in the schema',
+                            'required': false,
+                            'type': 'string'
+                        },
+                        {
+                            'name': '$expand',
+                            'in': 'query',
+                            'description': 'system query option $expand, a comma-separated list of navigation property names',
+                            'required': false,
+                            'type': 'string'
+                        },
+                        {
+                            'name': '$format',
+                            'in': 'query',
+                            'description': 'system query option $format such as json, application/json, application/json;odata.metadata=full',
+                            'required': false,
+                            'type': 'string'
+                        }   
+                    ],
+                    'responses': {
+                        '204': {
+                            'description': 'The function is without a return type.'
+                        },
+                        '400': {
+                            'description': 'A single entity function with a non-nullable return type has no result.'
+                        },
+                        '200': {
+                            'description': 'The function has been returned results.',
+                            'schema': {
+                                '$ref': '#/definitions/person'
+                            }
+                        }
+                    }
+                }
+            },
+            '/people/{userName}/getInvolvedPeople': {
+                'get': {
+                    'tags': [
+                        'Function',
+                        'Bound'
+                    ],
+                    'description': 'Bound function: getInvolvedPeople.',
+                    'parameters': [
+                        {
+                            'name': 'userName',
+                            'type': 'string',
+                            'in': 'path',
+                            'description': 'The key.',
+                            'required': true
+                        },
+                        {
+                            'name': '$select',
+                            'in': 'query',
+                            'description': 'system query option $select, is a comma-separated list of properties, qualified action names, qualified function names, the star operator (*), or the star operator prefixed with the namespace or alias of the schema in order to specify all operations defined in the schema',
+                            'required': false,
+                            'type': 'string'
+                        },                                
+                        {
+                            'name': '$expand',
+                            'in': 'query',
+                            'description': 'system query option $expand, a comma-separated list of navigation property names',
+                            'required': false,
+                            'type': 'string'
+                        },
+                        {
+                            'name': '$filter',
+                            'in': 'query',
+                            'description': 'system query option $filter, one or a set of built-in filter operations and functions',
+                            'required': false,
+                            'type': 'string'
+                        },                                
+                        {
+                            'name': '$orderby',
+                            'in': 'query',
+                            'description': 'system query option $orderby, The expression can include the suffix asc for ascending or desc for descending, separated from the  property name by one or more spaces.',
+                            'required': false,
+                            'type': 'string'
+                        },
+                        {
+                            'name': '$top',
+                            'in': 'query',
+                            'description': 'system query option $top, number of items returned from a collection',
+                            'required': false,
+                            'type': 'number'
+                        },
+                        {
+                            'name': '$skip',
+                            'in': 'query',
+                            'description': 'system query option $skip, the service returns items starting at position n+1',
+                            'required': false,
+                            'type': 'number'
+                        },
+                        {
+                            'name': '$count',
+                            'in': 'query',
+                            'description': 'system query option $count, with a value of true specifies that the total count of items within the collection, false (or not specified) means not reutrn a count',
+                            'required': false,
+                            'type': 'boolean'
+                        }, 
+                        {
+                            'name': '$search',
+                            'in': 'query',
+                            'description': 'system query option $search, restricts the result to include only those entities matching the specified search expression',
+                            'required': false,
+                            'type': 'string'
+                        },                                 
+                        {
+                            'name': '$format',
+                            'in': 'query',
+                            'description': 'system query option $format such as json, application/json, application/json;odata.metadata=full',
+                            'required': false,
+                            'type': 'string'
+                        }       
+                    ],
+                    'responses': {
+                        '204': {
+                            'description': 'The function is without a return type.'
+                        },
+                        '400': {
+                            'description': 'A single entity function with a non-nullable return type has no result.'
+                        },
+                        '200': {
+                            'description': 'The function has been returned results.',
+                            'schema': {
+                                'type': 'array',
+                                'items': {
+                                    '$ref': '#/definitions/person'
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            '/people/{userName}/getHomeAddress': {
+                'get': {
+                    'tags': [
+                        'Function',
+                        'Bound'
+                    ],
+                    'description': 'Bound function: getHomeAddress.',
+                    'parameters': [
+                        {
+                            'name': 'userName',
+                            'type': 'string',
+                            'in': 'path',
+                            'description': 'The key.',
+                            'required': true
+                        },
+                        {
+                            'name': 'userName',
+                            'type': 'string',
+                            'in': 'formData',
+                            'description': 'The parameter.',
+                            'required': true
+                        },
+                        {
+                            'name': '$select',
+                            'in': 'query',
+                            'description': 'system query option $select, is a comma-separated list of properties, qualified action names, qualified function names, the star operator (*), or the star operator prefixed with the namespace or alias of the schema in order to specify all operations defined in the schema',
+                            'required': false,
+                            'type': 'string'
+                        },                                
+                        {
+                            'name': '$expand',
+                            'in': 'query',
+                            'description': 'system query option $expand, a comma-separated list of navigation property names',
+                            'required': false,
+                            'type': 'string'
+                        }, 
+                        {
+                            'name': '$format',
+                            'in': 'query',
+                            'description': 'system query option $format such as json, application/json, application/json;odata.metadata=full',
+                            'required': false,
+                            'type': 'string'
+                        } 
+                    ],
+                    'responses': {
+                        '204': {
+                            'description': 'The function is without a return type.'
+                        },
+                        '400': {
+                            'description': 'A single entity function with a non-nullable return type has no result.'
+                        },
+                        '200': {
+                            'description': 'The function has been returned results.',
+                            'schema': {
+                                '$ref': '#/definitions/location'
+                            }
+                        }
+                    }
+                }
+            },
+            '/people/{userName}/getEventLocation': {
+                'get': {
+                    'tags': [
+                        'Function',
+                        'Bound'
+                    ],
+                    'description': 'Bound function: getEventLocation.',
+                    'parameters': [
+                        {
+                            'name': 'userName',
+                            'type': 'string',
+                            'in': 'path',
+                            'description': 'The key.',
+                            'required': true
+                        },
+                        {
+                            'name': 'userName',
+                            'type': 'string',
+                            'in': 'formData',
+                            'description': 'The parameter.',
+                            'required': true
+                        },
+                        {
+                            'name': '$select',
+                            'in': 'query',
+                            'description': 'system query option $select, is a comma-separated list of properties, qualified action names, qualified function names, the star operator (*), or the star operator prefixed with the namespace or alias of the schema in order to specify all operations defined in the schema',
+                            'required': false,
+                            'type': 'string'
+                        },                                
+                        {
+                            'name': '$expand',
+                            'in': 'query',
+                            'description': 'system query option $expand, a comma-separated list of navigation property names',
+                            'required': false,
+                            'type': 'string'
+                        },
+                        {
+                            'name': '$filter',
+                            'in': 'query',
+                            'description': 'system query option $filter, one or a set of built-in filter operations and functions',
+                            'required': false,
+                            'type': 'string'
+                        },                                
+                        {
+                            'name': '$orderby',
+                            'in': 'query',
+                            'description': 'system query option $orderby, The expression can include the suffix asc for ascending or desc for descending, separated from the  property name by one or more spaces.',
+                            'required': false,
+                            'type': 'string'
+                        },
+                        {
+                            'name': '$top',
+                            'in': 'query',
+                            'description': 'system query option $top, number of items returned from a collection',
+                            'required': false,
+                            'type': 'number'
+                        },
+                        {
+                            'name': '$skip',
+                            'in': 'query',
+                            'description': 'system query option $skip, the service returns items starting at position n+1',
+                            'required': false,
+                            'type': 'number'
+                        },
+                        {
+                            'name': '$count',
+                            'in': 'query',
+                            'description': 'system query option $count, with a value of true specifies that the total count of items within the collection, false (or not specified) means not reutrn a count',
+                            'required': false,
+                            'type': 'boolean'
+                        }, 
+                        {
+                            'name': '$format',
+                            'in': 'query',
+                            'description': 'system query option $format such as json, application/json, application/json;odata.metadata=full',
+                            'required': false,
+                            'type': 'string'
+                        }                               
+                    ],
+                    'responses': {
+                        '204': {
+                            'description': 'The function is without a return type.'
+                        },
+                        '400': {
+                            'description': 'A single entity function with a non-nullable return type has no result.'
+                        },
+                        '200': {
+                            'description': 'The function has been returned results.',
+                            'schema': {
+                                'type': 'array',
+                                'items': {
+                                    '$ref': '#/definitions/city'
+                                }
+                            }
+                        }
+                    }
+
+                }
+            },
+            '/people/{userName}/getFriendNames': {
+                'get': {
+                    'tags': [
+                        'Function',
+                        'Bound'
+                    ],
+                    'description': 'Bound function: getFriendNames.',
+                    'parameters': [
+                        {
+                            'name': 'userName',
+                            'type': 'string',
+                            'in': 'path',
+                            'description': 'The key.',
+                            'required': true
+                        },
+                        {
+                            'name': '$filter',
+                            'in': 'query',
+                            'description': 'system query option $filter, one or a set of built-in filter operations and functions',
+                            'required': false,
+                            'type': 'string'
+                        },
+                        {
+                            'name': '$orderby',
+                            'in': 'query',
+                            'description': 'system query option $orderby, The expression can include the suffix asc for ascending or desc for descending, separated from the  property name by one or more spaces.',
+                            'required': false,
+                            'type': 'string'
+                        },
+                        {
+                            'name': '$top',
+                            'in': 'query',
+                            'description': 'system query option $top, number of items returned from a collection',
+                            'required': false,
+                            'type': 'number'
+                        },
+                        {
+                            'name': '$skip',
+                            'in': 'query',
+                            'description': 'system query option $skip, the service returns items starting at position n+1',
+                            'required': false,
+                            'type': 'number'
+                        },
+                        {
+                            'name': '$count',
+                            'in': 'query',
+                            'description': 'system query option $count, with a value of true specifies that the total count of items within the collection, false (or not specified) means not reutrn a count',
+                            'required': false,
+                            'type': 'boolean'
+                        }, 
+                        {
+                            'name': '$format',
+                            'in': 'query',
+                            'description': 'system query option $format such as json, application/json, application/json;odata.metadata=full',
+                            'required': false,
+                            'type': 'string'
+                        }                             
+                    ],
+                    'responses': {
+                        '204': {
+                            'description': 'The function is without a return type.'
+                        },
+                        '400': {
+                            'description': 'A single entity function with a non-nullable return type has no result.'
+                        },
+                        '200': {
+                            'description': 'The function has been returned results.',
+                            'schema': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'string'
+                                }
+                            }
                         }
                     }
                 }

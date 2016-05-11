@@ -67,6 +67,8 @@
         return isCollection ? {'type': 'array', 'items': swgrType} : swgrType;
     }
 
+    var entityTypes = [];
+    var complexTypes = [];
     var entitySetMappings = {};
 
     // Gets a singleton/entity-set's name.
@@ -87,6 +89,24 @@
         };
     }
 
+    // Get current type's root type.
+    // params:
+    // 'typesArr': Input definition types array.
+    // 'currType': Input current type.
+    // return:
+    // The root type of current one.
+    function getRootType(typesArr, currType){
+        var rootType = currType;
+        if(!!currType.baseType){
+            for(var i in typesArr) {
+                if(typesArr[i].name == currType.baseType){
+                    rootType = typesArr[i];
+                    return getRootType(typesArr, rootType);
+                }
+            }
+        }
+       return rootType;
+    }
     function routeAction(name, operationType, params, parentType, swKey, returns) {
         var parameters = [];
         var ifMatchHeader = {
@@ -203,6 +223,8 @@
             parameters.push(param);
         }
 
+        getFunctionQueryPara(returns, parameters);
+
         var path;
         if ('Bound' === operationType) {
             var temp = getEntitySet(parentType);
@@ -252,6 +274,120 @@
         }
     }
 
+    function getFunctionQueryPara(returns, parameters){
+        var param = {};
+        var isEntityType = false;
+        var isComplexType = false;
+        if (!returns || !returns.type){
+            return;
+        }
+
+        for (var e in entityTypes){
+            if(returns.type == entityTypes[e]){
+                isEntityType = true;
+            }
+        }
+
+        for (var c in complexTypes){
+            if(returns.type == complexTypes[c]){
+                isComplexType = true;
+            }
+        }
+        //singleton, entityset, complexTypeInstance, collectionOfComplexType 
+        if (isEntityType || isComplexType)
+        {
+            param =     {
+                            'name': '$select',
+                            'in': 'query',
+                            'description': 'system query option $select, is a comma-separated list of properties, qualified action names, qualified function names, the star operator (*), or the star operator prefixed with the namespace or alias of the schema in order to specify all operations defined in the schema',
+                            'required': false,
+                            'type': 'string'
+                        };
+            parameters.push(param);
+
+            param =     {
+                            'name': '$expand',
+                            'in': 'query',
+                            'description': 'system query option $expand, a comma-separated list of navigation property names',
+                            'required': false,
+                            'type': 'string'
+                        };
+            parameters.push(param);                        
+        }
+
+
+        if (returns.isCollection && returns.isCollection === true){ //system query options for collections 
+            param =     {
+                            'name': '$filter',
+                            'in': 'query',
+                            'description': 'system query option $filter, one or a set of built-in filter operations and functions',
+                            'required': false,
+                            'type': 'string'
+                        };
+            parameters.push(param);                        
+
+            param =     {       
+                            'name': '$orderby',
+                            'in': 'query',
+                            'description': 'system query option $orderby, The expression can include the suffix asc for ascending or desc for descending, separated from the  property name by one or more spaces.',
+                            'required': false,
+                            'type': 'string'
+                        };
+            parameters.push(param);                        
+            
+            param =     {
+                            'name': '$top',
+                            'in': 'query',
+                            'description': 'system query option $top, number of items returned from a collection',
+                            'required': false,
+                            'type': 'number'
+                        };
+            parameters.push(param);                        
+            
+            param =     {
+                            'name': '$skip',
+                            'in': 'query',
+                            'description': 'system query option $skip, the service returns items starting at position n+1',
+                            'required': false,
+                            'type': 'number'
+                        };
+            parameters.push(param);                        
+            
+            param =     {
+                            'name': '$count',
+                            'in': 'query',
+                            'description': 'system query option $count, with a value of true specifies that the total count of items within the collection, false (or not specified) means not reutrn a count',
+                            'required': false,
+                            'type': 'boolean'
+                        };
+            parameters.push(param);   
+            
+        }
+         
+        if (returns.isCollection && returns.isCollection === true && isEntityType){    //system query parameter only for entityset
+            param =     {
+                            'name': '$search',
+                            'in': 'query',
+                            'description': 'system query option $search, restricts the result to include only those entities matching the specified search expression',
+                            'required': false,
+                            'type': 'string'
+                        };
+            parameters.push(param);                        
+        }
+        
+        param =     {
+                        'name': '$format',
+                        'in': 'query',
+                        'description': 'system query option $format such as json, application/json, application/json;odata.metadata=full',
+                        'required': false,
+                        'type': 'string'
+                    }; 
+        if (returns.type.slice(0, 4) === 'edm.' && !returns.isCollection){
+            return; //function return single primivite type, not support '$format'.
+        }
+        parameters.push(param);
+    }
+
     function addPaths(model, resolveKey) {
         function getSchema(type, isCollection) {
             var sref = {'$ref': '#/definitions/' + type};
@@ -265,14 +401,14 @@
                 'description': isCollection ?
                         ('Returns all items from ' + name + ' without parameters. \n\r' + queryDescriptionStr) :
                         swKey ?
-                        'Returns a single item from ' + name + '.' :
+                        ('Returns a single item from ' + name + ' with parameter ' + swKey.name + '. \n\rAppend parameters prefixed with \'$\' to query specific info from this item.') :
                         'Returns ' + name + ' without parameters. \n\r' + queryDescriptionStr ,
                 'parameters': isCollection ?
                     [
                         {
-                            'name': '$filter',
+                            'name': '$select',
                             'in': 'query',
-                            'description': 'system query option $filter, one or a set of built-in filter operations and functions',
+                            'description': 'system query option $select, is a comma-separated list of properties, qualified action names, qualified function names, the star operator (*), or the star operator prefixed with the namespace or alias of the schema in order to specify all operations defined in the schema',
                             'required': false,
                             'type': 'string'
                         },
@@ -284,9 +420,9 @@
                             'type': 'string'
                         },
                         {
-                            'name': '$select',
+                            'name': '$filter',
                             'in': 'query',
-                            'description': 'system query option $select, is a comma-separated list of properties, qualified action names, qualified function names, the star operator (*), or the star operator prefixed with the namespace or alias of the schema in order to specify all operations defined in the schema',
+                            'description': 'system query option $filter, one or a set of built-in filter operations and functions',
                             'required': false,
                             'type': 'string'
                         },
@@ -335,16 +471,16 @@
                     ] :
                     [
                         {
-                            'name': '$expand',
+                            'name': '$select',
                             'in': 'query',
-                            'description': 'system query option $expand, a comma-separated list of navigation property names',
+                            'description': 'system query option $select, is a comma-separated list of properties, qualified action names, qualified function names, the star operator (*), or the star operator prefixed with the namespace or alias of the schema in order to specify all operations defined in the schema',
                             'required': false,
                             'type': 'string'
                         },
                         {
-                            'name': '$select',
+                            'name': '$expand',
                             'in': 'query',
-                            'description': 'system query option $select, is a comma-separated list of properties, qualified action names, qualified function names, the star operator (*), or the star operator prefixed with the namespace or alias of the schema in order to specify all operations defined in the schema',
+                            'description': 'system query option $expand, a comma-separated list of navigation property names',
                             'required': false,
                             'type': 'string'
                         }, 
@@ -378,7 +514,7 @@
                 if (swKey.format)
                     parameter.format = swKey.format;
 
-                route.parameters = [parameter];
+                route.parameters.unshift(parameter); 
             }
 
             return route;
@@ -500,7 +636,6 @@
 
         var paths = {};
         var visitor = new Visitor();
-        var routesQ = {};
 
         visitor.visitObj(model.container, {
             'entitysets': function (arr) {
@@ -637,7 +772,32 @@
             'types': function (arr) {
                 state.definitions = {};
                 var baseTypeNames = [];
+                var temp = {};
+                var hasKey = false;
 
+                function hasKeycallback(propItem){
+                    if(!!propItem.isKey && propItem.isKey === true){
+                        hasKey = true;
+                    }
+                }
+                //Collect entity and complex types.
+                for(var a in arr){ 
+                    if (!!arr[a].baseType){
+                        temp = getRootType(arr, arr[a]);
+                    }else{
+                        temp = arr[a];
+                    }
+                    
+                    if (temp.properties){
+                        visitor.visitArr(temp.properties, hasKeycallback);
+                        if(hasKey && !arr[a].members){
+                            entityTypes.push(arr[a].name);
+                        }else{
+                            complexTypes.push(arr[a].name);
+                        }
+                    }
+                }
+                
                 this.visitArr(arr, function (item) {
                     var type = {properties: {}};
 
@@ -818,6 +978,9 @@
         state.paths = addPaths(model, function (type) {
             return keys[type];
         });
+        
+        entityTypes = [];
+        complexTypes = [];
 
         for (var i in boundOpPaths) {
             state.paths[i] = boundOpPaths[i];
