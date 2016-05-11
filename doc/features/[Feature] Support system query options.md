@@ -10,7 +10,7 @@ This part is to discuss about how to support OData system query options .
 
 #### 1.2 Goals
 
-+ Add support of **OData system query options** for the Model-first tool show as below. The names of all system query options are prefixed with a dollar(```$```) character.
++ Add support of **OData system query options** for the Model-first tool shown as below. The names of all system query options are prefixed with a dollar(```$```) character.
 	+ ```$filter```
 	+ ```$expand```
     + ```$select```
@@ -36,18 +36,18 @@ This part is to discuss about how to support OData system query options .
 
 According to OData system query options, for ```GET```  requests the following rules apply (refer to [OData version4.0 part2](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part2-url-conventions/odata-v4.0-errata02-os-part2-url-conventions-complete.html#_Toc406398093)):
 
-* Resource paths identifying **a single entity(singleton)**, allow```$expand```, ```$select``` and ```$format```.
-* Resource paths identifying **a complex type instance** allow ```$expand``` ,  ```$select``` and ```$format```.
-* Resource paths identifying **collection of primitive type** allow  ```$filter```, ```$orderby``` ,```$skip```, ```$top```, ```$count``` and ```$format```.
+* Resource paths identifying **a single entity(singleton)**, allow ```$expand```, ```$select``` and ```$format```.
+* Resource paths identifying **a complex type instance** allow ```$expand```, ```$select``` and ```$format```.
+* Resource paths identifying **collection of primitive type** allow  ```$filter```, ```$orderby``` , ```$skip```, ```$top```, ```$count``` and ```$format```.
 * Resource paths identifying **collection of entities**  allow ```$expand```, ```$select```, ```$filter```, ```$orderby``` ,```$skip```, ```$top```, ```$count```,```$search```and ```$format```.
 * Resource paths identifying **collection of complex type instance**  allow ```$expand```, ```$select```, ```$filter```, ```$orderby``` ,```$skip```, ```$top```, ```$count```and ```$format```.
 
 
-> ```/$count``` which address the count of a collection, NOT support yet in current version of model-first tool.
+> ```/$count``` which address the count of a collection is not supported yet in current version of model-first tool.
 	
 	 
 -------------------------------------------
- For different source paths, allow system query options show as following table:
+ For different source paths, allow system query options shown as following table:
  
 |system query option| singleton| complex type instance| collection of primitive type | entityset | collection of complex type|
 |:-----|:-----:|:-----:|:-----:|:-----:|:-----:|
