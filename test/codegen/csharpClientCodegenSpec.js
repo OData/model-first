@@ -731,7 +731,7 @@ describe('[OData Service Client Codegen: CSharp] Test', function () {
         {\n\
             global::System.Uri requestUri;\n\
             Context.TryGetUri(this, out requestUri);\n\n\
-            return new global::' + namespaceName + '.AirlineSingle(this.Context.CreateFunctionQuerySingle<global::' + namespaceName + '.Airline>(string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim(\'/\'))), "Microsoft.OData.SampleService.Models.TripPin.GetFriendFavoriteAirline", true, new global::Microsoft.OData.Client.UriEntityOperationParameter("friend", friend, useEntityReference),\n\
+            return new global::' + namespaceName + '.AirlineSingle(this.Context.CreateFunctionQuerySingle<global::' + namespaceName + '.Airline>(string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim(\'/\'))), "Default.Namespace.IfNoNamespaceField.GetFriendFavoriteAirline", true, new global::Microsoft.OData.Client.UriEntityOperationParameter("friend", friend, useEntityReference),\n\
                     new global::Microsoft.OData.Client.UriEntityOperationParameter("friendPhotos", friendPhotos, useEntityReference)));\n\
         }\n\
         [global::Microsoft.OData.Client.OriginalNameAttribute("GetFriendPhotosCount")]\n\
@@ -739,14 +739,14 @@ describe('[OData Service Client Codegen: CSharp] Test', function () {
         {\n\
             global::System.Uri requestUri;\n\
             Context.TryGetUri(this, out requestUri);\n\n\
-            return this.Context.CreateFunctionQuerySingle<global::System.Nullable<int>>(string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim(\'/\'))), "Microsoft.OData.SampleService.Models.TripPin.GetFriendPhotosCount", true, new global::Microsoft.OData.Client.UriOperationParameter("userName", userName));\n\
+            return this.Context.CreateFunctionQuerySingle<global::System.Nullable<int>>(string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim(\'/\'))), "Default.Namespace.IfNoNamespaceField.GetFriendPhotosCount", true, new global::Microsoft.OData.Client.UriOperationParameter("userName", userName));\n\
         }\n\
         [global::Microsoft.OData.Client.OriginalNameAttribute("GetFriendsTripsCount")]\n\
         public global::Microsoft.OData.Client.DataServiceQuery<int> GetFriendsTripsCount(string userName, global::System.Nullable<double> howFar)\n\
         {\n\
             global::System.Uri requestUri;\n\
             Context.TryGetUri(this, out requestUri);\n\n\
-            return this.Context.CreateFunctionQuery<int>(string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim(\'/\'))), "Microsoft.OData.SampleService.Models.TripPin.GetFriendsTripsCount", true, new global::Microsoft.OData.Client.UriOperationParameter("userName", userName),\n\
+            return this.Context.CreateFunctionQuery<int>(string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim(\'/\'))), "Default.Namespace.IfNoNamespaceField.GetFriendsTripsCount", true, new global::Microsoft.OData.Client.UriOperationParameter("userName", userName),\n\
                     new global::Microsoft.OData.Client.UriOperationParameter("howFar", howFar));\n\
         }\n\
         public global::Microsoft.OData.Client.DataServiceActionQuery ShareTrip(string sharedTo, int tripId)\n\
@@ -756,7 +756,7 @@ describe('[OData Service Client Codegen: CSharp] Test', function () {
             {\n\
                 throw new global::System.Exception("cannot find entity");\n\
             }\n\n\
-            return new global::Microsoft.OData.Client.DataServiceActionQuery(this.Context, resource.EditLink.OriginalString.Trim(\'/\') + "/Microsoft.OData.SampleService.Models.TripPin.ShareTrip", new global::Microsoft.OData.Client.BodyOperationParameter("sharedTo", sharedTo),\n\
+            return new global::Microsoft.OData.Client.DataServiceActionQuery(this.Context, resource.EditLink.OriginalString.Trim(\'/\') + "/Default.Namespace.IfNoNamespaceField.ShareTrip", new global::Microsoft.OData.Client.BodyOperationParameter("sharedTo", sharedTo),\n\
                     new global::Microsoft.OData.Client.BodyOperationParameter("tripId", tripId));\n\
         }\n\
     }\n\
@@ -1435,7 +1435,7 @@ describe('[OData Service Client Codegen: CSharp] Test', function () {
                 throw new global::System.NotSupportedException("The previous function is not composable.");\n\
             }\n\
 \n\
-            return source.CreateFunctionQuerySingle<string>("Microsoft.OData.SampleService.Models.TripPin.MyFunction1", true, new global::Microsoft.OData.Client.UriOperationParameter("tripId", tripId));\n\
+            return source.CreateFunctionQuerySingle<string>("Default.Namespace.IfNoNamespaceField.MyFunction1", true, new global::Microsoft.OData.Client.UriOperationParameter("tripId", tripId));\n\
         }\n\
 \n';
 
@@ -1479,7 +1479,7 @@ describe('[OData Service Client Codegen: CSharp] Test', function () {
                 throw new global::System.NotSupportedException("The previous function is not composable.");\n\
             }\n\
 \n\
-            return source.CreateFunctionQuery<string>("Microsoft.OData.SampleService.Models.TripPin.MyFunction2", true, new global::Microsoft.OData.Client.UriOperationParameter("tripIds", tripIds));\n\
+            return source.CreateFunctionQuery<string>("Default.Namespace.IfNoNamespaceField.MyFunction2", true, new global::Microsoft.OData.Client.UriOperationParameter("tripIds", tripIds));\n\
         }\n\
 \n';
 
@@ -1520,7 +1520,7 @@ describe('[OData Service Client Codegen: CSharp] Test', function () {
                 throw new global::System.NotSupportedException("The previous function is not composable.");\n\
             }\n\
 \n\
-            return new global::' + namespaceName + '.PersonSingle(source.CreateFunctionQuerySingle<global::' + namespaceName + '.Person>("Microsoft.OData.SampleService.Models.TripPin.MyFunction3", true, new global::Microsoft.OData.Client.UriEntityOperationParameter("trip", trip, useEntityReference)));\n\
+            return new global::' + namespaceName + '.PersonSingle(source.CreateFunctionQuerySingle<global::' + namespaceName + '.Person>("Default.Namespace.IfNoNamespaceField.MyFunction3", true, new global::Microsoft.OData.Client.UriEntityOperationParameter("trip", trip, useEntityReference)));\n\
         }\n\
 \n';
 
@@ -1563,7 +1563,7 @@ describe('[OData Service Client Codegen: CSharp] Test', function () {
                 throw new global::System.NotSupportedException("The previous function is not composable.");\n\
             }\n\
 \n\
-            return source.CreateFunctionQuery<global::' + namespaceName + '.Person>("Microsoft.OData.SampleService.Models.TripPin.MyFunction4", true, new global::Microsoft.OData.Client.UriEntityOperationParameter("trips", trips, useEntityReference));\n\
+            return source.CreateFunctionQuery<global::' + namespaceName + '.Person>("Default.Namespace.IfNoNamespaceField.MyFunction4", true, new global::Microsoft.OData.Client.UriEntityOperationParameter("trips", trips, useEntityReference));\n\
         }\n\
 \n';
         var actual = genExBoundOperations(entityType, namespaceName);
@@ -1602,7 +1602,7 @@ describe('[OData Service Client Codegen: CSharp] Test', function () {
 \n\
             return new global::Microsoft.OData.Client.DataServiceActionQuery(\n\
                 source.Context,\n\
-                source.AppendRequestUri("Microsoft.OData.SampleService.Models.TripPin.MyAction1"),\n\
+                source.AppendRequestUri("Default.Namespace.IfNoNamespaceField.MyAction1"),\n\
                 new global::Microsoft.OData.Client.BodyOperationParameter("tripId", tripId));\n\
         }\n\
 \n';
@@ -1643,7 +1643,7 @@ describe('[OData Service Client Codegen: CSharp] Test', function () {
 \n\
             return new global::Microsoft.OData.Client.DataServiceActionQuery(\n\
                 source.Context,\n\
-                source.AppendRequestUri("Microsoft.OData.SampleService.Models.TripPin.MyAction2"),\n\
+                source.AppendRequestUri("Default.Namespace.IfNoNamespaceField.MyAction2"),\n\
                 new global::Microsoft.OData.Client.BodyOperationParameter("tripIds", tripIds));\n\
         }\n\
 \n';
@@ -1683,7 +1683,7 @@ describe('[OData Service Client Codegen: CSharp] Test', function () {
 \n\
             return new global::Microsoft.OData.Client.DataServiceActionQuery(\n\
                 source.Context,\n\
-                source.AppendRequestUri("Microsoft.OData.SampleService.Models.TripPin.MyAction3"),\n\
+                source.AppendRequestUri("Default.Namespace.IfNoNamespaceField.MyAction3"),\n\
                 new global::Microsoft.OData.Client.BodyOperationParameter("trip", trip));\n\
         }\n\
 \n';
@@ -1723,7 +1723,7 @@ describe('[OData Service Client Codegen: CSharp] Test', function () {
 \n\
             return new global::Microsoft.OData.Client.DataServiceActionQuery(\n\
                 source.Context,\n\
-                source.AppendRequestUri("Microsoft.OData.SampleService.Models.TripPin.MyAction4"),\n\
+                source.AppendRequestUri("Default.Namespace.IfNoNamespaceField.MyAction4"),\n\
                 new global::Microsoft.OData.Client.BodyOperationParameter("trips", trips));\n\
         }\n\
 \n';

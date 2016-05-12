@@ -3,7 +3,7 @@ var typeMaps = require('./csharpTypeMaps');
 var StringHelper = require('../helpers/stringhelper');
 var TypesHelper = require('../helpers/typeshelper');
 
-MetadataNamespace = 'Default.Namespace.InMetadata.Comes.From.APIName';
+MetadataNamespace = 'Default.Namespace.IfNoNamespaceField'; //The value for test case, if the JSON model does not have api part or name and namespace fields both missing in api part.
 
 var container = require('./entityContainerGenerator');
 var castTo = require('./castToMethod');

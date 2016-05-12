@@ -1,7 +1,7 @@
 var config = require('./config');
 
 var EntityContainer = config.Constants.Code.EntityContainer;
-var fullNamespace='Microsoft.OData.SampleService.Models.TripPin';
+var fullNamespace='Default.Namespace.IfNoNamespaceField';
 
 // Need user configure or we got from the ymal?
 var languageDependentNamespace = config.Constants.Code.DefaultNamespace;
@@ -487,7 +487,7 @@ describe('[Client CodeGen] Entity Container', function () {
             return clientType.FullName;\n\
         }\n\
 {4}\
-    }\n'.format(entityContainerGenerator.CustomizeNaming(EntityContainer), EntityContainer, fullNamespace,
+    }\n'.format(entityContainerGenerator.CustomizeNaming(EntityContainer), EntityContainer, 'Microsoft.OData.SampleService.Models.TripPin',
     entityContainerGenerator.CustomizeNaming(languageDependentNamespace), expected);
 
     var actual = entityContainerGenerator.generate(model, languageDependentNamespace);

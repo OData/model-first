@@ -23,7 +23,7 @@ if (!String.prototype.format) {
 
 // Simple YAML Bugs
 var EntityContainer=config.Constants.Code.EntityContainer;
-var fullNamespace='Microsoft.OData.SampleService.Models.TripPin';
+var fullNamespace='Default.Namespace.IfNoNamespaceField'; //The value for test case, if the JSON model does not have api part or name and namespace fields both missing in api part.
 
 // Need user configure or we got from the ymal?
 var languageDependentNamespace= '';
