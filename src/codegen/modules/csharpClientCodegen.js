@@ -3,7 +3,7 @@ var typeMaps = require('./csharpTypeMaps');
 var StringHelper = require('../helpers/stringhelper');
 var TypesHelper = require('../helpers/typeshelper');
 
-MetadataNamespace = 'Microsoft.OData.SampleService.Models.TripPin';
+MetadataNamespace = 'Default.Namespace.InMetadata.Comes.From.APIName';
 
 var container = require('./entityContainerGenerator');
 var castTo = require('./castToMethod');

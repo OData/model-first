@@ -39,7 +39,7 @@ Field Name|	Description
 -----------|----------------
 name	| Required. The title of the application.
 version	| Required. Provides the version of the application API (not to be confused with the specification version). Default value is "0.0.0.0".
-namespace | Required. The namespace of the application API. Corresponding to the Namespace attribute in [CSDL Section 5.1.1 Attribute Namespace](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part3-csdl/odata-v4.0-errata02-os-part3-csdl-complete.html#_Toc406397948) Default value is "Default.Namespace".
+namespace | Optional. The namespace of the application API. Corresponding to the Namespace attribute in [CSDL Section 5.1.1 Attribute Namespace](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part3-csdl/odata-v4.0-errata02-os-part3-csdl-complete.html#_Toc406397948) Default value comes from the name field by relpacing white space to dot. For example, if the name is 'My Web API' and the namespace is not provided, then the default value of namespace is automaticaly generated as 'My.Web.API'.
 ------------------------------------------------------------
 
 Two formats of version available:
@@ -90,7 +90,7 @@ Field Name|	Description
 -----------|----------------
 name	| Required. The title of the application.
 version	| Required. Provides the version of the application API (not to be confused with the specification version). Default value is "0.0.0.0".
-namespace | Required. The namespace of the application API. Default value is "Default.Namespace".
+namespace | Optional. The namespace of the application API. Default value comes from the name field by relpacing white space to dot. For example, if the name is 'My Web API' and the namespace is not provided, then the default value of namespace is automaticaly generated as 'My.Web.API'.
 ------------------------------------------------------------
 
 Two formats of version available:
