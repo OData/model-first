@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Model-first Builder</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <!-- build:css /stylesheets/codemirror-mf.css -->
+    <link rel="stylesheet" href="bower_components/codemirror/lib/codemirror.css">
+    <link rel="stylesheet" href="bower_components/codemirror/theme/zenburn.css">
+    <link rel="stylesheet" href="bower_components/codemirror/theme/mdn-like.css">
+    <!-- endbuild -->
+    
+    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css" />
+    <link rel="stylesheet" href="/stylesheets/bootstrap-theme.min.css" />
+    <link rel="stylesheet" href="/stylesheets/demo.css">
+
+    <!-- build:js /javascripts/lib.js -->
+    <script src="../bower_components/js-yaml/dist/js-yaml.min.js"></script>
+    <script src="../bower_components/yaml-js/yaml.min.js"></script>
+    <script src="../bower_components/yaml-worker/index.js"></script>
+    <script src="../bower_components/yaml-js/yaml.min.js"></script>
+    <script src="../bower_components/yaml-worker/index.js"></script>
+    <script src="bower_components/codemirror/lib/codemirror.js"></script>
+    <script src="bower_components/codemirror/mode/yaml/yaml.js"></script>
+    <script src="bower_components/codemirror/mode/xml/xml.js"></script>
+    <script src="bower_components/codemirror/mode/javascript/javascript.js"></script>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/jquery-tmpl/jquery.tmpl.min.js"></script>
+    <!-- endbuild -->
+
+    <script src="/javascripts/bootstrap.min.js"></script>
+    <script src="/javascripts/config.js"></script>
+
+    <!-- build:js /javascripts/app.js -->
+    <script src="scripts/editor.js"></script>
+    <script src="../src/morpho.js"></script>
+    <script src="../src/visitor.js"></script>
+    <script src="../src/modules/modYaml.js"></script>
+    <script src="../src/modules/modCsdl.js"></script>
+    <script src="../src/modules/modJson.js"></script>
+    <script src="../src/modules/modSwagger.js"></script>
+    <script src="../src/conventions/convAddDefaults.js"></script>
+    <!-- endbuild -->
+  </head>
+  <body>
+    <!-- Navigation bar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">Model-first Builder</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            Load
+            <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu" id="sampleList">
+          </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            Download
+            <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu" id="sampleList">
+            <li><a id="csharpClient" name="csharpClient" href="#"><span class="glyphicon glyphicon-save"></span> C#: OData V4 Client</a></li>
+            <li><a id="csharpServer" name="csharpServer" href="#"><span class="glyphicon glyphicon-save"></span> C#: OData V4 Server</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav> 
+
+    <div style="margin-top: 50px;"></div>
+
+    <div class="row">
+      <div class="col-md-6" id="src">
+        <!-- <div class="row">
+          <div class="col-md-11 col-md-offset-1">
+            <div class="textareamessage"><span class="glyphicon glyphicon-pencil"></span> Edit model here:</div>
+          </div>
+        </div> -->
+        <div class="col-md-12" style="padding-right: 0px;">
+          <textarea id="inputarea"></textarea>
+        </div>
+      </div>
+
+      <div class="col-md-6" id="res">
+        <div class="row">
+          <div class="col-md-12" style="padding-left: 0px;padding-right: 0px;">
+            <div id="errPanel" name="errPanel" class="panel panel-danger sr-only">
+              <div class="panel-heading">
+                <h3 class="panel-title">Error</h3>
+              </div>
+              <div class="panel-body">
+                <div id="errors"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12" style="padding-left: 0px;padding-right: 0px;">
+            <ul id="resultTabs" class="nav nav-tabs"></ul>
+            <div id="resultContents" class="tab-content"></div>
+          </div>
+        </div>
+      </div>
+    </div> 
+  </body>
+
+  <script id="errorTemp" type="text/x-jQuery-tmpl">
+    <span style="color:red">${errorType}</span>
+    <div>{{html errDes}}</div>
+    <p>lineNumber: ${ln}</p>
+  </script>
+</html>

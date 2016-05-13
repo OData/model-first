@@ -8,7 +8,7 @@ module.exports = {
 };
 
 function updateSamples(content){
-  return content.replace(/\/\/ sample[\s\S]*\/\/ endsample/, run('dist/samples', 'yaml'));
+  return content.replace(/\/\/ sample[\s\S]*\/\/ endsample/, run('public/samples', 'yaml'));
 }
 
 function run(dir, ext) {

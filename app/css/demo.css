@@ -8,26 +8,21 @@
 #src {
   width: 49%;
   float: left;
+  padding-left: 0px;
+  padding-right: 0px;
 }
 
 #res {
   width: 49%;
   float: right;
+  padding-left: 0px;
+  padding-right: 0px;
 }
 
 #src .CodeMirror {
-  background-color: #fffffb;
-  border: 1px solid #888;
-  border-radius: 3px;
-  box-shadow: 0 0 3px #ccc inset;
+  height: 650px;
 }
 
 #res .CodeMirror {
-  background-color: #F8F8F8;
-  border: 1px solid #eee;
-  border-radius: 3px;
-}
-
-.CodeMirror {
-  height: 650px;
+  height: 605px;
 }

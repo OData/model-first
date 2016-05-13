@@ -68,7 +68,7 @@ app.use(function (req, res, next) {
 app.use('/', routes);
 
 var server = app.listen(constants.Port, function () {
-    logger.logSuc('Started connect codegen web service on http://localhost:' + constants.Port + '/');
+    logger.logSuc('Started connect model-first builder on http://localhost:' + constants.Port + '/');
     logger.logInfo('Download OData client C# code on:');
     logger.logInfo('-- HTTP GET / POST: http://localhost:' + constants.Port + '/client/codegen/?name=csharp');
     logger.logInfo('Download OData server C# code on:');

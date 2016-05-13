@@ -1,6 +1,8 @@
 'use strict';
 
 $(function (){
+
+  // Methods.
   function positionRangeForPath(yamlSpec, path) {
   var MAP_TAG = 'tag:yaml.org,2002:map';
   var SEQ_TAG = 'tag:yaml.org,2002:seq';
@@ -69,12 +71,24 @@ $(function (){
     return compose(null, yaml.compose(yamlSpec));
   }
 
-  function convert(){
+  /*
+  ** Convert sample to target format.
+  ** @params:
+  **    sourceArea: the source code mirror component.
+  **    sourceFormat: the source format will be transformed.
+  **    targetArea: the target code mirror component.
+  **    targetFormat: the target format will transform to.
+  */
+  function convert(sourceArea, sourceFormat, targetArea, targetFormat){
     function displayError(errors)
     {
       $('#errors').empty();
-      if(errors.length <= 0){return;}
+      if(errors.length <= 0){
+        $('#errPanel').addClass('sr-only');
+        return;
+      }
 
+      $('#errPanel').removeClass('sr-only');
       for(var index in errors){
         var error={errorType:null,errDes:'',ln:0};
 
@@ -96,30 +110,163 @@ $(function (){
       }
     }
 
-    var defaultConfig = {addDefaults: true, format: true};
-    var input = source.getValue();
-    var out = Morpho.convert(input, config.sourceFormat, config.targetFormat, defaultConfig, displayError);
+    var defaultConfig = { addDefaults: true, format: true };
+    var input = sourceArea.getValue();
+    var out = Morpho.convert(input, sourceFormat, targetFormat, defaultConfig, displayError);
 
-    target.setValue(out.model);
+    targetArea.setValue(out.model);
   }
 
+  /*
+  ** Load the sample from server.
+  */
+  function loadSample(sampleName){
+    $.get(samplesPrefix + sampleName, function(data){
+      source.setValue(data);
+      for(var i = 0; i < targets.length; i++){
+        convert(source, config.soruceFormats[0], targets[i].target, targets[i].targetFormat);
+      }
+    });
+  }
+
+  /*
+  ** Refresh the code mirror component.
+  */
+  function refreshCodeEditor(){
+    // Location for the active label '<a />'.
+    var active = $('#resultTabs > .active > a');
+
+    // Using active.data('target') gets the value of the attribute data-target.
+    // Then use the value of attribute data-target to get the element <div /> which contains the code editor.
+    var resultContents = $(active.data('target'));
+
+    var cmContainer = resultContents.find('.CodeMirror')[0];
+    if(cmContainer && cmContainer.CodeMirror){
+      cmContainer.CodeMirror.refresh();
+    }
+  }
+
+  /*
+  ** Remove the extension name from file's full name.
+  ** @params:
+  **     fileName: The full name of a file.
+  */
+  function removeFileExName(fileName){
+    if(fileName){
+      var index = fileName.lastIndexOf('.');
+      return fileName.substring(0, index);
+    }
+
+    return fileName;
+  }
+
+  /*
+  ** Capitalize the first letter in a string.
+  ** @params:
+  **     target: The target string need capitalize the first letter.
+  */
+  function capitalize(target){
+    return target.charAt(0).toUpperCase() + target.substring(1, target.length);
+  }
+
+  /*
+  ** Verify whether the collection contains the element.
+  ** @params:
+  **     collection: A collection.
+  **     element: An element maybe contains in the collection.
+  */
+  function contains(collection, element){
+    for(var i = 0; i < collection.length; i++){
+      if(element === collection[i]){
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /*
+  ** Download the codes from the server.
+  ** @params:
+  **     yamlModel: The OData model is wrote with the simple yaml.
+  **     url: The url which the code can be downloaded.
+  */
+  function download(yamlModel, url){
+    var defaultConfig = { addDefaults: true, format: true };
+    var jsonModel = Morpho.convert(yamlModel, config.soruceFormats[0], 'json', defaultConfig).model;
+    $.ajax({
+        type: 'POST',
+        url: url,
+        contentType: 'application/json',
+        data: jsonModel,
+        success: function (result) {
+            window.location.href = result.link;
+        }
+    });
+  }
+
+  // Initialize.
   var config  = window.morphoEditorConfig;
   var formats = config.formats;
-  config.sourceFormat = config.soruceFormat || config.soruceFormats[0];
-  config.targetFormat = config.targetFormat || config.targetFormats[0];
-
   var source = CodeMirror.fromTextArea(document.getElementById('inputarea'), {
-        mode: formats[config.sourceFormat].cmMode,
-        lineNumbers: true
-      }),
-      target = CodeMirror.fromTextArea(document.getElementById('outputarea'), {
-        mode: formats[config.targetFormat].cmMode,
+    mode: formats[config.soruceFormats[0]].cmMode,
+    lineNumbers: true,
+    theme: 'zenburn'
+  });
+  var samplesPrefix = 'samples/';
+  var sampleList = $('#sampleList');
+  $.each(config.samples, function(key, value) { 
+    var val = removeFileExName(value);
+    var li = '<li><a id="' + value + '" name="' + value + '" href="#">' + capitalize(val) + '</a></li>';
+    sampleList.append(li); 
+  });
+  var targets = [];
+  for(var i = 0; i < config.targetFormats.length; i++){
+    console.log(config.targetFormats[i]);
+    var tab = '<li id="' + config.targetFormats[i] + 'Tab"><a href="" data-target="#' + config.targetFormats[i] + '" data-toggle="tab">' + config.formats[config.targetFormats[i]].displayName + '</a></li>';
+    var content = '<div class="tab-pane" id="' + config.targetFormats[i] + '"><textarea id="outputarea_' + config.targetFormats[i] + '"></textarea></div>';
+    $('#resultTabs').append(tab);
+    $('#resultContents').append(content);
+    var target = CodeMirror.fromTextArea(document.getElementById('outputarea_' + config.targetFormats[i]), {
+        mode: config.formats[config.targetFormats[i]].cmMode,
         readOnly: true,
-        lineNumbers: true
-      });
+        lineNumbers: true,
+        theme: 'mdn-like'
+    });
+    targets.push({ target: target, targetFormat: config.targetFormats[i] });
 
+    if(i === 0){
+        $('#' + config.targetFormats[i] + 'Tab').addClass('active');
+        $('#' + config.targetFormats[i]).addClass('active');
+    }
+  }
+
+  loadSample(config.samples[0]);
+
+  // All the events.
+  // Trigger this event when the selector is changed.
+  $('a').click(function(){
+    if(contains(config.samples, $(this).attr('name'))){
+      loadSample($(this).attr('name'));
+      refreshCodeEditor();
+    }
+
+    var yamlModel = '';
+    var downloadUrl = '';
+    if($(this).attr('name') === 'csharpClient'){
+      yamlModel = source.getValue();
+      downloadUrl = 'http://localhost:9002/client/codegen?name=csharp';
+      download(yamlModel, downloadUrl);
+    }
+    else if($(this).attr('name') === 'csharpServer'){
+      yamlModel = source.getValue();
+      downloadUrl = 'http://localhost:9002/server/codegen?name=csharp';
+      download(yamlModel, downloadUrl);
+    }
+  });
+
+  // Trigger this event when someone is editting in the input area.
   var timer = null;
-
   source.on('keyup', function(instance, evt) {
     switch (evt.keyCode) {
       //ignore up down left right 
@@ -131,21 +278,17 @@ $(function (){
     }
 
     window.clearTimeout(timer);
-    timer = window.setTimeout(convert, 500);
+    timer = window.setTimeout(function(){
+      for(var i = 0; i < targets.length; i++){
+        convert(source, config.soruceFormats[0], targets[i].target, targets[i].targetFormat);
+      }
+    }, 500);
   });
 
-  window.MorphoEditor = {
-    loadSource : function(data){
-      source.setValue(data);
-      convert();
-    },
-    getSamples : function(key){
-      return window.morphoEditorConfig.samples;
-    },
-    setTargetFormat : function(format){
-      target.setOption('mode', formats[format].cmMode);
-      config.targetFormat = format;
-      convert();
+  // Trigger this event when the tab is changed.
+  $('#resultTabs > li > a[data-toggle="tab"]').on('shown.bs.tab', function(e){
+    if($(e.target).is(':visible')){
+      refreshCodeEditor();
     }
-  };
+  });
 });

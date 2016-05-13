@@ -244,3 +244,13 @@ public/client/csharp/packages
 public/client/csharp/zips
 public/server/csharp/packages
 public/server/csharp/zips
+
+public/bower_components/
+public/javascripts/app.js
+public/javascripts/config.js
+public/javascripts/lib.js
+public/samples/todo-minimal.yaml
+public/samples/trippin.yaml
+public/stylesheets/codemirror-mf.css
+public/stylesheets/demo.css
+views/index.ejs

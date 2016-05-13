@@ -27,13 +27,14 @@ module.exports = function (grunt) {
         copy: {
             dist: {
                 files: [
-                    {expand: true, cwd: 'app', src: ['index.html', 'css/*'], dest: 'dist/'},
-                    {expand: true, cwd: 'doc/samples', src: ['*.yaml'], dest: 'dist/samples/'},
+                    {expand: true, cwd: 'app', src: ['index.ejs'], dest: 'views/'},
+					{expand: true, cwd: 'app/css', src: ['*.css'], dest: 'public/stylesheets/'},
+                    {expand: true, cwd: 'doc/samples', src: ['*.yaml'], dest: 'public/samples/'}
                 ],
             },
             config: {
                 src: 'app/scripts/config.js',
-                dest: 'dist/scripts/config.js',
+                dest: 'public/javascripts/config.js',
                 options: {
                     process: function (content, srcpath) {
                         var distCopy = require('./distCopy');
@@ -43,12 +44,22 @@ module.exports = function (grunt) {
             }
         },
         clean: {
-            dist: ['dist/*', '.tmp/']
+			dist: [
+				'public/bower_components/*', 
+				'public/samples/todo-minimal.yaml',
+				'public/samples/trippin.yaml',
+				'public/stylesheets/codemirror-mf.css', 
+				'public/stylesheets/demo.css', 
+				'public/javascripts/app.js',
+				'public/javascripts/config.js',
+				'public/javascripts/lib.js',
+				'views/index.ejs'
+			]
         },
         useminPrepare: {
-            html: 'dist/index.html',
+            html: 'views/index.ejs',
             options: {
-                dest: 'dist',
+                dest: 'public',
                 root: 'app',
                 flow: {
                     html: {
@@ -62,16 +73,7 @@ module.exports = function (grunt) {
             }
         },
         usemin: {
-            html: 'dist/index.html'
-        },
-        connect: {
-            server: {
-                options: {
-                    port: 9001,
-                    base: 'dist',
-                    keepalive: true
-                }
-            }
+            html: 'views/index.ejs'
         },
         uglify: {
             options: {
@@ -79,7 +81,7 @@ module.exports = function (grunt) {
             },
             simpleYamlWorker: {
                 files: {
-                    'dist/bower_components/morpho/src/index.js': ['src/index.js']
+                    'public/bower_components/morpho/src/index.js': ['src/index.js']
                 }
             }
         },
@@ -97,7 +99,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-usemin');
-    grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-execute');
 
@@ -109,14 +110,11 @@ module.exports = function (grunt) {
         'copy:config',
         'useminPrepare',
         'concat:generated',
-        //'cssmin:generated',
-        //'uglify:generated',
-        //'filerev',
         'uglify',
         'usemin'
     ]);
     grunt.registerTask('server', [
         'build',
-        'connect',
+        'execute',
     ]);
 };

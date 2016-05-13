@@ -69,7 +69,9 @@ exports.post = function (req, res) {
                             return res.send('err');
                         }
 
-                        res.send({link: !!req.connection.encrypted ? 'https://' : 'http://' + req.headers.host + constants.Paths.CSharpZipPackage.substr(1) + folderName + '.zip'});
+                        // Remove the string './public'.
+                        var path = constants.Paths.CSharpZipPackage.substr(8);
+                        res.send({link: !!req.connection.encrypted ? 'https://' : 'http://' + req.headers.host + path + folderName + '.zip'});
                         logger.logSuc('Success to download!');
                     });
                 });

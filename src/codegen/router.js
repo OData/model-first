@@ -6,7 +6,7 @@ var router = express.Router();
 
 /* Get code-gen testing home page. */
 router.get('/', function(req, res, next){
-	res.send('Hello world!');
+	res.render('index');
 });
 
 router.get('/gen-client', function(req, res, next){
