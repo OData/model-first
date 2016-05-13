@@ -36,8 +36,7 @@
 		
 		var editor = CodeMirror.fromTextArea(inputarea, {
 			mode:  mapMode(languageName),
-			lineNumbers: true,
-			theme: theme
+			lineNumbers: true
 		});
 
 		// Set the size (width, height) of code editor.
