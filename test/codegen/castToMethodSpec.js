@@ -1,6 +1,4 @@
 var config = require('./config');
-
-var fullNamespace='Default.Namespace.IfNoNamespaceField';
 var castToMethodGenerator = require('../../src/codegen/modules/castToMethod');
 
 // Need user configure or we got from the ymal?

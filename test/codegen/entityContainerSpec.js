@@ -1,11 +1,9 @@
 var config = require('./config');
-
 var EntityContainer = config.Constants.Code.EntityContainer;
-var fullNamespace='Default.Namespace.IfNoNamespaceField';
 
 // Need user configure or we got from the ymal?
 var languageDependentNamespace = config.Constants.Code.DefaultNamespace;
-    var entityContainerGenerator = require('../../src/codegen/modules/entityContainerGenerator');
+var entityContainerGenerator = require('../../src/codegen/modules/entityContainerGenerator');
 describe('[Client CodeGen] Entity Container', function () {
 
     if (!String.prototype.format) {
@@ -353,7 +351,7 @@ describe('[Client CodeGen] Entity Container', function () {
     {
         var model = {
             'api': {
-                'namespace': 'Microsoft.OData.SampleService.Models.TripPin'},
+            'namespace': 'Microsoft.OData.SampleService.Models.TripPin'},
             'container': {},
             'types':[
             {
