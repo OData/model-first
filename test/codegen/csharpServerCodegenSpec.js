@@ -2,7 +2,7 @@ describe('[OData Service Server Codegen: CSharp] Test', function(){
 	var util = require('util');
 	var codegen = require('../../src/codegen/modules/csharpServerCodegen');
 	var constants = require('../../src/codegen/config').Constants;
-	var ns = constants.Code.ServerDefaultNamespace;
+	var ns = 'Default.Namespace.IfNoNamespaceField';
 	var genComplexType;
 	var genEntityType;
 	var genEnumType;
@@ -72,9 +72,9 @@ namespace %s.Models\n\
     public class Location\n\
     {\n\
         public string Address { get; set; }\n\
-        public OData.Service.V4.Server.Models.City City { get; set; }\n\
+        public %s.Models.City City { get; set; }\n\
     }\n\
-}\n', ns);
+}\n', ns, ns);
 		var actual = genComplexType(complexTypeObj, ns).content;
 
 		expect(actual).toEqual(expected);

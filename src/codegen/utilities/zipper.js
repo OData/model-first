@@ -2,6 +2,7 @@ var fs = require('fs');
 var EasyZip = require('easy-zip').EasyZip;
 var StringHelper = require('../helpers/stringhelper');
 var Logger = require('./logger');
+var constants = require('../config').Constants;
 
 /*
 ** Zip the whole folder to a package.
@@ -44,7 +45,7 @@ function traverseFolder(folderPath, easyZip, folder){
             var filePath = StringHelper.addSlash(folderPath) + files[i];
             var stats = fs.statSync(filePath);
             if(stats.isFile()){
-                var content = fs.readFileSync(filePath);
+                var content = fs.readFileSync(filePath,{encoding:constants.Code.Encoding});
                 folder.file(files[i], content);
             }
             else if(stats.isDirectory()){

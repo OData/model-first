@@ -4,19 +4,19 @@ var codegen = require('../modules/csharpClientCodegen');
 var serverCodegen = require('../modules/csharpServerCodegen');
 
 var constants = config.Constants;
-var defaultNamespace = constants.Code.DefaultNamespace;
-var serverDefaultNamespace = constants.Code.ServerDefaultNamespace;
 
 exports.processSample = function (samplePath, callback){
 	fs.readFile(samplePath, function(err, data){
 		if(err){
 			return callback(err, null);
 		}
+		var jObj = JSON.parse(data);
 
-		var csharpCode = codegen.Codegen(data, defaultNamespace);
+		var csharpCode = codegen.CodegenByObj(jObj);
 		var result = {
 			metadata: data, 
-			csharpCode: csharpCode 
+			csharpCode: csharpCode,
+			namespace: jObj.api.namespace
 		};
 
 		return callback(null, result);
@@ -24,7 +24,7 @@ exports.processSample = function (samplePath, callback){
 };
 
 exports.processInput = function (metadata){
-	var csharpCode = codegen.Codegen(metadata, defaultNamespace);
+	var csharpCode = codegen.Codegen(metadata);
 	var result = {
 		metadata: metadata,
 		csharpCode: csharpCode
@@ -38,11 +38,13 @@ exports.processSampleForServer = function(samplePath, callback){
 		if(err){
 			return callback(err, null);
 		}
+		var jObj = JSON.parse(data);
 
-		var files = serverCodegen.Codegen(data, serverDefaultNamespace);
+		var files = serverCodegen.CodegenByObj(jObj);
 		var result = {
 			metadata: data, 
-			files: files 
+			files: files,
+			namespace: jObj.api.namespace+'.Server'
 		};
 
 		return callback(null, result);
@@ -50,7 +52,7 @@ exports.processSampleForServer = function(samplePath, callback){
 };
 
 exports.processInputForServer = function(metadata){
-	var files = serverCodegen.Codegen(metadata, serverDefaultNamespace);
+	var files = serverCodegen.Codegen(metadata);
 	var result = {
 		metadata: metadata, 
 		files: files 

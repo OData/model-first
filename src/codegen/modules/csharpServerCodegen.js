@@ -245,7 +245,7 @@ namespace ' + namespaceName + '\n';
         /// Gets or sets the %s entity-set.\n\
         /// </summary>\n', StringHelper.capitalizeInitial(entitySets[i].name));
 		result += util.format('\
-        public System.Data.Entity.DbSet<%s> %s { get; set; }\n', constants.Code.ServerDefaultNamespace + '.Models.' + StringHelper.capitalizeInitial(entitySets[i].type), StringHelper.capitalizeInitial(entitySets[i].name));
+        public System.Data.Entity.DbSet<%s> %s { get; set; }\n', namespaceName + '.Models.' + StringHelper.capitalizeInitial(entitySets[i].type), StringHelper.capitalizeInitial(entitySets[i].name));
 	}
 
 	result += '\
@@ -290,12 +290,12 @@ function codegen(jObj, namespaceName){
 	return files;
 }
 
-exports.CodegenByObj = function(jObj, namespaceName){
-	return codegen(jObj, namespaceName);
+exports.CodegenByObj = function(jObj){
+	return codegen(jObj, jObj.api.namespace+'.Server');
 };
 
-exports.Codegen = function(jsonMetadata, namespaceName){
+exports.Codegen = function(jsonMetadata){
 	var jObj = JSON.parse(jsonMetadata);
 
-	return codegen(jObj, namespaceName);
+	return codegen(jObj, jObj.api.namespace+'.Server');
 };

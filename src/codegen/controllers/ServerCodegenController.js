@@ -21,7 +21,7 @@ exports.get = function(req, res){
 				}
 
 				logger.logInfo('Generating the CSharp server code for OData v4 service...');
-				codewriter.createServerCSharpProject(constants.FileNames.ServerCSharpZipPackage, result.files, function(err, folderName){
+				codewriter.createServerCSharpProject(constants.FileNames.ServerCSharpZipPackage, result.files, result.namespace, function(err, folderName){
 					if(err){
 						logger.logErr(err);
 						return res.send(err);
@@ -54,9 +54,9 @@ exports.post = function(req, res){
 		if(query.name == 'csharp'){
 			if(req.body){
 				logger.logInfo('Processing request\'s metadata...');
-				var files = codegen.CodegenByObj(req.body, constants.Code.ServerDefaultNamespace);
+				var files = codegen.CodegenByObj(req.body);
 				logger.logInfo('Generating the CSharp server code for OData v4 service...');
-				codewriter.createServerCSharpProject(constants.FileNames.ServerCSharpZipPackage, files, function(err, folderName){
+				codewriter.createServerCSharpProject(constants.FileNames.ServerCSharpZipPackage, files, req.body.api.namespace+'.Server', function(err, folderName){
 					if(err){
 						logger.logErr(err);
 						return res.send('err');

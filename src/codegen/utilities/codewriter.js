@@ -12,7 +12,7 @@ var constants = config.Constants;
 **     projName: The project name (user definition).
 **     callback: The callback function.
 */
-exports.createServerCSharpProject = function(projName, files, callback){
+exports.createServerCSharpProject = function(projName, files, namespaceName, callback){
 	var folderName = genPackageName(projName, constants.FileNames.RandomStringLen);
 	try{
 		var folderPathes = [
@@ -56,14 +56,14 @@ exports.createServerCSharpProject = function(projName, files, callback){
 					var compileInfos = insertServerCSharpModelFiles(files, folderName);
 					var projFileSrcPath = constants.Paths.ServerCSharpProj + constants.FileNames.ServerCSharpProjFile;
 					var projFileTargetPath = constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/' + constants.FileNames.ServerCSharpProjFile;
-					insertCSharpProjFile(folderName, constants.Code.ServerDefaultNamespace, compileInfos, projFileSrcPath, projFileTargetPath, function(err){
+					insertCSharpProjFile(folderName, namespaceName, compileInfos, projFileSrcPath, projFileTargetPath, function(err){
 						if(err){
 							return callback(err);
 						}
 
 						var assmFileSrcPath = constants.Paths.ServerCSharpProj + 'Properties/' + constants.FileNames.CSharpAssemblyFile;
 						var assmFileTargetPath = constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/Properties/' + constants.FileNames.CSharpAssemblyFile;
-						insertCSharpAssmFile(folderName, constants.Code.ServerDefaultNamespace, assmFileSrcPath, assmFileTargetPath, function(err){
+						insertCSharpAssmFile(folderName, namespaceName, assmFileSrcPath, assmFileTargetPath, function(err){
 							if(err){
 								return callback(err);
 							}
@@ -112,7 +112,7 @@ function insertServerCSharpModelFiles(files, folderName){
 **     projName: The project name (user definition).
 **     callback: The callback function.
 */
-exports.createCSharpProject = function(projName, coreContent, callback){
+exports.createCSharpProject = function(projName, coreContent, namespaceName, callback){
 	var folderName = genPackageName(projName, constants.FileNames.RandomStringLen);
 	try{
 		var folderPathes = [
@@ -139,14 +139,14 @@ exports.createCSharpProject = function(projName, coreContent, callback){
 				
 				var projFileSrcPath = constants.Paths.CSharpProj + constants.FileNames.CSharpProjFile;
 				var projFileTargetPath = constants.Paths.CSharpPackage + folderName + '/' + constants.FileNames.CSharpProjFolder + '/' + constants.FileNames.CSharpProjFile;
-				insertCSharpProjFile(folderName, constants.Code.DefaultNamespace, null, projFileSrcPath, projFileTargetPath, function(err){
+				insertCSharpProjFile(folderName, namespaceName, null, projFileSrcPath, projFileTargetPath, function(err){
 					if(err){
 						return callback(err);
 					}
 
 					var assmFileSrcPath = constants.Paths.CSharpProj + 'Properties/' + constants.FileNames.CSharpAssemblyFile;
 					var assmFileTargetPath = constants.Paths.CSharpPackage + folderName + '/' + constants.FileNames.CSharpProjFolder + '/Properties/' + constants.FileNames.CSharpAssemblyFile;
-					insertCSharpAssmFile(folderName, constants.Code.DefaultNamespace, assmFileSrcPath, assmFileTargetPath, function(err){
+					insertCSharpAssmFile(folderName, namespaceName, assmFileSrcPath, assmFileTargetPath, function(err){
 						if(err){
 							return callback(err);
 						}
@@ -178,7 +178,7 @@ exports.createCSharpProject = function(projName, coreContent, callback){
 function insertCSharpCoreFile(coreContent, folderName, callback){
 	var filePath = constants.Paths.CSharpPackage + folderName + '/' + constants.FileNames.CSharpProjFolder + '/' + constants.FileNames.CSharpCode;
 	try{
-		fs.writeFile(filePath, coreContent, function(err){
+		fs.writeFile(filePath, coreContent, {encoding:constants.Code.Encoding}, function(err){
 			if(err){
 				return callback(err);
 			}
