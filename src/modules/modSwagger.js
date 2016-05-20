@@ -299,7 +299,7 @@
             param =     {
                             'name': '$select',
                             'in': 'query',
-                            'description': 'system query option $select, is a comma-separated list of properties, qualified action names, qualified function names, the star operator (*), or the star operator prefixed with the namespace or alias of the schema in order to specify all operations defined in the schema',
+                            'description': 'System query option $select, is a comma-separated list of properties, qualified action names, qualified function names, the star operator (*), or the star operator prefixed with the namespace or alias of the schema in order to specify all operations defined in the schema',
                             'required': false,
                             'type': 'string'
                         };
@@ -308,7 +308,7 @@
             param =     {
                             'name': '$expand',
                             'in': 'query',
-                            'description': 'system query option $expand, a comma-separated list of navigation property names',
+                            'description': 'System query option $expand, a comma-separated list of navigation property names',
                             'required': false,
                             'type': 'string'
                         };
@@ -320,7 +320,7 @@
             param =     {
                             'name': '$filter',
                             'in': 'query',
-                            'description': 'system query option $filter, one or a set of built-in filter operations and functions',
+                            'description': 'System query option $filter, one or a set of built-in filter operations and functions',
                             'required': false,
                             'type': 'string'
                         };
@@ -329,7 +329,7 @@
             param =     {       
                             'name': '$orderby',
                             'in': 'query',
-                            'description': 'system query option $orderby, The expression can include the suffix asc for ascending or desc for descending, separated from the  property name by one or more spaces.',
+                            'description': 'System query option $orderby, The expression can include the suffix asc for ascending or desc for descending, separated from the  property name by one or more spaces.',
                             'required': false,
                             'type': 'string'
                         };
@@ -338,7 +338,7 @@
             param =     {
                             'name': '$top',
                             'in': 'query',
-                            'description': 'system query option $top, number of items returned from a collection',
+                            'description': 'System query option $top, number of items returned from a collection',
                             'required': false,
                             'type': 'number'
                         };
@@ -347,7 +347,7 @@
             param =     {
                             'name': '$skip',
                             'in': 'query',
-                            'description': 'system query option $skip, the service returns items starting at position n+1',
+                            'description': 'System query option $skip, the service returns items starting at position n+1',
                             'required': false,
                             'type': 'number'
                         };
@@ -356,7 +356,7 @@
             param =     {
                             'name': '$count',
                             'in': 'query',
-                            'description': 'system query option $count, with a value of true specifies that the total count of items within the collection, false (or not specified) means not reutrn a count',
+                            'description': 'System query option $count, with a value of true specifies that the total count of items within the collection, false (or not specified) means not reutrn a count',
                             'required': false,
                             'type': 'boolean'
                         };
@@ -368,7 +368,7 @@
             param =     {
                             'name': '$search',
                             'in': 'query',
-                            'description': 'system query option $search, restricts the result to include only those entities matching the specified search expression',
+                            'description': 'System query option $search, restricts the result to include only those entities matching the specified search expression',
                             'required': false,
                             'type': 'string'
                         };
@@ -378,7 +378,7 @@
         param =     {
                         'name': '$format',
                         'in': 'query',
-                        'description': 'system query option $format such as json, application/json, application/json;odata.metadata=full',
+                        'description': 'System query option $format such as json, application/json, application/json;odata.metadata=full',
                         'required': false,
                         'type': 'string'
                     }; 
@@ -408,63 +408,63 @@
                         {
                             'name': '$select',
                             'in': 'query',
-                            'description': 'system query option $select, is a comma-separated list of properties, qualified action names, qualified function names, the star operator (*), or the star operator prefixed with the namespace or alias of the schema in order to specify all operations defined in the schema',
+                            'description': 'System query option $select, is a comma-separated list of properties, qualified action names, qualified function names, the star operator (*), or the star operator prefixed with the namespace or alias of the schema in order to specify all operations defined in the schema',
                             'required': false,
                             'type': 'string'
                         },
                         {
                             'name': '$expand',
                             'in': 'query',
-                            'description': 'system query option $expand, a comma-separated list of navigation property names',
+                            'description': 'System query option $expand, a comma-separated list of navigation property names',
                             'required': false,
                             'type': 'string'
                         },
                         {
                             'name': '$filter',
                             'in': 'query',
-                            'description': 'system query option $filter, one or a set of built-in filter operations and functions',
+                            'description': 'System query option $filter, one or a set of built-in filter operations and functions',
                             'required': false,
                             'type': 'string'
                         },
                         {
                             'name': '$orderby',
                             'in': 'query',
-                            'description': 'system query option $orderby, The expression can include the suffix asc for ascending or desc for descending, separated from the  property name by one or more spaces.',
+                            'description': 'System query option $orderby, The expression can include the suffix asc for ascending or desc for descending, separated from the  property name by one or more spaces.',
                             'required': false,
                             'type': 'string'
                         },
                         {
                             'name': '$top',
                             'in': 'query',
-                            'description': 'system query option $top, number of items returned from a collection',
+                            'description': 'System query option $top, number of items returned from a collection',
                             'required': false,
                             'type': 'number'
                         },
                         {
                             'name': '$skip',
                             'in': 'query',
-                            'description': 'system query option $skip, the service returns items starting at position n+1',
+                            'description': 'System query option $skip, the service returns items starting at position n+1',
                             'required': false,
                             'type': 'number'
                         },
                         {
                             'name': '$count',
                             'in': 'query',
-                            'description': 'system query option $count, with a value of true specifies that the total count of items within the collection, false (or not specified) means not reutrn a count',
+                            'description': 'System query option $count, with a value of true specifies that the total count of items within the collection, false (or not specified) means not reutrn a count',
                             'required': false,
                             'type': 'boolean'
                         },  
                         {
                             'name': '$search',
                             'in': 'query',
-                            'description': 'system query option $search, restricts the result to include only those entities matching the specified search expression',
+                            'description': 'System query option $search, restricts the result to include only those entities matching the specified search expression',
                             'required': false,
                             'type': 'string'
                         }, 
                         {
                             'name': '$format',
                             'in': 'query',
-                            'description': 'system query option $format such as json, application/json, application/json;odata.metadata=full',
+                            'description': 'System query option $format such as json, application/json, application/json;odata.metadata=full',
                             'required': false,
                             'type': 'string'
                         }                                       
@@ -473,21 +473,21 @@
                         {
                             'name': '$select',
                             'in': 'query',
-                            'description': 'system query option $select, is a comma-separated list of properties, qualified action names, qualified function names, the star operator (*), or the star operator prefixed with the namespace or alias of the schema in order to specify all operations defined in the schema',
+                            'description': 'System query option $select, is a comma-separated list of properties, qualified action names, qualified function names, the star operator (*), or the star operator prefixed with the namespace or alias of the schema in order to specify all operations defined in the schema',
                             'required': false,
                             'type': 'string'
                         },
                         {
                             'name': '$expand',
                             'in': 'query',
-                            'description': 'system query option $expand, a comma-separated list of navigation property names',
+                            'description': 'System query option $expand, a comma-separated list of navigation property names',
                             'required': false,
                             'type': 'string'
                         }, 
                         {
                             'name': '$format',
                             'in': 'query',
-                            'description': 'system query option $format such as json, application/json, application/json;odata.metadata=full',
+                            'description': 'System query option $format such as json, application/json, application/json;odata.metadata=full',
                             'required': false,
                             'type': 'string'
                         }                                       
