@@ -37,8 +37,6 @@ grunt
 grunt build
 
 # Run test server
-grunt connect
-
-# Run code generation
 grunt execute
+
 ```
