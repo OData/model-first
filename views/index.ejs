@@ -3,43 +3,8 @@
   <head>
     <title>Model-first Builder</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
-    <!-- build:css /stylesheets/codemirror-mf.css -->
-    <link rel="stylesheet" href="bower_components/codemirror/lib/codemirror.css">
-    <link rel="stylesheet" href="bower_components/codemirror/theme/zenburn.css">
-    <link rel="stylesheet" href="bower_components/codemirror/theme/mdn-like.css">
-    <!-- endbuild -->
-    
-    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css" />
-    <link rel="stylesheet" href="/stylesheets/bootstrap-theme.min.css" />
-    <link rel="stylesheet" href="/stylesheets/demo.css">
-
-    <!-- build:js /javascripts/lib.js -->
-    <script src="../bower_components/js-yaml/dist/js-yaml.min.js"></script>
-    <script src="../bower_components/yaml-js/yaml.min.js"></script>
-    <script src="../bower_components/yaml-worker/index.js"></script>
-    <script src="../bower_components/yaml-js/yaml.min.js"></script>
-    <script src="../bower_components/yaml-worker/index.js"></script>
-    <script src="bower_components/codemirror/lib/codemirror.js"></script>
-    <script src="bower_components/codemirror/mode/yaml/yaml.js"></script>
-    <script src="bower_components/codemirror/mode/xml/xml.js"></script>
-    <script src="bower_components/codemirror/mode/javascript/javascript.js"></script>
-    <script src="bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="bower_components/jquery-tmpl/jquery.tmpl.min.js"></script>
-    <!-- endbuild -->
-
-    <script src="/javascripts/bootstrap.min.js"></script>
-    <script src="/javascripts/config.js"></script>
-
-    <!-- build:js /javascripts/app.js -->
-    <script src="scripts/editor.js"></script>
-    <script src="../src/morpho.js"></script>
-    <script src="../src/visitor.js"></script>
-    <script src="../src/modules/modYaml.js"></script>
-    <script src="../src/modules/modCsdl.js"></script>
-    <script src="../src/modules/modJson.js"></script>
-    <script src="../src/modules/modSwagger.js"></script>
-    <script src="../src/conventions/convAddDefaults.js"></script>
+    <script src="javascript/frontend.bundle.js"></script>
+    <link rel="stylesheet" href="javascript/frontend.css">
     <!-- endbuild -->
   </head>
   <body>
@@ -110,8 +75,8 @@
   </body>
 
   <script id="errorTemp" type="text/x-jQuery-tmpl">
-    <span style="color:red">${errorType}</span>
-    <div>{{html errDes}}</div>
-    <p>lineNumber: ${ln}</p>
+    <span style="color:red">{{:errorType}}</span>
+    <div>{{:errDes}}</div>
+    <p>lineNumber: {{:ln}}</p>
   </script>
 </html>

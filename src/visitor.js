@@ -60,3 +60,5 @@ Visitor.prototype.visitArr=function(arr, func)
     }
   });
 };
+
+module.exports = Visitor;

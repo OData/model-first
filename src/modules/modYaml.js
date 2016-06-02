@@ -1,3 +1,4 @@
+var jsyaml=require('js-yaml');
 function fromYaml(str, errors, config, callback) {
     function OnMessage(message) {
         if (!!callback && typeof callback === 'function')
@@ -10,6 +11,7 @@ function fromYaml(str, errors, config, callback) {
         if (!!callback && typeof callback === 'function')
         {
             callback(message.data.errors);
+            //callback();
         }
     }
 
@@ -24,13 +26,15 @@ function fromYaml(str, errors, config, callback) {
             }]);
         return null;
     }
-    var workerPath = 'bower_components/morpho/src/index.js';
-    if (/^\?id=/.test(window.location.search) || /^\/debug.html/.test(window.location.pathname))
-    {
-        workerPath = 'base/src/index.js';
-    }
+    var workerPath = './dist/simpleYamlWorker.js';
+    // if (/^\?id=/.test(window.location.search) || /^\/debug.html/.test(window.location.pathname))
+    // {
+    //     workerPath = 'base/src/index.js';
+    // }
 
     var worker = worker || new Worker(workerPath);
+    // var simpleYamlWorker= require('../simpleYaml.worker.js');
+    // var worker =new simpleYamlWorker();
     worker.onmessage = OnMessage;
     worker.onerror = OnError;
     worker.postMessage({
