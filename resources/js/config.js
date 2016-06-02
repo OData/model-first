@@ -36,7 +36,7 @@
 
     samples       : 
     // sample
-      ['sample.yaml', 'tripPin.yaml']
+      ['tripPin.yaml', 'todo-minimal.yaml']
     // endsample
   };
 })();

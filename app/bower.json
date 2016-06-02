@@ -1,9 +1,0 @@
-{
-  "name": "morpho-editor",
-  "version": "0.0.1",
-  "dependencies": {
-    "jquery": "2.1.3",
-    "codemirror": "5.1.0",
-    "jquery-tmpl": "*"
-  }
-}
