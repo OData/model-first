@@ -1,3 +1,4 @@
+var Visitor=require('../visitor');
 Morpho.addDefaults = function (model)
 {
     var visitor = new Visitor();

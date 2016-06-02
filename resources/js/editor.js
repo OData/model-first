@@ -1,5 +1,8 @@
 'use strict';
 
+var yaml=require('yaml-js/yaml.js').yaml;
+var jsrender = require('jsrender');
+
 $(function (){
 
   // Methods.
@@ -104,9 +107,9 @@ $(function (){
           error.ln = range.start.line + 1;
         }
         console.log(error.errDes);
-        var t = $('#errorTemp').tmpl(error);
+        var t = jsrender.templates('#errorTemp').render(error);
         console.log(t);
-        t.appendTo('#errors');
+        $(t).appendTo('#errors');
       }
     }
 

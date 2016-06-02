@@ -486,7 +486,7 @@ describe('[Client CodeGen] Entity Container', function () {
         }\n\
 {4}\
     }\n'.format(entityContainerGenerator.CustomizeNaming(EntityContainer), EntityContainer, 'Microsoft.OData.SampleService.Models.TripPin',
-    entityContainerGenerator.CustomizeNaming(languageDependentNamespace), expected);
+    entityContainerGenerator.CustomizeNaming(languageDependentNamespace), expected.replace('\t',''));
 
     var actual = entityContainerGenerator.generate(model, languageDependentNamespace);
     expect(actual).toEqual(output);
