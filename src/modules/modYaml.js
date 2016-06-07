@@ -1,4 +1,5 @@
 var jsyaml=require('js-yaml');
+
 function fromYaml(str, errors, config, callback) {
     function OnMessage(message) {
         if (!!callback && typeof callback === 'function')
@@ -26,26 +27,19 @@ function fromYaml(str, errors, config, callback) {
             }]);
         return null;
     }
-    var workerPath = './dist/simpleYamlWorker.js';
+    //var workerPath = './dist/simpleYamlWorker.js';
     // if (/^\?id=/.test(window.location.search) || /^\/debug.html/.test(window.location.pathname))
     // {
     //     workerPath = 'base/src/index.js';
     // }
-
-    var worker = worker || new Worker(workerPath);
+    var simpleYAMLWorker=require('../errorcheck/simpleYAML.worker');
+    var worker = worker || new simpleYAMLWorker();
     // var simpleYamlWorker= require('../simpleYaml.worker.js');
     // var worker =new simpleYamlWorker();
     worker.onmessage = OnMessage;
     worker.onerror = OnError;
     worker.postMessage({
-        definition: obj,
-        jsonRefs: {
-            location: window.location.href
-
-                    // TODO: remove when this bug is fixed:
-                    // https://github.com/apigee-127/sway/issues/24
-                    .replace(/#.+/, '').replace(/\/$/, '')
-        }
+        definition: obj
     });
 
     var typeMap = {

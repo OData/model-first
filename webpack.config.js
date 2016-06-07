@@ -16,7 +16,8 @@ var config = {
   output: {
     path: path.join(__dirname, 'public/javascript'),
     filename: '[name].bundle.js',
-    sourcePrefix: ''
+    sourcePrefix: '',
+    publicPath: 'javascript/'
   },
 
   resolve: {
@@ -44,7 +45,10 @@ var config = {
         test: /resources\\test samples\\.*\.json$/,
         loader: 'file?name=../samples/[name].[ext]'
       },
-
+      {
+        test: /\.json$/,
+        loader: 'json-loader'
+      },
       { test: /\.css$/, 
         loader: ExtractTextPlugin.extract("style-loader", "css-loader") 
       },

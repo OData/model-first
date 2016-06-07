@@ -1,0 +1,397 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "http://morpho-se.azurewebsites.net/simple-yaml.schema#",
+  "type": "object",
+  "properties": {
+    "api": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "object",
+          "properties": {
+            "current": {
+              "type": "string",
+              "pattern": "^[0-9]+(.[0-9]+){0,3}$"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "current"
+          ]
+        },
+        "description": {
+          "type": "string"
+        },
+        "host": {
+          "type": "string",
+          "pattern": "^[^{}/ :\\\\]+(?::\\d+)?$",
+          "description": "The host (name or ip) of the API. Example: 'swagger.io'"
+        },
+        "basePath": {
+          "type": "string",
+          "pattern": "^/",
+          "description": "The base path to the API. Example: '/api'."
+        },
+        "namespace":{
+          "type": "string",
+          "pattern": "^[A-Za-z_][A-Za-z0-9_]*(.[A-Za-z_][A-Za-z0-9_]*)*",
+          "description": "The namespace mustbe identifiers delimited by dot. Example: 'TripPin.OData.Reference.Servic'."
+        },
+        "termsOfService": {
+          "type": "string",
+          "description": "The terms of service for the API."
+        },
+        "contact": {
+          "$ref": "#/definitions/contact"
+        },
+        "license": {
+          "$ref": "#/definitions/license"
+        },
+        "auth": {
+          "type": "string"
+        },
+        "conformance": {
+          "description": "Must be one of minimal, intermediate, advanced.",
+          "type": "string",
+          "enum": [
+            "minimal", "intermediate", "advanced"
+          ]
+        },
+        "supportsFilterFunctions": {
+          "type": "array",
+          "items": {
+            "description": "Must be one of contains, endswith, startswith, length, indexof, substring, tolower, toupper, trim, concat, year, month, day, hour, minute, second, round, floor, ceiling, cast, isof.",
+            "enum": [
+              "contains", "endswith", "startswith", "length", "indexof", "substring", "tolower", "toupper", "trim", "concat", "year", "month", "day", "hour", "minute", "second", "round", "floor", "ceiling", "cast", "isof"
+            ]
+          }
+        }
+      },
+      "patternProperties": {
+        "^x-": {
+          "$ref": "#/definitions/vendorExtension"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ]
+    },
+    "root": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/service"
+      },
+      "additionalItems": false
+    },
+    "types": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/type"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "api", "root", "types"
+  ],
+  "definitions": {
+    "contact": {
+      "type": "object",
+      "description": "Contact information for the owners of the API.",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The identifying name of the contact person/organization."
+        },
+        "url": {
+          "type": "string",
+          "description": "The URL pointing to the contact information.",
+          "format": "uri"
+        },
+        "email": {
+          "type": "string",
+          "description": "The email address of the contact person/organization.",
+          "format": "email"
+        }
+      },
+      "patternProperties": {
+        "^x-": {
+          "$ref": "#/definitions/vendorExtension"
+        }
+      }
+    },
+    "license": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the license type. It's encouraged to use an OSI compatible license."
+        },
+        "url": {
+          "type": "string",
+          "description": "The URL pointing to the license.",
+          "format": "uri"
+        }
+      },
+      "patternProperties": {
+        "^x-": {
+          "$ref": "#/definitions/vendorExtension"
+        }
+      }
+    },
+    "vendorExtension": {
+      "description": "Any property starting with x- is valid.",
+      "additionalProperties": true,
+      "additionalItems": true
+    },
+    "service": {
+      "description": "Must be one of operation or entitySet.",
+      "anyOf": [
+        {
+          "$ref": "#/definitions/functionOrAction"
+        }, {
+          "$ref": "#/definitions/entitySet"
+        }
+      ]
+    },
+    "functionOrAction": {
+      "type": "object",
+      "description": "For operation:",
+      "required": ["name"],
+      "properties": {
+        "name": {"type": "string"},
+        "params": {
+          "$ref": "#/definitions/parameterList"
+        },
+        "returns": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "entitySet": {
+      "type": "object",
+      "description": "For entitySet:",
+      "required": ["name", "type"],
+      "properties": {
+        "name": {"type":"string"},
+        "type": {"type":"string"},
+        "searchable": {"type": "boolean"},
+        "insertable": {"type": "boolean"},
+        "deletable": {"type": "boolean"},
+        "allows": {
+          "description": "Must be one of create, read, update, delete",
+          "type": "array",
+          "items":{
+            "enum":["create","read","update","delete"]
+          }
+        },
+        "concurrencyProperties": {
+          "$ref": "#/definitions/stringOrstringArray"
+        },
+        "disallowNavigation": {
+          "$ref": "#/definitions/stringOrstringArray"
+        },
+        "disallowInsert": {
+          "$ref": "#/definitions/stringOrstringArray"
+        }
+      },
+      "additionalProperties": false
+    },
+    "stringOrstringArray": {
+      "description": "Must be string or string array.",
+      "anyOf": [
+        {
+          "description": "For string:",
+          "type": "string"
+        }, {
+          "$ref": "#/definitions/stringArray"
+        }
+      ]
+    },
+    "type": {
+      "description": "Must be one of enum type, entity type and complex type.",
+      "anyOf": [
+        {
+          "$ref": "#/definitions/enumType"
+        }, {
+          "$ref": "#/definitions/entityType"
+        }, {
+          "$ref": "#/definitions/complexType"
+        }
+      ]
+    },
+    "stringArray": {
+      "description": "For string array:",
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "additionalItems": false
+    },
+    "operationList": {
+       "type": "array",
+       "items": {
+          "$ref": "#/definitions/operation"
+       }
+    },
+    "operation": {
+      "type": "object",
+      "description": "",
+      "required": ["name"],
+      "properties": {
+        "name": {"type": "string"},
+        "params": {
+          "$ref": "#/definitions/paramsType"
+        },
+        "returns": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "paramsType":{
+       "description": "Must be string or an array of parameter.",
+       "anyOf":[
+        {"type": "string"},
+        {"$ref": "#/definitions/parameterList"}
+       ]
+      },
+    "parameterList": {
+      "type": "array",
+      "description": "Must be an array, the items must be string or parameter.",
+      "items": {
+        "anyOf": [
+          {"type": "string"},
+          {"$ref": "#/definitions/parameter"}
+        ]
+      },
+      "uniqueItems": true,
+      "additionalItems": false
+    },
+    "parameter": {
+      "type": "object",
+      "description": "Must be a parameter object",
+      "properties": {
+        "name": {"type": "string"},
+        "type": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "enumType": {
+      "type": "object",
+      "description": "For enum type:",
+      "properties": {
+        "name": {"type": "string"},
+        "members": {
+          "description":"Must be a array of strings or enum members.",
+          "anyOf": [
+            {"$ref": "#/definitions/stringArray"},
+            {"$ref": "#/definitions/enumMembers"}
+          ]
+        },
+        "flags":{"type": "boolean"},
+        "underlyingType": {
+          "type": "string",
+          "enum": [
+            "int", "int32", "Int32", "string", "String"
+          ]}
+      },
+      "additionalProperties": false
+    },
+    "enumMembers":{
+      "type": "array",
+      "description":"For enum member:",
+      "items": {
+        "type": "object",
+        "properties":{
+          "name":{"type": "string"},
+          "value":{"type": "number"}
+        },
+        "required":["name"],
+        "additionalProperties": false
+      },
+      "uniqueItems": true,
+      "additionalItems": false
+    },
+    "entityType": {
+      "type": "object",
+      "description": "For entity type",
+      "properties": {
+        "name": {"type": "string"},
+        "baseType": {"type": "string"},
+        "hasStream": {"type": "boolean"},
+        "dynamic": {"type": "boolean"},
+        "requiredProperties": {
+          "$ref": "#/definitions/propertiesList"
+        },
+        "key": {
+          "$ref": "#/definitions/propertiesList"
+        },
+        "optionalProperties": {
+          "$ref": "#/definitions/propertiesList"
+        },
+        "operations": {
+          "$ref": "#/definitions/operationList"
+        }
+      },
+      "additionalProperties": false
+    },
+    "propertiesList": {
+      "description": "Must be a string or an array of string, property",
+      "anyOf": [
+        {
+          "description": "For string:",
+          "type": "string"
+        }, {
+          "description": "For an array of string, property:",
+          "type": "array",
+          "items": {
+            "description": "Must be a string or property object.",
+            "anyOf": [
+              {
+                "description": "For a string:",
+                "type": "string"
+              }, {
+                "description": "For a property object:",
+                "type": "object",
+                "required": ["name"],
+                "properties": {
+                  "type": {"type":"string"},
+                  "name": {"type":"string"},
+                  "immutable": {"type":"boolean"},
+                  "contained": {"type":"boolean"},
+                  "isoCurrency": {"type":"string"},
+                  "computed": {"type":"boolean"}
+                },
+                "additionalProperties": false
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "complexType": {
+      "type": "object",
+      "description": "For complex type",
+      "properties": {
+        "name": {"type": "string"},
+        "baseType": {"type": "string"},
+        "hasStream": {"type": "boolean"},
+        "dynamic": {"type": "boolean"},
+        "requiredProperties": {
+          "$ref": "#/definitions/propertiesList"
+        },
+        "optionalProperties": {
+          "$ref": "#/definitions/propertiesList"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
