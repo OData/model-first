@@ -237,4 +237,4 @@ $RECYCLE.BIN/
 nbproject/*
 
 # Ignore the codegen folder.
-public/*
+/public/*
