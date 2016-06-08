@@ -1,4 +1,4 @@
-﻿namespace OData.Service.V4.Server
+﻿namespace %s
 {
     #region Namespace.
     using System;

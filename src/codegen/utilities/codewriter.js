@@ -32,8 +32,6 @@ exports.createServerCSharpProject = function(projName, files, namespaceName, cal
 			}
 
 			var filePathes = [
-				constants.Paths.ServerCSharpProj + 'Global.asax',
-				constants.Paths.ServerCSharpProj + 'Global.asax.cs',
 				constants.Paths.ServerCSharpProj + 'packages.config',
 				constants.Paths.ServerCSharpProj + 'Web.config',
 				constants.Paths.ServerCSharpProj + 'Web.Debug.config',
@@ -43,36 +41,37 @@ exports.createServerCSharpProject = function(projName, files, namespaceName, cal
 				if(err){
 					return callback(err);
 				}
-
-				filePathes = [
-					constants.Paths.ServerCSharpProj + 'App_Start/WebApiConfig.cs'
-				];
-
-				copyFiles(filePathes, constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/App_Start/', function(err){
-					if(err){
-						return callback(err);
-					}
-
-					var compileInfos = insertServerCSharpModelFiles(files, folderName);
-					var projFileSrcPath = constants.Paths.ServerCSharpProj + constants.FileNames.ServerCSharpProjFile;
-					var projFileTargetPath = constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/' + constants.FileNames.ServerCSharpProjFile;
-					insertCSharpProjFile(folderName, namespaceName, compileInfos, projFileSrcPath, projFileTargetPath, function(err){
-						if(err){
-							return callback(err);
-						}
-
-						var assmFileSrcPath = constants.Paths.ServerCSharpProj + 'Properties/' + constants.FileNames.CSharpAssemblyFile;
-						var assmFileTargetPath = constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/Properties/' + constants.FileNames.CSharpAssemblyFile;
-						insertCSharpAssmFile(folderName, namespaceName, assmFileSrcPath, assmFileTargetPath, function(err){
-							if(err){
-								return callback(err);
-							}
-
-							return callback(null, folderName);
-						});
-					});
-				});
 			});
+
+			filePathes = [
+				'Global.asax',
+				'Global.asax.cs',
+				'App_Start/WebApiConfig.cs'
+			];
+
+			copyAndReplaceNamespace(filePathes, constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder+'/', namespaceName, function(err){
+				if(err){
+					return callback(err);
+				}
+			});
+
+			var compileInfos = insertServerCSharpModelFiles(files, folderName);
+			var projFileSrcPath = constants.Paths.ServerCSharpProj + constants.FileNames.ServerCSharpProjFile;
+			var projFileTargetPath = constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/' + constants.FileNames.ServerCSharpProjFile;
+			insertCSharpProjFile(folderName, namespaceName, compileInfos, projFileSrcPath, projFileTargetPath, function(err){
+				if(err){
+					return callback(err);
+				}
+			});
+
+			var assmFileSrcPath = constants.Paths.ServerCSharpProj + 'Properties/' + constants.FileNames.CSharpAssemblyFile;
+			var assmFileTargetPath = constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/Properties/' + constants.FileNames.CSharpAssemblyFile;
+			insertCSharpAssmFile(folderName, namespaceName, assmFileSrcPath, assmFileTargetPath, function(err){
+				if(err){
+					return callback(err);
+				}
+			});
+			return callback(null, folderName);
 		});			
 	}
 	catch(err){
@@ -208,13 +207,8 @@ function insertCSharpProjFile(folderName, namespaceName, compileInfos, projFileS
 		}
 
 		try{
-			fs.writeFile(projFileTargetPath, data, constants.Code.Encoding, function(err){
-				if(err){
-					return callback(err);
-				}
-
-				return callback();
-			});
+			fs.writeFileSync(projFileTargetPath, data, constants.Code.Encoding);
+			callback();
 		}
 		catch(err){
 			return callback(err);
@@ -238,17 +232,12 @@ function insertCSharpAssmFile(folderName, namespaceName, assmFileSrcPath, assmFi
 		}
 
 		try{
-			fs.writeFile(assmFileTargetPath, data, constants.Code.Encoding, function(err){
-				if(err){
-					return callback(err);
-				}
-
-				return callback();
-			});
+			fs.writeFileSync(assmFileTargetPath, data, constants.Code.Encoding)
 		}
 		catch(err){
 			return callback(err);
 		}
+		return callback();
 	});
 }
 
@@ -263,19 +252,14 @@ function insertCSharpAssmFile(folderName, namespaceName, assmFileSrcPath, assmFi
 function updateCSharpProjContent(filePath, namespaceName, compileInfos, callback){
 	var guid = Guid.NewGuid();
 	try{
-		fs.readFile(filePath, constants.Code.Encoding, function(err, data){
-			if(err){
-				return callback(err);
-			}
+		var data = fs.readFileSync(filePath, constants.Code.Encoding);
 
-			if(compileInfos){
-				return callback(null, util.format(data, guid, namespaceName, namespaceName, compileInfos));
-			}
-			else{
-				return callback(null, util.format(data, guid, namespaceName, namespaceName));
-			}
-			
-		});
+		if(compileInfos){
+			return callback(null, util.format(data, guid, namespaceName, namespaceName, compileInfos));
+		}
+		else{
+			return callback(null, util.format(data, guid, namespaceName, namespaceName));
+		}
 	}
 	catch(err){
 		return callback(err);
@@ -292,17 +276,12 @@ function updateCSharpProjContent(filePath, namespaceName, compileInfos, callback
 function updateCSharpAssmContent(filePath, namespaceName, callback){
 	var guid = Guid.NewGuid();
 	try{
-		fs.readFile(filePath, constants.Code.Encoding, function(err, data){
-			if(err){
-				return callback(err);
-			}
-
-			return callback(null, util.format(data, namespaceName, namespaceName, guid));
-		});
+		var data = fs.readFileSync(filePath, constants.Code.Encoding)
 	}
 	catch(err){
 		return callback(err);
 	}
+	return callback(null, util.format(data, namespaceName, namespaceName, guid));
 }
 
 /*
@@ -313,26 +292,18 @@ function updateCSharpAssmContent(filePath, namespaceName, callback){
 **     callback: The callback function.
 */
 function copyFiles(filePathes, destFolder, callback){
-	// Check wether the folder is exist. 
-	// If the folder is not exist, the function will create this folder.
-	createFolder(destFolder, function(err, folderPath){
-		if(err){
-			return callback(err);
-		}
-
-		try{
-			for(var i = 0; i < filePathes.length; i++){
-				if(!copySync(filePathes[i], destFolder)){
-					throw new Error(util.format('Copy file \'%s\' failed!', filePaths[i]));
-				}
+	try{
+		for(var i = 0; i < filePathes.length; i++){
+			if(!copySync(filePathes[i], destFolder)){
+				throw new Error(util.format('Copy file \'%s\' failed!', filePaths[i]));
 			}
+		}
 
-			return callback();
-		}
-		catch(err){
-			return callback(err);
-		}
-	});
+		return callback();
+	}
+	catch(err){
+		return callback(err);
+	}
 }
 
 /*
@@ -363,6 +334,19 @@ function copy(filePath, destFolder, callback){
 	    	}
 	    }
 	});
+}
+
+function copyAndReplaceNamespace(filePathes, destFolder, namespaceName, callback){
+	for(var i = 0; i < filePathes.length; i++){
+		try{
+			var content = fs.readFileSync(constants.Paths.ServerCSharpProj+filePathes[i], constants.Code.Encoding);
+			fs.writeFileSync(destFolder+filePathes[i] , util.format(content, namespaceName), constants.Code.Encoding);
+		} catch(e)
+		{
+			return callback(e);
+		}
+	}
+	return callback();
 }
 
 /*
