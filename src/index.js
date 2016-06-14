@@ -1,8 +1,8 @@
-require('./src/morpho');
-require('./src/visitor');
-require('./src/modules/modCsdl');
-require('./src/modules/modJson');
-require('./src/modules/modSwagger');
-require('./src/modules/modYaml');
-require('./src/conventions/convAddDefaults');
+require('./morpho');
+require('./visitor');
+require('./modules/modCsdl');
+require('./modules/modJson');
+require('./modules/modSwagger');
+require('./modules/modYaml');
+require('./conventions/convAddDefaults');
 module.exports = Morpho;
