@@ -1,6 +1,7 @@
 {
-  "name": "morpho",
+  "name": "model-first",
   "description": "A model first tooling",
+  "version": "0.1.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/odata/model-first"
