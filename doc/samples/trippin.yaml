@@ -5,6 +5,8 @@ api:
     current: 1.0.0
   description: "TripPin is a fictional reference service demonstrating the capabilities of OData v4."
   namespace: "Microsoft.OData.SampleService.Models.TripPin"
+  host: services.odata.org
+  basePath: /V4/TripPinServiceRW
   termsOfService: http://swagger.io/terms/
   contact:
     name: API Support
@@ -103,6 +105,7 @@ types:
         type: person[]
       - name: trips
         type: trip[]
+        containsTarget: true
       - name: photo
         type: photo
     operations:

@@ -27,15 +27,10 @@ function fromYaml(str, errors, config, callback) {
             }]);
         return null;
     }
-    //var workerPath = './dist/simpleYamlWorker.js';
-    // if (/^\?id=/.test(window.location.search) || /^\/debug.html/.test(window.location.pathname))
-    // {
-    //     workerPath = 'base/src/index.js';
-    // }
+
     var simpleYAMLWorker=require('../errorcheck/simpleYAML.worker');
     var worker = worker || new simpleYAMLWorker();
-    // var simpleYamlWorker= require('../simpleYaml.worker.js');
-    // var worker =new simpleYamlWorker();
+
     worker.onmessage = OnMessage;
     worker.onerror = OnError;
     worker.postMessage({
@@ -240,17 +235,25 @@ function fromYaml(str, errors, config, callback) {
             }
         });
 
-        state.container = {};
         if (entitysets.length > 0)
-            state.container.entitysets = entitysets;
+            state.container.entitysets = state.container.entitysets.concat(entitysets);
         if (singletons.length > 0)
-            state.container.singletons = singletons;
+            state.container.singletons = state.container.singletons.concat(singletons);
         if (operations.length > 0)
-            state.container.operations = operations;
+            state.container.operations = state.container.operations.concat(operations);
     }
 
     var visitor = this.getVisitor();
-    var state = {};
+    var state = {
+        api:{},
+        container:
+        {
+            entitysets:[],
+            singletons:[],
+            operations:[]
+        },
+        types:[]
+    };
     visitor.visitObj(obj, {
         'api': function (obj) {
             if(!obj.version)
@@ -274,9 +277,52 @@ function fromYaml(str, errors, config, callback) {
             state.api = obj;
         },
         'types': function (arr) {
-            state.types = [];
             this.visitArr(arr, function (item) {
+                function isnumber(type)
+                {
+                    return ['edm.int32', 'edm.int16','edm.int64','edm.double','edm.decimal','edm.single'].includes(type);
+                }
                 function handleProperty(obj, extend) {
+
+                    // Add a entityset
+                    if(!!obj.containsTarget&&obj.containsTarget===true)
+                    {
+                        var es ='', key='', keyType='';
+                        for(var i in state.container.entitysets) {
+                            if(state.container.entitysets[i].type===item.name)
+                            {
+                                es = state.container.entitysets[i].name; 
+                                key = item.key[0].name;
+                                keyType = !!item.key.type?maps(detectCollectionType(item.key.type).type):'edm.string';
+                                break;
+                            }
+                        } 
+
+                        var type = maps(detectCollectionType(obj.type).type);
+
+                        var esname ='';
+                        if(isnumber(type))
+                        {
+                            esname = es +'({' + key +'})/'+obj.name;
+                        }
+                        else
+                        {
+                            esname = es +"('{" + key +"}')/"+obj.name;
+                        }
+                        
+                        var entityset = {
+                            name: esname,
+                            type: type,
+                            allows: ['read'],
+
+                            implicit: true,
+                            keyType: keyType,
+                            pathName: key
+                        };
+
+                        state.container.entitysets = state.container.entitysets.concat(entityset);
+                    }
+
                     var property;
                     if (typeof obj === 'string') {
                         property = {'name': obj};

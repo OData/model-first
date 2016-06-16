@@ -448,10 +448,92 @@ function validateSimpleYamlnamespace(api)
   return response;
 }
 
+function validateContainsTarget(api)
+{
+  var response = {
+    errors: [],
+    warnings: []
+  };
+  var containsTargetSet=[];
+
+  var temptype;
+
+  _.forEach(api.definitionFullyResolved.types, function(type, index){
+    _.forEach(type.requiredProperties, function(property, i){
+      if(!!property.containsTarget&&property.containsTarget)
+      {
+        temptype = trimRight(property.type,'[]');
+        if(containsTargetSet.includes(temptype))
+        {
+          response.errors.push({
+            code: 'DUPLICATE_CONTAINSTARGET',
+            message:  "An entity cannot be referenced by more than one containment relationship.",
+            path: ['types', index, 'requiredProperties', i]
+          });
+        }
+        containsTargetSet.push(temptype);
+
+        if(!isEntityType(api, temptype))
+        {
+          response.errors.push({
+            code: 'UNALLOWED_VALUE',
+            message:  "Containment navigation property's type must be a entity type.",
+            path: ['types', index, 'requiredProperties', i]
+          });
+        }
+        _.forEach(api.definitionFullyResolved.root, function(service){
+          if( trimRight(service.type,'[]') === temptype){
+            response.errors.push({
+              code: 'DEFINITION_CONFLICT',
+              message:  "An entity cannot both belong to an entity set declared within the entity container and be referenced by a containment relationship.",
+              path: ['types', index, 'requiredProperties', i]
+            });
+          }
+        });
+      }
+    });
+    _.forEach(type.optionalProperties, function(property, i){
+      if(!!property.containsTarget&&property.containsTarget)
+      {
+        temptype = trimRight(property.type,'[]');
+        if(containsTargetSet.includes(temptype))
+        {
+          response.errors.push({
+            code: 'DUPLICATE_CONTAINSTARGET',
+            message:  "An entity cannot be referenced by more than one containment relationship.",
+            path: ['types', index, 'optionalProperties', i]
+          });
+        }
+        containsTargetSet.push(temptype);
+
+        if(!isEntityType(api, temptype))
+        {
+          response.errors.push({
+            code: 'UNALLOWED_VALUE',
+            message:  "Containment navigation property's type must be a entity type.",
+            path: ['types', index, 'optionalProperties', i]
+          });
+        }
+        _.forEach(api.definitionFullyResolved.root, function(service){
+          if( trimRight(service.type,'[]') === temptype){
+            response.errors.push({
+              code: 'DEFINITION_CONFLICT',
+              message:  "An entity cannot both belong to an entity set declared within the entity container and be referenced by a containment relationship.",
+              path: ['types', index, 'optionalProperties', i]
+            });
+          }
+        });
+      }
+    });
+  });
+  return response;
+}
+
 module.exports = {
   jsonSchemaValidator: validateStructure,
   semanticValidators: [
   validateSimpleYamlTypereferences,
-  validateSimpleYamlnamespace
+  validateSimpleYamlnamespace,
+  validateContainsTarget
   ]
 };

@@ -367,7 +367,8 @@
                   "immutable": {"type":"boolean"},
                   "contained": {"type":"boolean"},
                   "isoCurrency": {"type":"string"},
-                  "computed": {"type":"boolean"}
+                  "computed": {"type":"boolean"},
+                  "containsTarget": {"type":"boolean"}
                 },
                 "additionalProperties": false
               }

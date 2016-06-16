@@ -56,7 +56,7 @@ var Visitor=require('../visitor');
         return false;
     }
 
-    function getSwaggerType(type, isCollection) {
+    function getSwaggerType(type, isCollection = false) {
         var swgrType;
         if (SwaggerTypes[type]) {
             swgrType = SwaggerTypes[type];
@@ -86,8 +86,9 @@ var Visitor=require('../visitor');
         }
 
         return {
-            'entitySet': result,
-            'success': success
+            'entitySet': success?result.name:null,
+            'success': success,
+            'origin': result
         };
     }
 
@@ -110,7 +111,33 @@ var Visitor=require('../visitor');
        return rootType;
     }
     function routeAction(name, operationType, params, parentType, swKey, returns) {
+        var temp = getEntitySet(parentType);
         var parameters = [];
+
+        if(temp.success && !!temp.origin.implicit&&temp.origin.implicit){
+            var hostKey = {
+                'name': temp.origin.pathName,
+                'type': getSwaggerType(temp.origin.keyType).type,
+                'in': 'path',
+                'description': 'The host entityset key.',
+                'required': true
+            };
+            parameters.push(hostKey);
+        }
+
+        var path;
+        if ('Bound' === operationType) {
+            if (temp.success) {
+                path = '/' + temp.entitySet + '/{' + swKey.name + '}/' + name;
+            } else {
+                // Should not enter this region.
+                // If the code enter this region, there will be some errors in user's template.
+                path = '/' + parentType + '/' + name;
+            }
+        } else if ('Unbound' === operationType) {
+            path = '/' + name;
+        }
+
         var ifMatchHeader = {
             'name': 'If-Match',
             'type': 'string',
@@ -149,19 +176,6 @@ var Visitor=require('../visitor');
             }
             parameters.push(param);
         }
-        var path;
-        if ('Bound' === operationType) {
-            var temp = getEntitySet(parentType);
-            if (temp.success) {
-                path = '/' + temp.entitySet + '/{' + swKey.name + '}/' + name;
-            } else {
-                // Should not enter this region.
-                // If the code enter this region, there will be some errors in user's template.
-                path = '/' + parentType + '/' + name;
-            }
-        } else if ('Unbound' === operationType) {
-            path = '/' + name;
-        }
 
         var responses = {
             '201': {
@@ -193,7 +207,20 @@ var Visitor=require('../visitor');
     }
 
     function routeFunction(name, operationType, params, parentType, swKey, returns) {
+        var temp = getEntitySet(parentType);
         var parameters = [];
+
+        if(temp.success && !!temp.origin.implicit&&temp.origin.implicit){
+            var hostKey = {
+                'name': temp.origin.pathName,
+                'type': getSwaggerType(temp.origin.keyType).type,
+                'in': 'path',
+                'description': 'The host entityset key.',
+                'required': true
+            };
+            parameters.push(hostKey);
+        }
+
         if ('Bound' === operationType) {
             var bindingParam = {
                 'name': swKey.name,
@@ -396,15 +423,15 @@ var Visitor=require('../visitor');
             return isCollection ? {'type': 'array', 'items': sref} : sref;
         }
 
-        function routeGet(name, type, isCollection, swKey) {
-            var queryDescriptionStr = 'Or query a specific info from ' + name + ', by input parameters as following.';//' Please use \'%20\' instead of space when input string type parameters.';
+        function routeGet(entityset, isCollection, swKey) {
+            var queryDescriptionStr = 'Or query a specific info from ' + entityset.name + ', by input parameters as following.';//' Please use \'%20\' instead of space when input string type parameters.';
             var route = {
-                'tags': [type],
+                'tags': [entityset.type],
                 'description': isCollection ?
-                        ('Returns all items from ' + name + ' without parameters. \n\r' + queryDescriptionStr) :
+                        ('Returns all items from ' + entityset.name + ' without parameters. \n\r' + queryDescriptionStr) :
                         swKey ?
-                        ('Returns a single item from ' + name + ' with parameter ' + swKey.name + '. \n\rAppend parameters prefixed with \'$\' to query specific info from this item.') :
-                        'Returns ' + name + ' without parameters. \n\r' + queryDescriptionStr ,
+                        ('Returns a single item from ' + entityset.name + ' with parameter ' + swKey.name + '. \n\rAppend parameters prefixed with \'$\' to query specific info from this item.') :
+                        'Returns ' + entityset.name + ' without parameters. \n\r' + queryDescriptionStr ,
                 'parameters': isCollection ?
                     [
                         {
@@ -497,9 +524,9 @@ var Visitor=require('../visitor');
                 'responses': {
                     '200': {
                         'description': isCollection ?
-                                'An array of ' + type + ' items.' :
-                                'A single ' + type + ' item.',
-                        'schema': getSchema(type, isCollection)
+                                'An array of ' + entityset.type + ' items.' :
+                                'A single ' + entityset.type + ' item.',
+                        'schema': getSchema(entityset.type, isCollection)
                     }
                 }
             };
@@ -517,6 +544,18 @@ var Visitor=require('../visitor');
                     parameter.format = swKey.format;
 
                 route.parameters.unshift(parameter); 
+            }
+
+            if(!!entityset.implicit&&entityset.implicit)
+            {
+                var hostKey = {
+                    'name': entityset.pathName,
+                    'type': getSwaggerType(entityset.keyType).type,
+                    'in': 'path',
+                    'description': 'The host entityset key.',
+                    'required': true
+                };
+                route.parameters.unshift(hostKey); 
             }
 
             return route;
@@ -645,7 +684,7 @@ var Visitor=require('../visitor');
                     var allows = genAllows(item.allows);
                     var routes = {};
                     if (allows.read)
-                        routes.get = routeGet(item.name, item.type, true);
+                        routes.get = routeGet(item, true);
 
                     if (allows.create)
                         routes.post = routePost(item.name, item.type);
@@ -655,7 +694,7 @@ var Visitor=require('../visitor');
                     if (swKey) {
                         var sRoutes = {};
                         if (allows.read)
-                            sRoutes.get = routeGet(item.name, item.type, false, swKey);
+                            sRoutes.get = routeGet(item, false, swKey);
                         if (allows.update)
                             sRoutes.put = routePut(item.name, item.type, swKey);
                         if (allows.delete)
@@ -669,7 +708,7 @@ var Visitor=require('../visitor');
                     var allows = genAllows(item.allows);
                     var routes = {};
                     if (allows.read)
-                        routes.get = routeGet(item.name, item.type, false);
+                        routes.get = routeGet(item, false);
                     if (allows.update)
                         routes.put = routePut(item.name, item.type);
                     paths['/' + item.name] = routes;
@@ -761,7 +800,7 @@ var Visitor=require('../visitor');
                 this.visitObj(container, {
                     'entitysets': function (arr) {
                         visitor.visitArr(arr, function (item) {
-                            entitySetMappings[item.type] = item.name;
+                            entitySetMappings[item.type] = item;
                         });
                     },
                     'singletons': function (arr) {
@@ -820,13 +859,15 @@ var Visitor=require('../visitor');
 
                     if (item.properties) {
                         visitor.visitArr(item.properties, function (item) {
-                            if(item.type !== 'Function' || item.type !== 'Action'){
-                                if(!isPrimitiveType(item.type)){
-                                    // Add navigation property name as contains target.
-                                    // Need add the containstarget property on navigation property in simple-YAML and Json model.
-                                    entitySetMappings[item.type] = item.name;
-                                }
-                            }
+                            // if(item.type !== 'Function' && item.type !== 'Action'){
+                            //     if(!isPrimitiveType(item.type)){
+                            //         // Add navigation property name as contains target.
+                            //         // Need add the containstarget property on navigation property in simple-YAML and Json model.
+                            //     if(item.name=="trips")
+                            //     {
+                            //         entitySetMappings[item.type] = item.name;}
+                            //     }
+                            // }
 
                             if (!item.operationType) {
                                 var swType = getSwaggerType(item.type, item.isCollection);
