@@ -1,6 +1,6 @@
 var fs = require('fs');
 var EasyZip = require('easy-zip').EasyZip;
-var StringHelper = require('../helpers/stringhelper');
+var StringHelper = require('../helpers/stringHelper');
 var Logger = require('./logger');
 var constants = require('../config').Constants;
 

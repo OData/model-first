@@ -1,7 +1,7 @@
 var fs = require('fs');
 var config = require('../config');
 var codegen = require('../modules/csharpClientCodegen');
-var ctrlhelper = require('../helpers/controlhelper');
+var ctrlhelper = require('../helpers/controlHelper');
 var codewriter = require('../utilities/codewriter');
 var guid = require('../utilities/guid');
 var zipper = require('../utilities/zipper');
@@ -62,13 +62,13 @@ exports.post = function (req, res) {
                         logger.logErr(err);
                         return res.send('err');
                     }
-
+                    //logger.logErr("zipping...");
                     zipper.zipFolder(constants.Paths.CSharpPackage + folderName, constants.Paths.CSharpZipPackage + folderName + '.zip', function(err){
                         if(err){
                             logger.logErr(err);
                             return res.send('err');
                         }
-
+                        //logger.logErr("zip commplete");
                         // Remove the string './public'.
                         var path = constants.Paths.CSharpZipPackage.substr(8);
                         res.send({link: !!req.connection.encrypted ? 'https://' : 'http://' + req.headers.host + path + folderName + '.zip'});

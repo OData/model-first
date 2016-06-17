@@ -259,9 +259,11 @@ var Visitor=require('../visitor');
 
         var schema = getSwaggerType(returns.type, isCollection);
 
-        responses['200'] = {
-            'description': 'The function has been returned results.',
-            'schema': schema
+        var responses={
+            '200': {
+                'description': 'The function has been returned results.',
+                'schema': schema
+            }
         };
 
         if(!returns.isCollection && !!returns.isNullable &&returns.isNullable)

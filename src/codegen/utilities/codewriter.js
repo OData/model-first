@@ -1,11 +1,12 @@
 var fs = require('fs');
 var util = require('util');
-var StringHelper = require('../helpers/stringhelper');
+var StringHelper = require('../helpers/stringHelper');
 var DateTime = require('./datetime');
 var Guid = require('./guid');
 var config = require('../config');
 var constants = config.Constants;
-
+var Logger = require('./logger');
+var logger = Logger.getInstance();
 /*
 ** Create a csharp server project's directory structure and necessary files on './public/server/csharp/packages/' folder.
 ** params: 
@@ -25,7 +26,6 @@ exports.createServerCSharpProject = function(projName, files, namespaceName, cal
 			constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/Models',
 			constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/Properties'
 		];
-
 		createFolders(folderPathes, function(err){
 			if(err){
 				return callback(err);
@@ -48,7 +48,6 @@ exports.createServerCSharpProject = function(projName, files, namespaceName, cal
 				'Global.asax.cs',
 				'App_Start/WebApiConfig.cs'
 			];
-
 			copyAndReplaceNamespace(filePathes, constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder+'/', namespaceName, function(err){
 				if(err){
 					return callback(err);
@@ -135,30 +134,30 @@ exports.createCSharpProject = function(projName, coreContent, namespaceName, cal
 				if(err){
 					return callback(err);
 				}
-				
-				var projFileSrcPath = constants.Paths.CSharpProj + constants.FileNames.CSharpProjFile;
-				var projFileTargetPath = constants.Paths.CSharpPackage + folderName + '/' + constants.FileNames.CSharpProjFolder + '/' + constants.FileNames.CSharpProjFile;
-				insertCSharpProjFile(folderName, namespaceName, null, projFileSrcPath, projFileTargetPath, function(err){
-					if(err){
-						return callback(err);
-					}
+			});
 
-					var assmFileSrcPath = constants.Paths.CSharpProj + 'Properties/' + constants.FileNames.CSharpAssemblyFile;
-					var assmFileTargetPath = constants.Paths.CSharpPackage + folderName + '/' + constants.FileNames.CSharpProjFolder + '/Properties/' + constants.FileNames.CSharpAssemblyFile;
-					insertCSharpAssmFile(folderName, namespaceName, assmFileSrcPath, assmFileTargetPath, function(err){
-						if(err){
-							return callback(err);
-						}
+			var projFileSrcPath = constants.Paths.CSharpProj + constants.FileNames.CSharpProjFile;
+			var projFileTargetPath = constants.Paths.CSharpPackage + folderName + '/' + constants.FileNames.CSharpProjFolder + '/' + constants.FileNames.CSharpProjFile;
+			insertCSharpProjFile(folderName, namespaceName, null, projFileSrcPath, projFileTargetPath, function(err){
+				if(err){
+					return callback(err);
+				}
+			});
 
-						insertCSharpCoreFile(coreContent, folderName, function(err){
-							if(err){
-								return callback(err);
-							}
+			var assmFileSrcPath = constants.Paths.CSharpProj + 'Properties/' + constants.FileNames.CSharpAssemblyFile;
+			var assmFileTargetPath = constants.Paths.CSharpPackage + folderName + '/' + constants.FileNames.CSharpProjFolder + '/Properties/' + constants.FileNames.CSharpAssemblyFile;
+			insertCSharpAssmFile(folderName, namespaceName, assmFileSrcPath, assmFileTargetPath, function(err){
+				if(err){
+					return callback(err);
+				}
+			});
 
-							return callback(null, folderName);
-						});
-					});
-				});
+			insertCSharpCoreFile(coreContent, folderName, function(err){
+				if(err){
+					return callback(err);
+				}
+
+				return callback(null, folderName);
 			});
 		});			
 	}
@@ -211,6 +210,7 @@ function insertCSharpProjFile(folderName, namespaceName, compileInfos, projFileS
 			callback();
 		}
 		catch(err){
+			console.log(err);
 			return callback(err);
 		}
 	});

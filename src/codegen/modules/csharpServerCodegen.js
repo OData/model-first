@@ -1,8 +1,8 @@
 var util = require('util');
 var typeMaps = require('./csharpTypeMaps');
 var constants = require('../config').Constants;
-var StringHelper = require('../helpers/stringhelper');
-var ParseHelper = require('../helpers/parsehelper');
+var StringHelper = require('../helpers/stringHelper');
+var ParseHelper = require('../helpers/parseHelper');
 
 exports.genEntityType = genEntityType;
 function genEntityType(entityType, types, namespaceName){

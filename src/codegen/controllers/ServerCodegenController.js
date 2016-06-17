@@ -1,6 +1,6 @@
 var fs = require('fs');
 var config = require('../config');
-var ctrlhelper = require('../helpers/controlhelper');
+var ctrlhelper = require('../helpers/controlHelper');
 var codegen = require('../modules/csharpServerCodegen');
 var codewriter = require('../utilities/codewriter');
 var guid = require('../utilities/guid');
@@ -67,7 +67,6 @@ exports.post = function(req, res){
 							logger.logErr(err);
 							return res.send('err');
 						}
-
 						// Remove the string './public'.
 						var path = constants.Paths.ServerCSharpZipPackage.substr(8);
 						res.send({link: !!req.connection.encrypted ? 'https://' : 'http://' + req.headers.host + path + folderName + '.zip'});

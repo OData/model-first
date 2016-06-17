@@ -1,7 +1,7 @@
 var util = require('util');
 var typeMaps = require('./csharpTypeMaps');
-var StringHelper = require('../helpers/stringhelper');
-var TypesHelper = require('../helpers/typeshelper');
+var StringHelper = require('../helpers/stringHelper');
+var TypesHelper = require('../helpers/typesHelper');
 
 MetadataNamespace = 'Default.Namespace.IfNoNamespaceField'; //The value for test case, if the JSON model does not have api part or name and namespace fields both missing in api part.
 

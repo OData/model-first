@@ -1,7 +1,7 @@
 var fs = require('fs');
 var config = require('../config');
 var codegen = require('../modules/csharpClientCodegen');
-var ctrlhelper = require('../helpers/controlhelper');
+var ctrlhelper = require('../helpers/controlHelper');
 var constants = config.Constants;
 
 exports.get = function(req, res){

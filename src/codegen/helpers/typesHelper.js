@@ -1,5 +1,5 @@
 var typeMaps = require('../modules/csharpTypeMaps');
-var StringHelper = require('../helpers/stringhelper');
+var StringHelper = require('../helpers/stringHelper');
 
 function getType(typeName, types){
     for(var i in types){

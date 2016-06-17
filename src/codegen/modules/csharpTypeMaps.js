@@ -1,4 +1,4 @@
-var StringHelper = require('../helpers/stringhelper');
+var StringHelper = require('../helpers/stringHelper');
 
 var PrimitiveTypeMappings = {
 	'edm.binary': 'byte[]', //global::System.Byte[]
