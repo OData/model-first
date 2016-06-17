@@ -70,7 +70,7 @@ Example 1 - 3: the bound action ShareTrip with JSON format
 {
   "name": "shareTrip",
   "operationType": "Bound",
-  "type": "Action"，
+  "type": "Action",
   "params": [
     {
       "name": "userName",
@@ -105,7 +105,7 @@ Example 1 - 4: the bound action ShareTrip with Swagger format
           "name": "If-Match",
           "type": "string",
           "in": "header",
-          "description": "The If-Match header.",
+          "description": "The value of the If-Match request header MUST be an ETag value previously retrieved for the entity, or \"*\" to match any value.",
           "required": false
         },
         {
@@ -220,7 +220,7 @@ Example 2 - 5: the unbound action Discount with Swagger format
           "name": "If-Match",
           "type": "string",
           "in": "header",
-          "description": "The If-Match header.",
+          "description": "The value of the If-Match request header MUST be an ETag value previously retrieved for the entity, or \"*\" to match any value.",
           "required": false
         },
         {

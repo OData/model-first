@@ -142,7 +142,7 @@ var Visitor=require('../visitor');
             'name': 'If-Match',
             'type': 'string',
             'in': 'header',
-            'description': 'The If-Match header.',
+            'description': 'The value of the If-Match request header MUST be an ETag value previously retrieved for the entity, or "*" to match any value.',
             'required': false
         };
         parameters.push(ifMatchHeader);
@@ -601,7 +601,7 @@ var Visitor=require('../visitor');
                     {
                         'name': 'If-Match',
                         'in': 'header',
-                        'description': 'If-Match header.',
+                        'description': 'The value of the If-Match request header MUST be an ETag value previously retrieved for the entity, or "*" to match any value.',
                         'type': 'string'
                     }
                 ],
@@ -648,7 +648,7 @@ var Visitor=require('../visitor');
                     {
                         'name': 'If-Match',
                         'in': 'header',
-                        'description': 'If-Match header.',
+                        'description': 'The value of the If-Match request header MUST be an ETag value previously retrieved for the entity, or "*" to match any value.',
                         'type': 'string'
                     }
                 ],
