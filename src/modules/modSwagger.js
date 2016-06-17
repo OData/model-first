@@ -182,18 +182,9 @@ var Visitor=require('../visitor');
                 'description': 'The action has been created new entities.'
             },
             '204': {
-                'description': 'The action is without a return type.'
+                'description': 'The action returns No Content.'
             }
         };
-        if (returns) {
-            isCollection = returns.isCollection && returns.isCollection === true;
-            var schema = getSwaggerType(returns.type, isCollection);
-
-            responses['200'] = {
-                'description': 'The function has been returned results.',
-                'schema': schema
-            };
-        }
 
         return {
             'route': {
@@ -266,21 +257,17 @@ var Visitor=require('../visitor');
             path = '/' + name;
         }
 
-        var responses = {
-            '204': {
-                'description': 'The function is without a return type.'
-            },
-            '400': {
-                'description': 'A single entity function with a non-nullable return type has no result.'
-            }
-        };
-        if (returns) {
-            isCollection = returns.isCollection && returns.isCollection === true;
-            var schema = getSwaggerType(returns.type, isCollection);
+        var schema = getSwaggerType(returns.type, isCollection);
 
-            responses['200'] = {
-                'description': 'The function has been returned results.',
-                'schema': schema
+        responses['200'] = {
+            'description': 'The function has been returned results.',
+            'schema': schema
+        };
+
+        if(!returns.isCollection && !!returns.isNullable &&returns.isNullable)
+        {
+            responses['204'] = {
+                'description': 'The function returns No Content.'
             };
         }
 
