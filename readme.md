@@ -35,3 +35,9 @@ npm test
 npm start
 
 ```
+
+### Thank You!
+
+We’re using NDepend to analyze and increase code quality.
+
+[![NDepend](images/ndependlogo.png)](http://www.ndepend.com)
