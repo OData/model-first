@@ -280,7 +280,7 @@ function fromYaml(str, errors, config, callback) {
             this.visitArr(arr, function (item) {
                 function isnumber(type)
                 {
-                    return ['edm.int32', 'edm.int16','edm.int64','edm.double','edm.decimal','edm.single'].includes(type);
+                    return ['edm.int32', 'edm.int16','edm.int64','edm.double','edm.decimal','edm.single'].indexOf(type) !== -1;
                 }
                 function handleProperty(obj, extend) {
 

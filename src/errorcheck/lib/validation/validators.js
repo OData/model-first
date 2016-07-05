@@ -463,7 +463,7 @@ function validateContainsTarget(api)
       if(!!property.containsTarget&&property.containsTarget)
       {
         temptype = trimRight(property.type,'[]');
-        if(containsTargetSet.includes(temptype))
+        if(containsTargetSet.indexOf(temptype)!==-1)
         {
           response.errors.push({
             code: 'DUPLICATE_CONTAINSTARGET',
@@ -496,7 +496,7 @@ function validateContainsTarget(api)
       if(!!property.containsTarget&&property.containsTarget)
       {
         temptype = trimRight(property.type,'[]');
-        if(containsTargetSet.includes(temptype))
+        if(containsTargetSet.indexOf(temptype)!==-1)
         {
           response.errors.push({
             code: 'DUPLICATE_CONTAINSTARGET',

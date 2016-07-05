@@ -155,7 +155,7 @@
     },
     "service": {
       "description": "Must be one of operation or entitySet.",
-      "anyOf": [
+      "oneOf": [
         {
           "$ref": "#/definitions/functionOrAction"
         }, {
@@ -207,7 +207,7 @@
     },
     "stringOrstringArray": {
       "description": "Must be string or string array.",
-      "anyOf": [
+      "oneOf": [
         {
           "description": "For string:",
           "type": "string"
@@ -218,7 +218,7 @@
     },
     "type": {
       "description": "Must be one of enum type, entity type and complex type.",
-      "anyOf": [
+      "oneOf": [
         {
           "$ref": "#/definitions/enumType"
         }, {
@@ -257,7 +257,7 @@
     },
     "paramsType":{
        "description": "Must be string or an array of parameter.",
-       "anyOf":[
+       "oneOf":[
         {"type": "string"},
         {"$ref": "#/definitions/parameterList"}
        ]
@@ -266,7 +266,7 @@
       "type": "array",
       "description": "Must be an array, the items must be string or parameter.",
       "items": {
-        "anyOf": [
+        "oneOf": [
           {"type": "string"},
           {"$ref": "#/definitions/parameter"}
         ]
@@ -290,7 +290,7 @@
         "name": {"type": "string"},
         "members": {
           "description":"Must be a array of strings or enum members.",
-          "anyOf": [
+          "oneOf": [
             {"$ref": "#/definitions/stringArray"},
             {"$ref": "#/definitions/enumMembers"}
           ]
@@ -340,11 +340,12 @@
           "$ref": "#/definitions/operationList"
         }
       },
+      "required":["key"],
       "additionalProperties": false
     },
     "propertiesList": {
       "description": "Must be a string or an array of string, property",
-      "anyOf": [
+      "oneOf": [
         {
           "description": "For string:",
           "type": "string"
@@ -353,7 +354,7 @@
           "type": "array",
           "items": {
             "description": "Must be a string or property object.",
-            "anyOf": [
+            "oneOf": [
               {
                 "description": "For a string:",
                 "type": "string"

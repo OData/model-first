@@ -56,7 +56,9 @@ var Visitor=require('../visitor');
         return false;
     }
 
-    function getSwaggerType(type, isCollection = false) {
+    function getSwaggerType(type, isCollection) {
+        isCollection=isCollection||false;
+        
         var swgrType;
         if (SwaggerTypes[type]) {
             swgrType = SwaggerTypes[type];
