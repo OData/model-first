@@ -860,6 +860,8 @@ describe('[YAML] Actions test', function () {
           - str2';
     var unboundActionWithJSON =
             {
+                'entitysets': [],
+                'singletons': [],
                 'operations': [
                     {
                         'type': 'Action',
@@ -932,6 +934,8 @@ describe('[YAML] Functions test', function () {
         returns: person[]';
     var unboundFunctionWithJSON =
             {
+                'entitysets': [],
+                'singletons': [],
                 'operations': [
                     {
                         'type': 'Function',
@@ -1040,7 +1044,9 @@ describe('[YAML] Root section tests', function () {
                         'name': 'thingsNew',
                         'type': 'things',
                         'allows': ['create', 'update']
-                    }]
+                    }],
+                'singletons': [],
+                'operations': [],
             }));
 });
 

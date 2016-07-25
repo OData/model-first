@@ -112,6 +112,7 @@ var Visitor=require('../visitor');
         }
        return rootType;
     }
+
     function routeAction(name, operationType, params, parentType, swKey, returns) {
         var temp = getEntitySet(parentType);
         var parameters = [];
@@ -259,7 +260,7 @@ var Visitor=require('../visitor');
             path = '/' + name;
         }
 
-        var schema = getSwaggerType(returns.type, isCollection);
+        var schema = getSwaggerType(returns.type, returns.isCollection);
 
         var responses={
             '200': {

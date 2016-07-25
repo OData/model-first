@@ -717,7 +717,7 @@ describe('[Swagger] To Swagger test', function () {
                         {
                             'name': 'If-Match',
                             'in': 'header',
-                            'description': 'If-Match header.',
+                            'description': 'The value of the If-Match request header MUST be an ETag value previously retrieved for the entity, or "*" to match any value.',
                             'type': 'string'
                         }
                     ],
@@ -743,7 +743,7 @@ describe('[Swagger] To Swagger test', function () {
                         {
                             'name': 'If-Match',
                             'in': 'header',
-                            'description': 'If-Match header.',
+                            'description': 'The value of the If-Match request header MUST be an ETag value previously retrieved for the entity, or "*" to match any value.',
                             'type': 'string'
                         }
                     ],
@@ -944,7 +944,7 @@ describe('[Swagger] To Swagger test', function () {
                         {
                             'name': 'If-Match',
                             'in': 'header',
-                            'description': 'If-Match header.',
+                            'description': 'The value of the If-Match request header MUST be an ETag value previously retrieved for the entity, or "*" to match any value.',
                             'type': 'string'
                         }
                     ],
@@ -967,7 +967,7 @@ describe('[Swagger] To Swagger test', function () {
                         {
                             'name': 'If-Match',
                             'in': 'header',
-                            'description': 'If-Match header.',
+                            'description': 'The value of the If-Match request header MUST be an ETag value previously retrieved for the entity, or "*" to match any value.',
                             'type': 'string'
                         }
                     ],
@@ -1026,7 +1026,7 @@ describe('[Swagger] To Swagger test', function () {
                         {
                             'name': 'If-Match',
                             'in': 'header',
-                            'description': 'If-Match header.',
+                            'description': 'The value of the If-Match request header MUST be an ETag value previously retrieved for the entity, or "*" to match any value.',
                             'type': 'string'
                         }
                     ],
@@ -1078,7 +1078,7 @@ describe('[Swagger] Actions test', function () {
                                     'name': 'If-Match',
                                     'type': 'string',
                                     'in': 'header',
-                                    'description': 'The If-Match header.',
+                                    'description': 'The value of the If-Match request header MUST be an ETag value previously retrieved for the entity, or "*" to match any value.',
                                     'required': false
                                 },
                                 {
@@ -1095,7 +1095,7 @@ describe('[Swagger] Actions test', function () {
                                     'description': 'The action has been created new entities.'
                                 },
                                 '204': {
-                                    'description': 'The action is without a return type.'
+                                    'description': 'The action returns No Content.'
                                 }
                             }
                         }
@@ -1281,7 +1281,7 @@ describe('[Swagger] Actions test', function () {
                             'name': 'If-Match',
                             'type': 'string',
                             'in': 'header',
-                            'description': 'The If-Match header.',
+                            'description': 'The value of the If-Match request header MUST be an ETag value previously retrieved for the entity, or "*" to match any value.',
                             'required': false
                         },
                         {
@@ -1297,7 +1297,7 @@ describe('[Swagger] Actions test', function () {
                             'description': 'The action has been created new entities.'
                         },
                         '204': {
-                            'description': 'The action is without a return type.'
+                            'description': 'The action returns No Content.'
                         }
                     }
                 }
@@ -1351,12 +1351,6 @@ describe('[Swagger] Functions test', function () {
                         }
                     ],
                     'responses': {
-                        '204': {
-                            'description': 'The function is without a return type.'
-                        },
-                        '400': {
-                            'description': 'A single entity function with a non-nullable return type has no result.'
-                        },
                         '200': {
                             'description': 'The function has been returned results.',
                             'schema': {
@@ -1397,7 +1391,10 @@ describe('[Swagger] Functions test', function () {
                                 {
                                     'name': 'functionTest',
                                     'type': 'Function',
-                                    'operationType': 'Bound'
+                                    'operationType': 'Bound',
+                                    'returns': {
+                                    'type': 'string[]'
+                                },
                                 }
                             ],
                             'name': 'person'
@@ -1550,14 +1547,21 @@ describe('[Swagger] Functions test', function () {
                             'in': 'path',
                             'description': 'The key.',
                             'required': true
+                        },
+                        {
+                            'name': '$format',
+                            'in': 'query',
+                            'description': 'System query option $format such as json, application/json, application/json;odata.metadata=full',
+                            'required': false,
+                            'type': 'string'
                         }
                     ],
                     'responses': {
-                        '204': {
-                            'description': 'The function is without a return type.'
-                        },
-                        '400': {
-                            'description': 'A single entity function with a non-nullable return type has no result.'
+                        '200': {
+                            'description': 'The function has been returned results.',
+                            'schema': {
+                                '$ref': '#/definitions/string[]'
+                            }
                         }
                     }
                 }
@@ -1565,6 +1569,7 @@ describe('[Swagger] Functions test', function () {
         };
         assertPaths(input, expected);
     });
+
     it('System query options for functions should work.', function () {
         var input =
                 {
@@ -1880,12 +1885,6 @@ describe('[Swagger] Functions test', function () {
                         }   
                     ],
                     'responses': {
-                        '204': {
-                            'description': 'The function is without a return type.'
-                        },
-                        '400': {
-                            'description': 'A single entity function with a non-nullable return type has no result.'
-                        },
                         '200': {
                             'description': 'The function has been returned results.',
                             'schema': {
@@ -1975,12 +1974,6 @@ describe('[Swagger] Functions test', function () {
                         }       
                     ],
                     'responses': {
-                        '204': {
-                            'description': 'The function is without a return type.'
-                        },
-                        '400': {
-                            'description': 'A single entity function with a non-nullable return type has no result.'
-                        },
                         '200': {
                             'description': 'The function has been returned results.',
                             'schema': {
@@ -2038,12 +2031,6 @@ describe('[Swagger] Functions test', function () {
                         } 
                     ],
                     'responses': {
-                        '204': {
-                            'description': 'The function is without a return type.'
-                        },
-                        '400': {
-                            'description': 'A single entity function with a non-nullable return type has no result.'
-                        },
                         '200': {
                             'description': 'The function has been returned results.',
                             'schema': {
@@ -2133,12 +2120,6 @@ describe('[Swagger] Functions test', function () {
                         }                               
                     ],
                     'responses': {
-                        '204': {
-                            'description': 'The function is without a return type.'
-                        },
-                        '400': {
-                            'description': 'A single entity function with a non-nullable return type has no result.'
-                        },
                         '200': {
                             'description': 'The function has been returned results.',
                             'schema': {
@@ -2211,12 +2192,6 @@ describe('[Swagger] Functions test', function () {
                         }                             
                     ],
                     'responses': {
-                        '204': {
-                            'description': 'The function is without a return type.'
-                        },
-                        '400': {
-                            'description': 'A single entity function with a non-nullable return type has no result.'
-                        },
                         '200': {
                             'description': 'The function has been returned results.',
                             'schema': {
