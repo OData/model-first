@@ -258,12 +258,12 @@ $(function (){
     var downloadUrl = '';
     if($(this).attr('name') === 'csharpClient'){
       yamlModel = source.getValue();
-      downloadUrl = 'http://localhost:9002/client/codegen?name=csharp';
+      downloadUrl = window.location.protocol + '//' + window.location.host + '/client/codegen?name=csharp';
       download(yamlModel, downloadUrl);
     }
     else if($(this).attr('name') === 'csharpServer'){
       yamlModel = source.getValue();
-      downloadUrl = 'http://localhost:9002/server/codegen?name=csharp';
+      downloadUrl = window.location.protocol + '//' + window.location.host + '/server/codegen?name=csharp';
       download(yamlModel, downloadUrl);
     }
   });

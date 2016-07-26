@@ -140,7 +140,7 @@
 					var reqData = removeLinebreak(iEditor.getValue());
 	    			$.ajax({
 			            type: "POST",
-			            url: "http://localhost:9002/sample?code=csharp",
+			            url: window.location.protocol + '//' + window.location.host + "/sample?code=csharp",
 			            contentType: "application/json",
 			            data: reqData,
 			            success: function (result) {
@@ -158,10 +158,10 @@
 			$('a').click(function(){
 				var reqUrl = '';
 				if($(this).attr('name') === 'todo'){
-					reqUrl = "http://localhost:9002/svrSample?name=todo";
+					reqUrl = window.location.protocol + '//' + window.location.host + "/svrSample?name=todo";
 				}
 				else if($(this).attr('name') === 'trippin'){
-					reqUrl = "http://localhost:9002/svrSample?name=trippin";
+					reqUrl = window.location.protocol + '//' + window.location.host + "/svrSample?name=trippin";
 				}
 
 				if(reqUrl !== ''){
@@ -199,7 +199,7 @@
 					var reqData = removeLinebreak(iSvrEditor.getValue());
 	    			$.ajax({
 			            type: "POST",
-			            url: "http://localhost:9002/svrSample?code=csharp",
+			            url: window.location.protocol + '//' + window.location.host + "/svrSample?code=csharp",
 			            contentType: "application/json",
 			            data: reqData,
 			            success: function (result) {
@@ -222,7 +222,7 @@
 				var reqData = removeLinebreak(iSvrEditor.getValue());
 				$.ajax({
 		            type: "POST",
-		            url: "http://localhost:9002/server/codegen?name=csharp",
+		            url: window.location.protocol + '//' + window.location.host + "/server/codegen?name=csharp",
 		            contentType: "application/json",
 		            data: reqData,
 		            success: function (result) {

@@ -42,12 +42,13 @@ var config = {
         exclude: 'node_modules/'
       },
       {
-        test: /resources\\test samples\\.*\.json$/,
+        test: /test samples\\.*\.json$/,
         loader: 'file?name=../samples/[name].[ext]'
       },
       {
         test: /\.json$/,
-        loader: 'json-loader'
+        loader: 'json-loader',
+        exclude: 'resources/test samples/'
       },
       { test: /\.css$/, 
         loader: ExtractTextPlugin.extract("style-loader", "css-loader") 

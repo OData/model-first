@@ -6,7 +6,7 @@ var serverCodegen = require('../modules/csharpServerCodegen');
 var constants = config.Constants;
 
 exports.processSample = function (samplePath, callback){
-	fs.readFile(samplePath, function(err, data){
+	fs.readFile(samplePath,{encoding:'utf8'}, function(err, data){
 		if(err){
 			return callback(err, null);
 		}

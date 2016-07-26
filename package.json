@@ -62,6 +62,6 @@
     "build": "webpack --production --hide-modules --stats=errors-only",
     "unit-test": "karma start test/karma.conf.js",
     "test": "npm run unit-test",
-    "start": "node src/codegen/app.js"
+    "start": "node ./app.js"
   }
 }
