@@ -340,7 +340,13 @@ function copyAndReplaceNamespace(filePathes, destFolder, namespaceName, callback
 	for(var i = 0; i < filePathes.length; i++){
 		try{
 			var content = fs.readFileSync(constants.Paths.ServerCSharpProj+filePathes[i], constants.Code.Encoding);
-			fs.writeFileSync(destFolder+filePathes[i] , util.format(content, namespaceName), constants.Code.Encoding);
+			if(filePathes[i].endsWith('WebApiConfig.cs'))
+			{
+				fs.writeFileSync(destFolder+filePathes[i] , util.format(content, namespaceName,namespaceName), constants.Code.Encoding);
+			}else{
+				fs.writeFileSync(destFolder+filePathes[i] , util.format(content, namespaceName), constants.Code.Encoding);
+			}
+			
 		} catch(e)
 		{
 			return callback(e);
