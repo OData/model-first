@@ -6,7 +6,7 @@
     using Microsoft.Restier.EntityFramework;
     using Microsoft.Restier.WebApi;
     using Microsoft.Restier.WebApi.Batch;
-    using OData.Service.V4.Server.Models;
+    using %s.Models;
     #endregion
 
     public static class WebApiConfig

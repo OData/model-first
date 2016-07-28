@@ -240,6 +240,10 @@ namespace ' + namespaceName + '\n';
         {\n\
         }\n';
 	for(var i = 0; i < entitySets.length; i++){
+		if(entitySets[i].name.includes("/"))
+		{
+			continue;
+		}
 		result += util.format('\
         /// <summary>\n\
         /// Gets or sets the %s entity-set.\n\
