@@ -17,14 +17,14 @@ exports.createServerCSharpProject = function(projName, files, namespaceName, cal
 	var folderName = genPackageName(projName, constants.FileNames.RandomStringLen);
 	try{
 		var folderPathes = [
-			constants.Paths.ServerCSharpPackage + folderName,
-			constants.Paths.ServerCSharpPackage + folderName + '/packages',
-			constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder,
-			constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/App_Data',
-			constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/App_Start',
-			constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/Controllers',
-			constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/Models',
-			constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/Properties'
+		constants.Paths.ServerCSharpPackage + folderName,
+		constants.Paths.ServerCSharpPackage + folderName + '/packages',
+		constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder,
+		constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/App_Data',
+		constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/App_Start',
+		constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/Controllers',
+		constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/Models',
+		constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/Properties'
 		];
 		createFolders(folderPathes, function(err){
 			if(err){
@@ -32,10 +32,10 @@ exports.createServerCSharpProject = function(projName, files, namespaceName, cal
 			}
 
 			var filePathes = [
-				constants.Paths.ServerCSharpProj + 'packages.config',
-				constants.Paths.ServerCSharpProj + 'Web.config',
-				constants.Paths.ServerCSharpProj + 'Web.Debug.config',
-				constants.Paths.ServerCSharpProj + 'Web.Release.config'
+			constants.Paths.ServerCSharpProj + 'packages.config',
+			constants.Paths.ServerCSharpProj + 'Web.config',
+			constants.Paths.ServerCSharpProj + 'Web.Debug.config',
+			constants.Paths.ServerCSharpProj + 'Web.Release.config'
 			];
 			copyFiles(filePathes, constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder, function(err){
 				if(err){
@@ -44,9 +44,9 @@ exports.createServerCSharpProject = function(projName, files, namespaceName, cal
 			});
 
 			filePathes = [
-				'Global.asax',
-				'Global.asax.cs',
-				'App_Start/WebApiConfig.cs'
+			'Global.asax',
+			'Global.asax.cs',
+			'App_Start/WebApiConfig.cs'
 			];
 			copyAndReplaceNamespace(filePathes, constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder+'/', namespaceName, function(err){
 				if(err){
@@ -114,10 +114,10 @@ exports.createCSharpProject = function(projName, coreContent, namespaceName, cal
 	var folderName = genPackageName(projName, constants.FileNames.RandomStringLen);
 	try{
 		var folderPathes = [
-			constants.Paths.CSharpPackage + folderName,
-			constants.Paths.CSharpPackage + folderName + '/packages',
-			constants.Paths.CSharpPackage + folderName + '/' + constants.FileNames.CSharpProjFolder,
-			constants.Paths.CSharpPackage + folderName + '/' + constants.FileNames.CSharpProjFolder + '/Properties'
+		constants.Paths.CSharpPackage + folderName,
+		constants.Paths.CSharpPackage + folderName + '/packages',
+		constants.Paths.CSharpPackage + folderName + '/' + constants.FileNames.CSharpProjFolder,
+		constants.Paths.CSharpPackage + folderName + '/' + constants.FileNames.CSharpProjFolder + '/Properties'
 		];
 
 		createFolders(folderPathes, function(err){
@@ -126,9 +126,9 @@ exports.createCSharpProject = function(projName, coreContent, namespaceName, cal
 			}
 
 			var filePathes = [
-				constants.Paths.CSharpProj + 'App.config',
-				constants.Paths.CSharpProj + 'packages.config',
-				constants.Paths.CSharpProj + 'Program.cs'
+			constants.Paths.CSharpProj + 'App.config',
+			constants.Paths.CSharpProj + 'packages.config',
+			constants.Paths.CSharpProj + 'Program.cs'
 			];
 			copyFiles(filePathes, constants.Paths.CSharpPackage + folderName + '/' + constants.FileNames.CSharpProjFolder, function(err){
 				if(err){
@@ -320,19 +320,19 @@ function copy(filePath, destFolder, callback){
 			return callback(err);
 		}
 
-	    if(stats.isFile()){
-	    	try{
-	    		var readStream = fs.createReadStream(filePath);
-		    	var dest = StringHelper.addSlash(destFolder) + StringHelper.getLastSegment(filePath);
-		    	var writeStream = fs.createWriteStream(dest);
-		    	readStream.pipe(writeStream);
+		if(stats.isFile()){
+			try{
+				var readStream = fs.createReadStream(filePath);
+				var dest = StringHelper.addSlash(destFolder) + StringHelper.getLastSegment(filePath);
+				var writeStream = fs.createWriteStream(dest);
+				readStream.pipe(writeStream);
 
-		    	return callback();
-	    	}
-	    	catch(err){
-	    		return callback(err);
-	    	}
-	    }
+				return callback();
+			}
+			catch(err){
+				return callback(err);
+			}
+		}
 	});
 }
 
@@ -342,7 +342,7 @@ function copyAndReplaceNamespace(filePathes, destFolder, namespaceName, callback
 			var content = fs.readFileSync(constants.Paths.ServerCSharpProj+filePathes[i], constants.Code.Encoding);
 			if(filePathes[i].endsWith('WebApiConfig.cs'))
 			{
-				fs.writeFileSync(destFolder+filePathes[i] , util.format(content, namespaceName,namespaceName), constants.Code.Encoding);
+				fs.writeFileSync(destFolder+filePathes[i] , util.format(content, namespaceName, namespaceName), constants.Code.Encoding);
 			}else{
 				fs.writeFileSync(destFolder+filePathes[i] , util.format(content, namespaceName), constants.Code.Encoding);
 			}
