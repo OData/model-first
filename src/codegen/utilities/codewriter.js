@@ -340,7 +340,13 @@ function copyAndReplaceNamespace(filePathes, destFolder, namespaceName, callback
 	for(var i = 0; i < filePathes.length; i++){
 		try{
 			var content = fs.readFileSync(constants.Paths.ServerCSharpProj+filePathes[i], constants.Code.Encoding);
-			fs.writeFileSync(destFolder+filePathes[i] , util.format(content, namespaceName), constants.Code.Encoding);
+			if(filePathes[i].endsWith('WebApiConfig.cs'))
+			{
+				fs.writeFileSync(destFolder+filePathes[i] , util.format(content, namespaceName,namespaceName), constants.Code.Encoding);
+			}else{
+				fs.writeFileSync(destFolder+filePathes[i] , util.format(content, namespaceName), constants.Code.Encoding);
+			}
+			
 		} catch(e)
 		{
 			return callback(e);
@@ -358,19 +364,30 @@ function copyAndReplaceNamespace(filePathes, destFolder, namespaceName, callback
 **	   boolean value.
 */
 function copySync(filePath, destFolder){
+	var BUF_LENGTH = 64*1024;
+	var buff = new Buffer(BUF_LENGTH);
 	var stat = fs.statSync(filePath);
 	if(stat.isFile()){
 		try{
-    		var readStream = fs.createReadStream(filePath);
-	    	var dest = StringHelper.addSlash(destFolder) + StringHelper.getLastSegment(filePath);
-	    	var writeStream = fs.createWriteStream(dest);
-	    	readStream.pipe(writeStream);
-
-	    	return true;
-    	}
-    	catch(err){
-    		return false;
-    	}
+			var fdr = fs.openSync(filePath,'r');
+			var dest = StringHelper.addSlash(destFolder) + StringHelper.getLastSegment(filePath);
+			var fdw = fs.openSync(dest, 'w');
+			var bytesRead = 1, pos = 0;
+			while (bytesRead > 0)
+			{
+				bytesRead = fs.readSync(fdr, buff, 0, BUF_LENGTH, pos);
+				fs.writeSync(fdw,buff,0,bytesRead);
+				pos += bytesRead;
+			}
+			fs.closeSync(fdr)
+			fs.closeSync(fdw)
+			return true;
+		}
+		catch(err){
+			fs.closeSync(fdr)
+			fs.closeSync(fdw)
+			return false;
+		}
 	}
 
 	return false;
