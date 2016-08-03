@@ -240,7 +240,7 @@ namespace ' + namespaceName + '\n';
         {\n\
         }\n';
 	for(var i = 0; i < entitySets.length; i++){
-		if(entitySets[i].name.includes("/"))
+		if(entitySets[i].name.indexOf("/")!==-1)
 		{
 			continue;
 		}

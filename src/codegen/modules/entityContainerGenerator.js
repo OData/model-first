@@ -59,8 +59,6 @@ var containerConstructor='\
             this.ResolveName = new global::System.Func<global::System.Type, string>(this.ResolveNameFromType);\n\
             this.ResolveType = new global::System.Func<string, global::System.Type>(this.ResolveTypeFromName);\n\
             this.OnContextCreated();\n\
-            this.Format.LoadServiceModel = GeneratedEdmModel.GetInstance;\n\
-            this.Format.UseJson();\n\
         }\n';
 
 var onContextCreated='\
@@ -76,7 +74,7 @@ var resolveTypeFromNameComment='\
 var ResolveTypeFromName='\
         protected global::System.Type ResolveTypeFromName(string typeName)\n\
         {\n\
-            global::System.Type resolvedType = this.DefaultResolveType(typeName, {0}, {1});\n\
+            global::System.Type resolvedType = this.DefaultResolveType(typeName, "{0}", "{1}");\n\
             if ((resolvedType != null))\n\
             {\n\
                 return resolvedType;\n\
@@ -125,7 +123,7 @@ var EntitySetProperty = '\
             {\n\
                 if ((this._{0} == null))\n\
                 {\n\
-                    this._{0} = base.CreateQuery<{2}>({0});\n\
+                    this._{0} = base.CreateQuery<{2}>("{0}");\n\
                 }\n\
                 return this._{0};\n\
             }\n\
@@ -245,21 +243,27 @@ function generateEntityContainer(model, namespaceName){
 
     if(!!model.container.entitysets){
         model.container.entitysets.forEach(function(element){
-            result += EntitySetProperty.format(CustomizeNaming(element.name),element.name , CustomizeNaming(element.type.substring(0, element.type.length-2)));
+            if(element.name.indexOf("/")!==-1)
+            {
+                return;
+            }
+            result += EntitySetProperty.format(CustomizeNaming(element.name), element.name, CustomizeNaming(element.type));
         });
     }
 
     // Write AddTo methods
     if(!!model.container.entitysets){
         model.container.entitysets.forEach(function(element){
-            var type =element.type.substring(0, element.type.length-2);
-            result += AddToEntitySetMethod.format(CustomizeNaming(element.name), CustomizeNaming(type), GetUniqueParameterName(type));
+            if(element.name.indexOf("/")!==-1)
+            {
+                return;
+            }
+            result += AddToEntitySetMethod.format(CustomizeNaming(element.name), CustomizeNaming(element.type), GetUniqueParameterName(element.type));
         });
     }
     // Write Singletons
     if(!!model.container.singletons){
         model.container.singletons.forEach(function(element){
-            var type =element.type.substring(0, element.type.length-2);
             result += SingletonProperty.format(CustomizeNaming(element.name), element.name, GetFixedName(CustomizeNaming(element.name)), CustomizeNaming(element.type) + 'Single');
         });
     }

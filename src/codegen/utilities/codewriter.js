@@ -17,14 +17,14 @@ exports.createServerCSharpProject = function(projName, files, namespaceName, cal
 	var folderName = genPackageName(projName, constants.FileNames.RandomStringLen);
 	try{
 		var folderPathes = [
-		constants.Paths.ServerCSharpPackage + folderName,
-		constants.Paths.ServerCSharpPackage + folderName + '/packages',
-		constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder,
-		constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/App_Data',
-		constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/App_Start',
-		constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/Controllers',
-		constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/Models',
-		constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/Properties'
+			constants.Paths.ServerCSharpPackage + folderName,
+			constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder,
+			constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/App_Data',
+			constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/App_Start',
+			constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/Controllers',
+			constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/Models',
+			constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/Properties',
+			constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/packages'
 		];
 		createFolders(folderPathes, function(err){
 			if(err){
@@ -114,10 +114,10 @@ exports.createCSharpProject = function(projName, coreContent, namespaceName, cal
 	var folderName = genPackageName(projName, constants.FileNames.RandomStringLen);
 	try{
 		var folderPathes = [
-		constants.Paths.CSharpPackage + folderName,
-		constants.Paths.CSharpPackage + folderName + '/packages',
-		constants.Paths.CSharpPackage + folderName + '/' + constants.FileNames.CSharpProjFolder,
-		constants.Paths.CSharpPackage + folderName + '/' + constants.FileNames.CSharpProjFolder + '/Properties'
+			constants.Paths.CSharpPackage + folderName,
+			constants.Paths.CSharpPackage + folderName + '/' + constants.FileNames.CSharpProjFolder,
+			constants.Paths.CSharpPackage + folderName + '/' + constants.FileNames.CSharpProjFolder + '/Properties',
+			constants.Paths.CSharpPackage + folderName + '/' + constants.FileNames.CSharpProjFolder + '/packages'
 		];
 
 		createFolders(folderPathes, function(err){

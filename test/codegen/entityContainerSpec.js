@@ -35,26 +35,26 @@ describe('[Client CodeGen] Entity Container', function () {
         /// </summary>\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
         [global::Microsoft.OData.Client.OriginalNameAttribute("airports")]\n\
-        public global::Microsoft.OData.Client.DataServiceQuery<Airpo> Airports\n\
+        public global::Microsoft.OData.Client.DataServiceQuery<Airport> Airports\n\
         {\n\
             get\n\
             {\n\
                 if ((this._Airports == null))\n\
                 {\n\
-                    this._Airports = base.CreateQuery<Airpo>(Airports);\n\
+                    this._Airports = base.CreateQuery<Airport>("Airports");\n\
                 }\n\
                 return this._Airports;\n\
             }\n\
         }\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
-        private global::Microsoft.OData.Client.DataServiceQuery<Airpo> _Airports;\n\
+        private global::Microsoft.OData.Client.DataServiceQuery<Airport> _Airports;\n\
         /// <summary>\n\
         /// There are no comments for Airports in the schema.\n\
         /// </summary>\n\
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]\n\
-        public void AddToAirports(Airpo airpo)\n\
+        public void AddToAirports(Airport airport)\n\
         {\n\
-            base.AddObject("Airports", airpo);\n\
+            base.AddObject("Airports", airport);\n\
         }\n';
         TestEntityContainer(entityContainer, expected);
     });
@@ -442,8 +442,6 @@ describe('[Client CodeGen] Entity Container', function () {
             this.ResolveName = new global::System.Func<global::System.Type, string>(this.ResolveNameFromType);\n\
             this.ResolveType = new global::System.Func<string, global::System.Type>(this.ResolveTypeFromName);\n\
             this.OnContextCreated();\n\
-            this.Format.LoadServiceModel = GeneratedEdmModel.GetInstance;\n\
-            this.Format.UseJson();\n\
         }\n\
         partial void OnContextCreated();\n\
         /// <summary>\n\
@@ -454,7 +452,7 @@ describe('[Client CodeGen] Entity Container', function () {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData Client.Design.T4", "2.4.0")]\n\
         protected global::System.Type ResolveTypeFromName(string typeName)\n\
         {\n\
-            global::System.Type resolvedType = this.DefaultResolveType(typeName, {2}, {3});\n\
+            global::System.Type resolvedType = this.DefaultResolveType(typeName, "{2}", "{3}");\n\
             if ((resolvedType != null))\n\
             {\n\
                 return resolvedType;\n\
