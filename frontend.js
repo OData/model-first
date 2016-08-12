@@ -1,3 +1,9 @@
+//---------------------------------------------------------------------
+// 
+// Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// 
+//---------------------------------------------------------------------
+
 'use strict';
 
 require('codemirror/lib/codemirror.css');
@@ -37,6 +43,6 @@ require("resources/js/editor.js");
 require("index.js");
 
 //require("./doc/samples/trippin.yaml");
-require.context("./doc/samples", false, /.yaml$/);
+require.context("./doc/samples", false, /\.yaml$/);
 
 

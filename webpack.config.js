@@ -48,7 +48,7 @@ var config = {
       {
         test: /\.json$/,
         loader: 'json-loader',
-        exclude: 'resources/test samples/'
+        exclude: /test samples\\.*\.json$/
       },
       { test: /\.css$/, 
         loader: ExtractTextPlugin.extract("style-loader", "css-loader") 

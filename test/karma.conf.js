@@ -1,3 +1,9 @@
+//---------------------------------------------------------------------
+// 
+// Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// 
+//---------------------------------------------------------------------
+
 // Karma configuration
 // http://karma-runner.github.io/0.10/config/configuration-file.html
 

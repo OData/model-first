@@ -1,3 +1,9 @@
+//---------------------------------------------------------------------
+// 
+// Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// 
+//---------------------------------------------------------------------
+
 var config = require('./config');
 var castToMethodGenerator = require('../../src/codegen/modules/castToMethod');
 

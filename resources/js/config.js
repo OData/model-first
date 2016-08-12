@@ -1,3 +1,9 @@
+//---------------------------------------------------------------------
+// 
+// Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// 
+//---------------------------------------------------------------------
+
 (function(){
   function getcmMode(format){
     // get CodeMirror mode for specific format
@@ -36,7 +42,7 @@
 
     samples       : 
     // sample
-      ['tripPin.yaml', 'todo-minimal.yaml']
+      ['new.yaml', 'todo-minimal.yaml', 'tripPin.yaml']
     // endsample
   };
 })();

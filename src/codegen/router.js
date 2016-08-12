@@ -1,3 +1,9 @@
+//---------------------------------------------------------------------
+// 
+// Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// 
+//---------------------------------------------------------------------
+
 var express = require('express');
 var ClientCodegenController = require('./controllers/ClientCodegenController');
 var ServerCodegenController = require('./controllers/ServerCodegenController');

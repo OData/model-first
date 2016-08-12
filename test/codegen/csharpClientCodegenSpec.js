@@ -1,3 +1,9 @@
+//---------------------------------------------------------------------
+// 
+// Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// 
+//---------------------------------------------------------------------
+
 describe('[OData Service Client Codegen: CSharp] Test', function () {
     var codegen = require('../../src/codegen/modules/csharpClientCodegen');
     var constants = require('./config').Constants;

@@ -1,3 +1,9 @@
+//---------------------------------------------------------------------
+// 
+// Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// 
+//---------------------------------------------------------------------
+
 'use strict';
 
 require('codemirror/lib/codemirror.css');
@@ -13,4 +19,4 @@ require("codemirror/mode/clike/clike.js");
 window.CodeMirror = require("codemirror");
 
 require("resources/js/codeeditor");
-require.context("./resources/test samples", false, /.*\.json$/);
+require.context("./resources/test samples", false, /\.json$/);

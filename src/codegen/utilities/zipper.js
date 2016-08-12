@@ -1,3 +1,9 @@
+//---------------------------------------------------------------------
+// 
+// Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// 
+//---------------------------------------------------------------------
+
 var fs = require('fs');
 var EasyZip = require('easy-zip').EasyZip;
 var StringHelper = require('../helpers/stringHelper');

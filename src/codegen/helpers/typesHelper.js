@@ -1,3 +1,9 @@
+//---------------------------------------------------------------------
+// 
+// Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// 
+//---------------------------------------------------------------------
+
 var typeMaps = require('../modules/csharpTypeMaps');
 var StringHelper = require('../helpers/stringHelper');
 

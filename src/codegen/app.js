@@ -1,3 +1,9 @@
+//---------------------------------------------------------------------
+// 
+// Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// 
+//---------------------------------------------------------------------
+
 var express = require('express');
 var path = require('path');
 var flash = require('express-flash');
@@ -7,6 +13,8 @@ var bodyParser = require('body-parser');
 var routes = require('./router');
 var config = require('./config');
 var Logger = require('./utilities/logger');
+var schedule = require('node-schedule');
+var cleanFiles = require('./cleanFiles');
 var constants = config.Constants;
 
 var logger = Logger.getInstance(constants.Logs.Suc, constants.Logs.Info, constants.Logs.Err);
@@ -66,6 +74,10 @@ app.use(function (req, res, next) {
 });
 
 app.use('/', routes);
+
+var rule = new schedule.RecurrenceRule();
+rule.hour = 0;
+schedule.scheduleJob(rule, cleanFiles);
 
 var server = app.listen(constants.Port, function () {
     logger.logSuc('Started connect model-first builder on http://localhost:' + constants.Port + '/');
