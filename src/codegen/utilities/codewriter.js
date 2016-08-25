@@ -26,10 +26,12 @@ exports.createServerCSharpProject = function(projName, files, namespaceName, cal
 		var folderPathes = [
 			constants.Paths.ServerCSharpPackage + folderName,
 			constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder,
+			constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/Api',
 			constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/App_Data',
 			constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/App_Start',
 			constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/Controllers',
 			constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/Models',
+			constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/Submit',
 			constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/Properties',
 			constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder + '/packages'
 		];
@@ -53,7 +55,10 @@ exports.createServerCSharpProject = function(projName, files, namespaceName, cal
 			filePathes = [
 			'Global.asax',
 			'Global.asax.cs',
-			'App_Start/WebApiConfig.cs'
+			'App_Start/WebApiConfig.cs',
+			'Api/DemoApi.cs',
+			'Controllers/DemoController.cs',
+			'Submit/CustomizedSubmitProcessor.cs'
 			];
 			result = copyAndReplaceNamespace(filePathes, constants.Paths.ServerCSharpPackage + folderName + '/' + constants.FileNames.ServerCSharpProjFolder+'/', namespaceName, function(err){
 				callback(err);
@@ -342,13 +347,7 @@ function copyAndReplaceNamespace(filePathes, destFolder, namespaceName, callback
 	for(var i = 0; i < filePathes.length; i++){
 		try{
 			var content = fs.readFileSync(constants.Paths.ServerCSharpProj+filePathes[i], constants.Code.Encoding);
-			if(filePathes[i].endsWith('WebApiConfig.cs'))
-			{
-				fs.writeFileSync(destFolder+filePathes[i] , util.format(content, namespaceName, namespaceName), constants.Code.Encoding);
-			}else{
-				fs.writeFileSync(destFolder+filePathes[i] , util.format(content, namespaceName), constants.Code.Encoding);
-			}
-			
+			fs.writeFileSync(destFolder+filePathes[i] , content.replace(/%s/g, namespaceName), constants.Code.Encoding);
 		} catch(e)
 		{
 			callback(e);

@@ -119,7 +119,7 @@ var Visitor=require('../visitor');
        return rootType;
     }
 
-    function routeAction(name, operationType, params, parentType, swKey, returns) {
+    function routeAction(name, operationType, params, parentType, swKey, returns, ns) {
         var temp = getEntitySet(parentType);
         var parameters = [];
 
@@ -137,11 +137,11 @@ var Visitor=require('../visitor');
         var path;
         if ('Bound' === operationType) {
             if (temp.success) {
-                path = '/' + temp.entitySet + '/{' + swKey.name + '}/' + name;
+                path = '/' + temp.entitySet + '/{' + swKey.name + '}/' + ns +'.' + name;
             } else {
                 // Should not enter this region.
                 // If the code enter this region, there will be some errors in user's template.
-                path = '/' + parentType + '/' + name;
+                path = '/' + parentType + '/' + ns +'.' + name;
             }
         } else if ('Unbound' === operationType) {
             path = '/' + name;
@@ -206,7 +206,7 @@ var Visitor=require('../visitor');
         };
     }
 
-    function routeFunction(name, operationType, params, parentType, swKey, returns) {
+    function routeFunction(name, operationType, params, parentType, swKey, returns, ns) {
         var temp = getEntitySet(parentType);
         var parameters = [];
 
@@ -258,9 +258,9 @@ var Visitor=require('../visitor');
         if ('Bound' === operationType) {
             var temp = getEntitySet(parentType);
             if (temp.success) {
-                path = '/' + temp.entitySet + '/{' + swKey.name + '}/' + name;
+                path = '/' + temp.entitySet + '/{' + swKey.name + '}/' + ns +'.' + name;
             } else {
-                path = '/' + parentType + '/' + name;
+                path = '/' + parentType + '/' + ns +'.' + name;
             }
         } else if ('Unbound' === operationType) {
             path = '/' + name;
@@ -293,11 +293,11 @@ var Visitor=require('../visitor');
         };
     }
 
-    function routeOperation(name, type, operationType, params, parentType, swKey, returns) {
+    function routeOperation(name, type, operationType, params, parentType, swKey, returns, ns) {
         if ('Action' === type) {
-            return routeAction(name, operationType, params, parentType, swKey, returns);
+            return routeAction(name, operationType, params, parentType, swKey, returns, ns);
         } else if ('Function' === type) {
-            return routeFunction(name, operationType, params, parentType, swKey, returns);
+            return routeFunction(name, operationType, params, parentType, swKey, returns, ns);
         }
     }
 
@@ -717,13 +717,13 @@ var Visitor=require('../visitor');
                     var temp;
                     var routes;
                     if ('Action' === item.type) {
-                        temp = routeOperation(item.name, item.type, item.operationType, item.params, null, null, item.returns);
+                        temp = routeOperation(item.name, item.type, item.operationType, item.params, null, null, item.returns, model.api.namespace);
                         routes = {
                             'post': temp.route
                         };
                         paths[temp.path] = routes;
                     } else if ('Function' === item.type) {
-                        temp = routeOperation(item.name, item.type, item.operationType, item.params, null, null, item.returns);
+                        temp = routeOperation(item.name, item.type, item.operationType, item.params, null, null, item.returns, model.api.namespace);
                         routes = {
                             'get': temp.route
                         };
@@ -915,13 +915,13 @@ var Visitor=require('../visitor');
                                     var temp;
                                     var routes;
                                     if ('Action' === item.type) {
-                                        temp = routeOperation(item.name, item.type, item.operationType, item.params, parentTypeName, swKey, item.returns);
+                                        temp = routeOperation(item.name, item.type, item.operationType, item.params, parentTypeName, swKey, item.returns, model.api.namespace);
                                         routes = {
                                             'post': temp.route
                                         };
                                         boundOpPaths[temp.path] = routes;
                                     } else if ('Function' === item.type) {
-                                        temp = routeOperation(item.name, item.type, item.operationType, item.params, parentTypeName, swKey, item.returns);
+                                        temp = routeOperation(item.name, item.type, item.operationType, item.params, parentTypeName, swKey, item.returns, model.api.namespace);
                                         routes = {
                                             'get': temp.route
                                         };

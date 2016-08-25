@@ -1,38 +1,17 @@
 ﻿namespace %s
 {
     #region Namespace.
-    using System;
     using System.Web.Http;
-    using Microsoft.Restier.EntityFramework;
-    using Microsoft.Restier.WebApi;
-    using Microsoft.Restier.WebApi.Batch;
-    using %s.Models;
+    using Restier.Publishers.OData;
+    using Restier.Publishers.OData.Batch;
+    using Api;
     #endregion
 
     public static class WebApiConfig
     {
         public static async void Register(HttpConfiguration config)
         {
-            ResetDataSource();
-            await config.MapRestierRoute<DbApi<DemoContext>>("OData", "demo", new RestierBatchHandler(GlobalConfiguration.DefaultServer));
-        }
-
-        public static DemoContext context = new DemoContext();
-
-        /// <summary>
-        /// Reset the data source.
-        /// </summary>
-        public static void ResetDataSource()
-        {
-            // If the database information was already exists, delete the current database.
-            if (context.Database.Exists())
-            {
-                context.Database.Delete();
-            }
-            
-            // 
-            // TODO: Write the testing date in here.
-            // 
+            await config.MapRestierRoute<DemoApi>("OData", "demo", new RestierBatchHandler(GlobalConfiguration.DefaultServer));
         }
     }
 }

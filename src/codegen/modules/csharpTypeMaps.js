@@ -42,21 +42,25 @@ var PrimitiveTypeMappings = {
     'edm.geometrycollection': 'global::Microsoft.Spatial.GeometryCollection'
 };
 
-var RefTypes = [
-    'edm.binary', 'edm.string', 'edm.stream', 'edm.geography', 'edm.geographypoint',
-    'edm.geographylinestring', 'edm.geographypolygon', 'edm.geographymultipoint', 'edm.geographymultilinestring', 'edm.geographymultipolygon',
-    'edm.geographycollection', 'edm.geometry', 'edm.geometrypoint', 'edm.geometrylinestring', 'edm.geometrypolygon',
-    'edm.geometrymultipoint', 'edm.geometrymultilinestring', 'edm.geometrymultipolygon', 'edm.geometrycollection'
-];
+var SpatialTypes = [
+    'edm.geography', 'edm.geographypoint', 'edm.geographylinestring', 'edm.geographypolygon', 'edm.geographymultipoint', 
+    'edm.geographymultilinestring', 'edm.geographymultipolygon', 'edm.geographycollection', 'edm.geometry', 'edm.geometrypoint', 
+    'edm.geometrylinestring', 'edm.geometrypolygon', 'edm.geometrymultipoint', 'edm.geometrymultilinestring', 
+    'edm.geometrymultipolygon', 'edm.geometrycollection'
+]
+
+var RefTypes = ['edm.binary', 'edm.string', 'edm.stream'].concat(SpatialTypes);
 
 exports.MapType = function(type){
     var isRefType = false;
+    var isSpatial = false;
     if(PrimitiveTypeMappings[type]){
         isRefType = RefTypes.indexOf(type) == -1 ? false : true;
+        isSpatial = SpatialTypes.indexOf(type) == -1 ? false : true;
 
-        return { type: PrimitiveTypeMappings[type], isPrimitive: true, isRefType: isRefType };
+        return { type: PrimitiveTypeMappings[type], isPrimitive: true, isRefType: isRefType, isSpatial: isSpatial };
     }
     else{
-        return { type: StringHelper.capitalizeInitial(type), isPrimitive: false, isRefType: true };
+        return { type: StringHelper.capitalizeInitial(type), isPrimitive: false, isRefType: true, isSpatial: isSpatial };
     }
 };

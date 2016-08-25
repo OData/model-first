@@ -24,6 +24,12 @@ function genEntityType(entityType, types, namespaceName){
 		var propType = typeMaps.MapType(prop.type);
 		var propName = StringHelper.capitalizeInitial(prop.name);
 
+		if(propType.isSpatial)
+		{
+			result += "\
+			// Spatial type is not supported \n\
+			[System.ComponentModel.DataAnnotations.Schema.NotMapped]\n";
+		}
 		// Check whether the property's type is primitive or complex type or not.
 		if(propType.isPrimitive || !ParseHelper.hasKeyProperty(ParseHelper.getType(prop.type, types), types)){
 			if(prop.isCollection){
@@ -119,7 +125,12 @@ namespace ' + namespaceName + '.Models\n\
 
 		var propType = typeMaps.MapType(prop.type);
 		var propName = StringHelper.capitalizeInitial(prop.name);
-		
+		if(propType.isSpatial)
+		{
+			result += "\
+			// Spatial type is not supported \n\
+			[System.ComponentModel.DataAnnotations.Schema.NotMapped]\n";
+		}
 		if(prop.isCollection){
 			result += util.format('\
         public System.Collections.Generic.ICollection<%s> %s { get; set; }\n', propType.type, propName);
@@ -227,7 +238,8 @@ function genDbContext(entitySets, namespaceName){
 	var result = '\
 namespace ' + namespaceName + '\n';
 	result += '\
-{\n';
+{\n\
+	using System.Data.Entity;\n\n';
 	result += '\
     /// <summary>\n\
     /// The DemoContext class.\n\
@@ -235,7 +247,11 @@ namespace ' + namespaceName + '\n';
     result += '\
     public class DemoContext : System.Data.Entity.DbContext\n';
     result += '\
-    {\n';
+    {\n\
+    	static DemoContext()\n\
+        {\n\
+            Database.SetInitializer(new DemoDatabaseInitializer());\n\
+        }\n\n';
     result += '\
         /// <summary>\n\
         /// The constructor of the class DemoContext.\n\
@@ -259,8 +275,38 @@ namespace ' + namespaceName + '\n';
 	}
 
 	result += '\
-    }\n';
-	result += '\
+	    private static DemoContext instance;\n\
+        public static DemoContext Instance\n\
+        {\n\
+            get\n\
+            {\n\
+                if (instance == null)\n\
+                {\n\
+                    ResetDataSource();\n\
+                }\n\
+                return instance;\n\
+            }\n\
+        }\n\
+\n\
+        /// <summary>\n\
+        /// Reset the data source.\n\
+        /// </summary>\n\
+        public static void ResetDataSource()\n\
+        {\n\
+            instance = new DemoContext();\n\
+\n\
+            // \n\
+            // TODO: Write the testing data in here.\n\
+            // \n\
+        }\n\
+    }\n\
+    class DemoDatabaseInitializer : DropCreateDatabaseAlways<DemoContext>\n\
+    {\n\
+        protected override void Seed(DemoContext context)\n\
+        {\n\
+            DemoContext.ResetDataSource();\n\
+        }\n\
+    }\n\
 }\n';
 
 	return {

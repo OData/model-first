@@ -20,36 +20,36 @@ api:
   supportsFilterFunctions: [contains, endswith, startswith, length, indexof, substring, tolower, toupper, trim, concat, year, month, day, hour, minute, second, round, floor, ceiling, cast, isof]
 
 root:
-  - name: photos
+  - name: Photos
     type: photo[]
     searchable: true
     insertable: true
-  - name: people
+  - name: People
     type: person[]
     searchable: true
     insertable: true
     concurrencyProperties: concurrency
     disallowNavigation: friends
     disallowInsert: [trips, friends]
-  - name: airlines
+  - name: Airlines
     type: airline[]
     searchable: true
     insertable: true
-  - name: airports
+  - name: Airports
     type: airport[]
     searchable: true
     insertable: false
     deletable: false
-  - name: me
+  - name: Me
     type: person
-  - name: getNearestAirport
+  - name: GetNearestAirport
     params:
       - name: lat
         type: double
       - name: lon
         type: double
     returns: airport
-  - name: resetDataSource
+  - name: ResetDataSource
 
 types:
   - name: personGender
@@ -70,9 +70,6 @@ types:
       - address
       - name: city
         type: city
-  - name: eventLocation
-    baseType: location
-    optionalProperties: buildingInfo
   - name: airportLocation
     baseType: location
     requiredProperties:
@@ -109,9 +106,9 @@ types:
       - name: photo
         type: photo
     operations:
-      - name: getFavoriteAirline
+      - name: GetFavoriteAirline
         returns: airline
-      - name: getFriendsTrips
+      - name: GetFriendsTrips
         params: userName
         returns: trip[]
       - name: shareTrip
@@ -144,26 +141,6 @@ types:
         type: dateTimeOffset
       - name: duration
         type: duration
-  - name: publicTransportation
-    baseType: planItem
-    optionalProperties: seatNumber
-  - name: flight
-    baseType: publicTransportation
-    requiredProperties: flightNumber
-    optionalProperties:
-      - name: from
-        type: airport
-      - name: to
-        type: airport
-      - name: airline
-        type: airline
-  - name: event
-    baseType: planItem
-    dynamic: true
-    optionalProperties:
-      - description
-      - name: occursAt
-        type: eventLocation
   - name: trip
     key: tripId
     requiredProperties:
@@ -183,5 +160,5 @@ types:
         type: planItem[]
         contained: true
     operations:
-      - name: getInvolvedPeople
+      - name: GetInvolvedPeople
         returns: person[]

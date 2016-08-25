@@ -1055,6 +1055,9 @@ describe('[Swagger] Actions test', function () {
     it('Unbound action should work.', function () {
         var input =
                 {
+                    'api':{
+                        'namespace': 'namespace'
+                    },
                     'container': {
                         'operations': [
                             {
@@ -1114,6 +1117,9 @@ describe('[Swagger] Actions test', function () {
     it('Bound action should work.', function () {
         var input =
                 {
+                    'api':{
+                        'namespace': 'namespace'
+                    },
                     'container': {
                         'entitysets': [
                             {
@@ -1275,7 +1281,7 @@ describe('[Swagger] Actions test', function () {
                     }
                 }
             },
-            '/people/{userName}/actionTest': {
+            '/people/{userName}/namespace.actionTest': {
                 'post': {
                     'tags': [
                         'Action',
@@ -1319,6 +1325,9 @@ describe('[Swagger] Functions test', function () {
     it('Unbound function should work.', function () {
         var input =
                 {
+                    'api':{
+                        'namespace': 'namespace'
+                    },
                     'container': {
                         'operations': [
                             {
@@ -1375,6 +1384,9 @@ describe('[Swagger] Functions test', function () {
     it('Bound function should work.', function () {
         var input =
                 {
+                    'api':{
+                        'namespace': 'namespace'
+                    },
                     'container': {
                         'entitysets': [
                             {
@@ -1539,7 +1551,7 @@ describe('[Swagger] Functions test', function () {
                     }
                 }
             },
-            '/people/{userName}/functionTest': {
+            '/people/{userName}/namespace.functionTest': {
                 'get': {
                     'tags': [
                         'Function',
@@ -1579,6 +1591,9 @@ describe('[Swagger] Functions test', function () {
     it('System query options for functions should work.', function () {
         var input =
                 {
+                    'api':{
+                        'namespace': 'namespace'
+                    },
                     'container': {
                         'entitysets': [
                             {
@@ -1846,7 +1861,7 @@ describe('[Swagger] Functions test', function () {
                     }
                 }
             },
-            '/people/{userName}/getBestFriend': {
+            '/people/{userName}/namespace.getBestFriend': {
                 'get': {
                     'tags': [
                         'Function',
@@ -1900,7 +1915,7 @@ describe('[Swagger] Functions test', function () {
                     }
                 }
             },
-            '/people/{userName}/getInvolvedPeople': {
+            '/people/{userName}/namespace.getInvolvedPeople': {
                 'get': {
                     'tags': [
                         'Function',
@@ -1992,7 +2007,7 @@ describe('[Swagger] Functions test', function () {
                     }
                 }
             },
-            '/people/{userName}/getHomeAddress': {
+            '/people/{userName}/namespace.getHomeAddress': {
                 'get': {
                     'tags': [
                         'Function',
@@ -2046,7 +2061,7 @@ describe('[Swagger] Functions test', function () {
                     }
                 }
             },
-            '/people/{userName}/getEventLocation': {
+            '/people/{userName}/namespace.getEventLocation': {
                 'get': {
                     'tags': [
                         'Function',
@@ -2139,7 +2154,7 @@ describe('[Swagger] Functions test', function () {
 
                 }
             },
-            '/people/{userName}/getFriendNames': {
+            '/people/{userName}/namespace.getFriendNames': {
                 'get': {
                     'tags': [
                         'Function',
