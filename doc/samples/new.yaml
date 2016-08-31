@@ -34,7 +34,7 @@ root: # Required.
     disallowInsert: [navigationProperty] # Optional
   # Singleton
   - name: Singleton # Required.
-    type: EntityType # Required.
+    type: ChildType # Required.
   # Operation
   - name: QueryFunction # Required.
     params: # Optional
@@ -58,17 +58,16 @@ types: # Required.
       - name: enum2
         value: 2 # Optional
   # Complex type
-  - name: BaseType
+  - name: ComplexType
     requiredProperties: # Optional
-      - name: price # Required.
-        type: decimal # Optional
-        isoCurrency: USD # Optional. The currency for this monetary amount as an ISO 4217 currency code
-        immutable: true # Optional. A value for this non-key property can be provided on insert and remains unchanged on update
+      - name: requiredProperty # Required.
+        type: string # Optional
+    optionalProperties: # Optional
+      - name: optionalProperty # Required. Default string type
   # Entity type
   - name: EntityType # Required.
     key: # Required.
       - name: id # Optional
-    baseType: BaseType # Optional
     dynamic: true # Optional. dynamic type allows clients to add properties dynamically to instances of the type by specifying uniquely named values in the payload used to insert or update an instance of the type.
     requiredProperties: # Optional
       - name: name # Required.
@@ -84,6 +83,8 @@ types: # Required.
       - name: navigationProperty # Required.
         type: AnotherEntityType # Optional
         containsTarget: true # Optional. Containment navigation properties define an implicit entity set for each instance of its declaring entity type. This implicit entity set is identified by the read URL of the navigation property for that entity.
+      - name: complexTypeProperty # Required.
+        type: ComplexType # Required
     operations: # Optional
       - name: BoundOperation # Required.
         params: # Optional
@@ -103,3 +104,10 @@ types: # Required.
           - name: parameterName # Required.
             type: string # Optional
         returns: AnotherEntityType # Optional
+  - name: ChildType
+    baseType: EntityType # Optional
+    requiredProperties: # Optional
+      - name: price # Required.
+        type: decimal # Optional
+        isoCurrency: USD # Optional. The currency for this monetary amount as an ISO 4217 currency code
+        immutable: true # Optional. A value for this non-key property can be provided on insert and remains unchanged on update

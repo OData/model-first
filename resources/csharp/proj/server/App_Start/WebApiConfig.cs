@@ -2,8 +2,8 @@
 {
     #region Namespace.
     using System.Web.Http;
-    using Restier.Publishers.OData;
-    using Restier.Publishers.OData.Batch;
+    using Microsoft.Restier.Publishers.OData;
+    using Microsoft.Restier.Publishers.OData.Batch;
     using Api;
     #endregion
 

@@ -26,9 +26,9 @@ function genEntityType(entityType, types, namespaceName){
 
 		if(propType.isSpatial)
 		{
-			result += "\
-			// Spatial type is not supported \n\
-			[System.ComponentModel.DataAnnotations.Schema.NotMapped]\n";
+			fields += "\
+        // Spatial type is not supported \n\
+        [System.ComponentModel.DataAnnotations.Schema.NotMapped]\n";
 		}
 		// Check whether the property's type is primitive or complex type or not.
 		if(propType.isPrimitive || !ParseHelper.hasKeyProperty(ParseHelper.getType(prop.type, types), types)){
