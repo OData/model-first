@@ -4,9 +4,9 @@ api:
   version:
     current: 1.0.0
   description: "TripPin is a fictional reference service demonstrating the capabilities of OData v4."
-  namespace: "Microsoft.OData.SampleService.Models.TripPin"
+  namespace: "Microsoft.OData.Service.Sample.TrippinInMemory.Models"
   host: services.odata.org
-  basePath: /V4/TripPinServiceRW
+  basePath: /TripPinRESTierService
   termsOfService: http://swagger.io/terms/
   contact:
     name: API Support
@@ -20,145 +20,154 @@ api:
   supportsFilterFunctions: [contains, endswith, startswith, length, indexof, substring, tolower, toupper, trim, concat, year, month, day, hour, minute, second, round, floor, ceiling, cast, isof]
 
 root:
-  - name: Photos
-    type: photo[]
-    searchable: true
-    insertable: true
   - name: People
-    type: person[]
+    type: Person[]
     searchable: true
     insertable: true
-    concurrencyProperties: concurrency
-    disallowNavigation: friends
-    disallowInsert: [trips, friends]
+    disallowNavigation: Features
+    disallowInsert: [Trips, Features]
   - name: Airlines
-    type: airline[]
+    type: Airline[]
+    concurrencyProperties: Name
     searchable: true
     insertable: true
   - name: Airports
-    type: airport[]
+    type: Airport[]
     searchable: true
     insertable: false
     deletable: false
   - name: Me
-    type: person
+    type: Person
   - name: GetNearestAirport
     params:
       - name: lat
         type: double
       - name: lon
         type: double
-    returns: airport
+    returns: Airport
   - name: ResetDataSource
 
 types:
-  - name: personGender
+  - name: PersonGender
     members:
-      - name: unknown
+      - name: Male
         value: 0
-      - name: female
-        value: -1
-      - name: male
+      - name: Female
+        value: 1
+      - name: Unknow
         value: 2
     flags: false
     underlyingType: int32
-  - name: city
-    requiredProperties: [countryRegion, name, region]
-  - name: location
-    dynamic: true
+  - name: Feature
+    members:
+      - name: Feature1
+        value: 0
+      - name: Feature2
+        value: 1
+      - name: Feature3
+        value: 2
+      - name: Feature4
+        value: 3
+    flags: false
+    underlyingType: int32
+  - name: City
+    optionalProperties: [CountryRegion, Name, Region]
+  - name: Location
     requiredProperties:
-      - address
-      - name: city
-        type: city
-  - name: airportLocation
-    baseType: location
-    requiredProperties:
-      - name: loc
+      - Address
+      - name: City
+        type: City
+  - name: AirportLocation
+    baseType: Location
+    optionalProperties:
+      - name: Loc
         type: edm.geographyPoint
-  - name: photo
-    # Missing acceptable media types annotation - consider hasStream: image/jpeg instead
+  - name: Person
     key:
-      - name: id
-        type: int64
-    hasStream: true
-    optionalProperties: name
-  - name: person
-    key:
-      - name: userName
+      - name: UserName
         type: string
     dynamic: true
-    requiredProperties: [firstName, lastName]
+    requiredProperties: 
+      - name: FirstName
+      - name: Gender
+        type: PersonGender
     optionalProperties:
-      - name: emails
-        type: string[]
-      - name: addressInfo
-        type: location[]
-      - name: gender
-        type: personGender
-      - name: concurrency
+      - name: LastName
+      - name: MiddleName
+      - name: Age
         type: int64
-        computed: true
-      - name: friends
-        type: person[]
-      - name: trips
-        type: trip[]
+      - name: Emails
+        type: string[]
+      - name: AddressInfo
+        type: Location[]
+      - name: HomeAddress
+        type: Location
+      - name: FavoriteFeature
+        type: Feature
+      - name: Features
+        type: Feature[]
+      - name: Trips
+        type: Trip[]
         containsTarget: true
-      - name: photo
-        type: photo
     operations:
       - name: GetFavoriteAirline
-        returns: airline
-      - name: GetFriendsTrips
-        params: userName
-        returns: trip[]
-      - name: shareTrip
+        returns: Airline
+      - name: UpdatePersonLastName
         params:
-          - sharedTo
+          - lastName
+        returns: Trip[]
+      - name: ShareTrip
+        params:
+          - userName
           - name: tripId
             type: int32
-  - name: airline
+  - name: Airline
     key:
-      - name: airlineCode
+      - name: AirlineCode
         type: string
-    requiredProperties: name
-  - name: airport
+    requiredProperties: Name
+  - name: Airport
     key:
-      - name: icaoCode
+      - name: IcaoCode
         type: string
-    requiredProperties:
-      - name
-      - name: iataCode
-        immutable: true
-      - name: location
-        type: airportLocation
-  - name: planItem
-    key: planItemId
     optionalProperties:
-      - confirmationCode
-      - name: startsAt
+      - name: Name
+      - name: IataCode
+      - name: Location
+        type: AirportLocation
+  - name: PlanItem
+    key: 
+      - name: PlanItemId
+        type: integer
+    requiredProperties:
+      - name: StartsAt
         type: dateTimeOffset
-      - name: endsAt
+      - name: EndsAt
         type: dateTimeOffset
       - name: duration
         type: duration
-  - name: trip
-    key: tripId
+    optionalProperties:
+      - ConfirmationCode
+  - name: Trip
+    key: 
+      - name: TripId
+        type: int32
     requiredProperties:
-      - name
-      - name: budget
+      - name: ShareId
+        type: guid
+      - name: Budget
         type: single
-        isoCurrency: USD
-      - name: startsAt
+      - name: StartsAt
         type: dateTimeOffset
-      - name: endsAt
+      - name: EndsAt
         type: dateTimeOffset
-      - name: tags
+      - name: PlanItems
+        type: PlanItem[]
+    optionalProperties:
+      - Name
+      - Description
+      - name: Tags
         type: string[]
-      - name: photos
-        type: photo[]
-      - name: planItems
-        type: planItem[]
-        contained: true
     operations:
       - name: GetInvolvedPeople
-        returns: person[]
+        returns: Person[]
